@@ -80,9 +80,9 @@ He is then shown his available cards. To easily find the ones he wants, these sh
 
 Trading Cards:
 
-    Bob and his friends have just exited the pack opener and have moved on to deck building. As he’s picking out cards for his deck, Bob realizes he’s missing a key card for the deck he’s working on. He navigates to the trade interface and searches for his friend, Greg, by entering his username. Upon finding his friend, he’s shown their two collections side by side. Within Greg’s collection, he spots the card he needs to complete his deck, and notices that a card in his own collection would synergize well with several of Greg’s cards. Bob selects the card(s) from his own collection to offer, as well as the card(s) from Greg’s that he wishes to receive, and presses send.
+Bob and his friends have just exited the pack opener and have moved on to deck building. As he’s picking out cards for his deck, Bob realizes he’s missing a key card for the deck he’s working on. He navigates to the trade interface and searches for his friend, Greg, by entering his username. Upon finding his friend, he’s shown their two collections side by side. Within Greg’s collection, he spots the card he needs to complete his deck, and notices that a card in his own collection would synergize well with several of Greg’s cards. Bob selects the card(s) from his own collection to offer, as well as the card(s) from Greg’s that he wishes to receive, and presses send.
     
-    A moment later, Greg receives a notification in the application that he has a trade request. Clicking “view”, Greg is shown the card(s) Bob is asking for and offering in return. Happy with the trade, he clicks “accept” and is returned to the main page with the newly traded cards now available to him.
+A moment later, Greg receives a notification in the application that he has a trade request. Clicking “view”, Greg is shown the card(s) Bob is asking for and offering in return. Happy with the trade, he clicks “accept” and is returned to the main page with the newly traded cards now available to him.
 
 Pricing Data:
 
