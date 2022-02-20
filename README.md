@@ -4,7 +4,7 @@ Project Name: All-in-one Duel Links Draft (AIO DLD)
 
 Abstract:
 
- AIO DLD will be an online application for users to open card packs from different Yu-Gi-Oh Duel Links boxes. Cards obtained through these packs will be stored in a database based on a username and password. Furthermore, users may use these cards to trade with other users, build decks, and view the prices of these cards through a card database. Though this application can be used as an educational tool to practice building decks with randomized packs of cards, it is primarily used as a tool to organize draft play itself by combining the tools to open packs and build decks into one application.
+  AIO DLD will be an online application for users to open card packs from different Yu-Gi-Oh Duel Links boxes. Cards obtained through these packs will be stored in a database based on a username and password. Furthermore, users may use these cards to trade with other users, build decks, and view the prices of these cards through a card database. Though this application can be used as an educational tool to practice building decks with randomized packs of cards, it is primarily used as a tool to organize draft play itself by combining the tools to open packs and build decks into one application.
 
 Links:
 Heroku Application: https://all-in-one-duel-links-draft.herokuapp.com/
