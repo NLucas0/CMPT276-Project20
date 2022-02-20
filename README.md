@@ -4,7 +4,7 @@ Project Name: All-in-one Duel Links Draft (AIO DLD)
 
 Abstract:
 
-AIO DLD will be an online application for users to open card packs from different Yu-Gi-Oh Duel Links boxes. Cards obtained through these packs will be stored in a database based on a username and password. Furthermore, users may use these cards to trade with other users, build decks, and view the prices of these cards through a card database. Though this application can be used as an educational tool to practice building decks with randomized packs of cards, it is primarily used as a tool to organize draft play itself by combining the tools to open packs and build decks into one application.
+ AIO DLD will be an online application for users to open card packs from different Yu-Gi-Oh Duel Links boxes. Cards obtained through these packs will be stored in a database based on a username and password. Furthermore, users may use these cards to trade with other users, build decks, and view the prices of these cards through a card database. Though this application can be used as an educational tool to practice building decks with randomized packs of cards, it is primarily used as a tool to organize draft play itself by combining the tools to open packs and build decks into one application.
 
 Links:
 Heroku Application: https://all-in-one-duel-links-draft.herokuapp.com/
@@ -18,7 +18,7 @@ Features:
 
 Pack Opening simulator
 
-Users can open randomly-generated packs of cards from a few specified boxes from the card game Yugioh Duel Links. The user will be able to see all the cards they obtained from the packs opened this session, as well as be able to reset the box packs. The cards opened from this pack will be saved based on an account as explained in the next feature.
+ Users can open randomly-generated packs of cards from a few specified boxes from the card game Yugioh Duel Links. The user will be able to see all the cards they obtained from the packs opened this session, as well as be able to reset the box packs. The cards opened from this pack will be saved based on an account as explained in the next feature.
 Account
 
 To save individual data, the user can create an account which will be linked to their email. Each account can be customized with a profile picture and username, both of which can be changed at any point in time. Passwords can also be reset, and other users can also be added into a friends list.
