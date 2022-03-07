@@ -1,4 +1,4 @@
-.jumbotron {
+/*.jumbotron {
   background: #532F8C;
   color: white;
   padding-bottom: 80px; }
@@ -24,4 +24,55 @@
     border: 2px solid white; }
     .jumbotron .lang-logo img {
       max-width: 100%; }
+*/
 
+
+/* table */
+#table{
+    border: 1px solid;
+    display: block;
+    overflow-y: scroll;
+    height:80%;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid;
+    padding: 1%;
+    height: fit-content;
+    text-align: center;
+}
+
+th{
+    border: 1px solid;
+    position: sticky;
+    top:0;
+}
+
+#adminTableInfoPopUp{
+    background-color: #000000AA;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#adminTableInfoTable{
+    background-color: white;
+    position: absolute;
+    bottom: 10%;
+    right: 10%;
+    border: 3px solid;
+    border-radius: 0.2em;
+    width: 80%;
+    height: 80%;
+    padding: 5%;
+    z-index: 1;
+
+    display: grid;
+}

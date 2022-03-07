@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+	<meta charset = "utf-8"/>
+	<title>Trade - AIO DLD</title>
+	<link rel="stylesheet" href="stylesheets/main.css"/>
+
+    <script src="/scripts/trade.js" defer></script>
+
+</head>
+
+<body onload="tradePageSetUp()">
+    <h1>Trading</h1>
+    <!-- row template for users-->
+    <table hidden="true">
+        <tr id="tradeSampleRow">
+            <td class="tradePicture"></td>
+            <td class="tradeName">Name</td>
+            <td class="tradeDisplayCards"><button>See Cards</button></td>
+            <td class="tradeButton"><button>Trade</button></td>
+        </tr>
+    </table>
+
+    <!--buttons at top to toggle pages-->
+    <div id="tradeTabs">
+        <button onclick="changeTab(event, 'friends')">Friends</button>
+        <button onclick="changeTab(event, 'all')">Search User</button>
+    </div>
+
+    <!--tables with users-->
+    <div id="tradeUsers">
+        <table id="tradeUserListFriends">
+        </table>
+
+        <table id="tradeUserListAll" hidden="true">
+            <tr>
+                <td><input placeholder="Search User"></input></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- store data from database in local variables-->
+    <script>
+        let userData = <%- JSON.stringify(results)%>;
+        let userId = <%JSON.stringify(id)%>;
+    </script>
+</body>

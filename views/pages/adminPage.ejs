@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+	<meta charset = "utf-8"/>
+	<title>Admin - AIO DLD</title>
+	<link rel="stylesheet" href="stylesheets/main.css"/>
+
+    <script src="/scripts/admin.js" defer></script>
+</head>
+
+<body onload="adminSetUp()">
+
+    <!-- row template for user data-->
+    <table hidden="true">
+        <tr id="adminSampleRow">
+            <td class="online">online</td>
+            <td class="id">id</td>
+            <td class="username">name</td>
+            <td class="password">pass</td>
+            <td><button onclick="toggleTable(false,'Owned Cards',event)">cards</button></td>
+            <td><button onclick="toggleTable(false,'Friends',event)">friends</button></td>
+            <td><button onclick="toggleTable(false,'Ongoing Trades',event)">trades</button></td>
+            <td class="type">type</td>
+        </tr>
+    </table>
+
+    <h1>User Data</h1>
+    <p>Click on "friends", "trades", "cards" to view full array in a popup. 
+        Click outside the popup to close.</br>
+
+        To add:</br>
+        user search (id and name), user sort alphabetically, online status, filter
+    </p>
+
+    <!-- search-->
+    <div>
+        <input placeholder="Search User" onkeyup="search(event)"/>
+    </div>
+
+    <!-- table with all user data-->
+    <div id="userTableContainer">
+        <table id="userTable">
+            <tr>
+                <th>ONLINE</th>
+                <th>ID</th>
+                <th>USERNAME</th>
+                <th>PASSWORD</th>
+                <th>CARDS</th>
+                <th>FRIENDS</th>
+                <th>TRADES</th>
+                <th>TYPE</th>
+            </tr>
+        </table>
+    </div>
+
+    <!-- use to display card/friend/trade info-->
+    <div id="adminTableInfoPopUp" onmouseup="toggleTable(true,0,0)" hidden="true">
+        <table id="adminTableInfoTable">
+            <thead>
+                <th id="adminTableInfoHeader">ColName</th>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- store data from database in local variable-->
+    <script>
+        let userData = <%- JSON.stringify(results)%>;
+    </script>
+</body>
