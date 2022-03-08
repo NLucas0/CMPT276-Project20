@@ -36,7 +36,7 @@ express()
         let password = req.body.password;
         
         const client = await pool.connect();
-        var result = await client.query(`SELECT * FROM users WHERE name='${username}' AND password='${password}'`);
+        var result = await client.query(`SELECT * FROM users WHERE name~*'${username}' AND password='${password}'`);
         
         var user = result.rows[0];
 
