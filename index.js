@@ -37,17 +37,22 @@ express()
         
         const client = await pool.connect();
         var result = await client.query(`SELECT * FROM users WHERE name~*'${username}' AND password='${password}'`);
-        
         var user = result.rows[0];
 
         req.session.user = user;
-        console.log(result.rows[0]);
-        console.log(req.session.user.name);
-        res.send(`
-        Your session id <code>${req.sessionID} </code>
-        <br>
-        <a href="/landing"> NEXT PAGE </a>
-        `)
+        if(req.session.user) {
+          res.send(`
+          Your session id <code>${req.sessionID} </code>
+          <br>
+          <a href="/landing"> NEXT PAGE </a>
+          `)
+        } else {
+          res.send(`
+          Login Failed - bad username or password
+          <br>
+          <a href='/login.html'>Return to Login</a>
+          `)
+        }
 
         client.release();
       } catch(error) {
