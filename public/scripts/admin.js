@@ -1,7 +1,7 @@
 // setup user table on load
 function adminSetUp(){
     for(let user of userData){
-        let newRow = document.getElementById("adminSampleRow").cloneNode(true);
+        let newRow = document.getElementsByClassName("adminSampleRow")[0].cloneNode(true);
 
         newRow.getElementsByClassName("id")[0].innerHTML = user.id;
         newRow.getElementsByClassName("username")[0].innerHTML = user.name;
@@ -47,23 +47,40 @@ function displayData(col, userId){
     }
 
     // display items
-    let max_col = 4;
     let table = document.getElementById("adminTableInfoTable").getElementsByTagName("tbody")[0];
 
     for(let i=0; i < array.length; i++){
-        let newRow = table.insertRow();
-
-        for(let j = 0; j < max_col && i < array.length; j++){
-            let newCell = newRow.insertCell();
-            newCell.innerHTML = array[i];
-            i++;
+        if(col != "Owned Cards"){
+            newCell = document.createElement("label");
         }
+        else{
+            newCell = document.createElement("button");
+        }
+        newCell.innerHTML = array[i];
+        table.appendChild(newCell);
     }
 }
 
-// search on input update
+// update search results with text input
 function search(event){
-    let searchTerm = (event.target || event.srcElement).value;
-    let userObj = userData.filter(x => x.name.includes(searchTerm)||String(x.id).includes(searchTerm));
+    let inputValue = (event.target||event.srcElement).value;
+    let users = document.getElementById("userTable").getElementsByClassName("adminSampleRow");
 
+    for(let user of users){
+        let contains = user.getElementsByClassName("username")[0].innerHTML.includes(inputValue);
+        contains = contains||user.getElementsByClassName("id")[0].innerHTML.includes(inputValue);
+        user.hidden = !contains;
+    }
+}
+
+// filter results by user type
+function toggleUserType(event){
+    let checkbox = event.target||event.srcElement;
+    let users = document.getElementById("userTable").getElementsByClassName("adminSampleRow");
+    
+    for(let user of users){
+        if(user.getElementsByClassName("type")[0].innerHTML == checkbox.value){
+            user.hidden = !checkbox.checked;
+        }
+    }
 }

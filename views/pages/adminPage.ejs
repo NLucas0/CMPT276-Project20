@@ -9,10 +9,12 @@
 </head>
 
 <body onload="adminSetUp()">
+    
+    <%- include ("../partials/aio_dld_header.ejs") %>
 
     <!-- row template for user data-->
     <table hidden="true">
-        <tr id="adminSampleRow">
+        <tr class="adminSampleRow">
             <td class="online">online</td>
             <td class="id">id</td>
             <td class="username">name</td>
@@ -28,13 +30,19 @@
     <p>Click on "friends", "trades", "cards" to view full array in a popup. 
         Click outside the popup to close.</br>
 
-        To add:</br>
-        user search (id and name), user sort alphabetically, online status, filter
+        To finish/implement:</br>
+        - online status </br>
+        - pop up scrolling
     </p>
 
     <!-- search-->
     <div>
         <input placeholder="Search User" onkeyup="search(event)"/>
+        
+        <input type="checkbox" value="ADMIN" id="adminCheckbox1" checked="checked" onclick="toggleUserType(event)">
+        <label for="adminCheckbox1">ADMIN</label>
+        <input type="checkbox" value="USER" id="adminCheckbox2" checked="checked" onclick="toggleUserType(event)">
+        <label for="adminCheckbox2">USER</label>
     </div>
 
     <!-- table with all user data-->
@@ -54,8 +62,8 @@
     </div>
 
     <!-- use to display card/friend/trade info-->
-    <div id="adminTableInfoPopUp" onmouseup="toggleTable(true,0,0)" hidden="true">
-        <table id="adminTableInfoTable">
+    <div class="popup" id="adminTableInfoPopUp" onmouseup="toggleTable(true,0,0)" hidden="true">
+        <table class="popupContents" id="adminTableInfoTable">
             <thead>
                 <th id="adminTableInfoHeader">ColName</th>
             </thead>

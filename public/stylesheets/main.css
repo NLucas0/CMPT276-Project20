@@ -28,32 +28,21 @@
 
 
 /* table */
-#table{
-    border: 1px solid;
-    display: block;
-    overflow-y: scroll;
-    height:80%;
-}
-
 table {
+    border: 1px solid;
     border-collapse: collapse;
     width: 100%;
+    height: 100%;
 }
 
 td, th {
     border: 1px solid;
     padding: 1%;
-    height: fit-content;
     text-align: center;
 }
 
-th{
-    border: 1px solid;
-    position: sticky;
-    top:0;
-}
 
-#adminTableInfoPopUp{
+.popup{
     background-color: #000000AA;
     position: absolute;
     bottom: 0;
@@ -62,7 +51,7 @@ th{
     height: 100%;
 }
 
-#adminTableInfoTable{
+.popupContents {
     background-color: white;
     position: absolute;
     bottom: 10%;
@@ -74,5 +63,25 @@ th{
     padding: 5%;
     z-index: 1;
 
+}
+
+.popupContents tbody, .popupContents tbody label{
+    border: 1px solid;
+    border-collapse: collapse;
+
     display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    width: 100%;
+    height:100%;
+    text-align: center;
+}
+
+.cardTable{
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+}
+
+.card{
+    width: 100%;
+    height: 100%;
 }

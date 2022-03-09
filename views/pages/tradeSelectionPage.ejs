@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+	<meta charset = "utf-8"/>
+	<title>Trade Selection - AIO DLD</title>
+	<link rel="stylesheet" href="/stylesheets/main.css"/>
+    <script src="/scripts/trade.js" defer></script>
+</head>
+
+<body onload="tradeSelectionPageSetUp()">
+
+    <%- include ("../partials/aio_dld_header.ejs") %>
+
+    <h1>Trade Selection</h1>
+    <div id="tradeSelectionContainer">
+        <!--Display own card inventory-->
+        <div id="initiatorCards">
+            <h3>Owned Cards</h3>
+            <table id="initiatorCardsTable" class="cardTable"></table>
+        </div>
+
+        <!--Display offered cards-->
+        <div id="offeredCards">
+            <h3>Offer</h3>
+            <table id="offeredCardsTable" class="cardTable"></table>
+        </div>
+
+        <!--Display wanted cards-->
+        <div id="wantedCards">
+            <h3>Request</h3>
+            <table id="wantedCards" class="cardTable"></table>
+        </div>
+        <!--Display receiver's card inventory-->
+        <div id="receiverCards">
+            <h3>Trader's Cards</h3>
+            <table id="receiverCardsTable" class="cardTable"></table>
+        </div>
+    </div>
+        
+    <!-- store data from database in local variables-->
+    <script>
+        let user1 = <%- user1%>;
+        let user2 = <%- user2%>;
+    </script>
+</body>

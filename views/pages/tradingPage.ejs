@@ -3,28 +3,29 @@
 <head>
 	<meta charset = "utf-8"/>
 	<title>Trade - AIO DLD</title>
-	<link rel="stylesheet" href="stylesheets/main.css"/>
-
+	<link rel="stylesheet" href="/stylesheets/main.css"/>
     <script src="/scripts/trade.js" defer></script>
-
 </head>
 
 <body onload="tradePageSetUp()">
+
+    <%- include ("../partials/aio_dld_header.ejs") %>
+
     <h1>Trading</h1>
     <!-- row template for users-->
     <table hidden="true">
-        <tr id="tradeSampleRow">
-            <td class="tradePicture"></td>
+        <tr class="tradeSampleRow">
+            <td class="tradeId">Id</td>
             <td class="tradeName">Name</td>
-            <td class="tradeDisplayCards"><button>See Cards</button></td>
-            <td class="tradeButton"><button>Trade</button></td>
+            <td class="tradeDisplayCards"><button onclick="toggleTable(false,event)">See Cards</button></td>
+            <td><a class="tradeButton">Trade</a></td>
         </tr>
     </table>
 
     <!--buttons at top to toggle pages-->
     <div id="tradeTabs">
-        <button onclick="changeTab(event, 'friends')">Friends</button>
-        <button onclick="changeTab(event, 'all')">Search User</button>
+        <button onclick="changeTab('friends')">Friends</button>
+        <button onclick="changeTab('all')">Search User</button>
     </div>
 
     <!--tables with users-->
@@ -34,14 +35,24 @@
 
         <table id="tradeUserListAll" hidden="true">
             <tr>
-                <td><input placeholder="Search User"></input></td>
+                <td colspan="4"><input placeholder="Search User" onkeyup="search(event)"></input></td>
             </tr>
         </table>
     </div>
 
+    <!-- use to display cards info-->
+    <div class="popup" id="tradeTableInfoPopUp" onmouseup="toggleTable(true,0,0)" hidden="true">
+        <table class="popupContents" id="tradeTableInfoTable">
+            <thead>
+                <th>Cards</th>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+        
     <!-- store data from database in local variables-->
     <script>
         let userData = <%- JSON.stringify(results)%>;
-        let userId = <%JSON.stringify(id)%>;
+        let userId = <%=id%>;
     </script>
 </body>

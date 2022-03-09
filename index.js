@@ -86,6 +86,19 @@ express()
             res.send(error);
         }
     })
+    // initiate trading. send traders' data to page
+    .get('/tradeSelection', async(req, res)=>{
+        try{
+            const client = await pool.connect();
+            const data = {user1: req.query.user1,
+                            user2: req.query.user2};
+            res.render('pages/tradeSelectionPage', data);
+            client.release();
+        }
+        catch(error){
+            res.send(error);
+        }
+    })
 
     // admin
     // send all user data to admin page
