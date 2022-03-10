@@ -116,6 +116,36 @@ function displayCards(container, cards){
     for(let card of cards){
         let newCard = document.createElement("button");
         newCard.innerHTML = card;
-        let newCell = container.appendChild(newCard);
+        if(container.id == "initiatorCardsTable"){
+            newCard.onclick = function(event){selectCard(event, "OFFER", false);}
+        }
+        else{
+            newCard.onclick = function(event){selectCard(event, "RECEIVE", false);}
+        }
+        container.appendChild(newCard);
     }
+}
+
+// select card
+function selectCard(event, type, deselect){
+    let card = event.target||event.srcElement;
+    let id;
+    if(!deselect){
+        if(type=="OFFER"){
+            id = "offeredCardsTable";
+        }
+        else{
+            id = "wantedCardsTable";
+        }
+    }
+    else{
+        if(type=="OFFER"){
+            id = "initiatorCardsTable";
+        }
+        else{
+            id = "receiverCardsTable";
+        }
+    }
+    document.getElementById(id).appendChild(card);
+    card.onclick = function(event){selectCard(event, type, !deselect);};
 }
