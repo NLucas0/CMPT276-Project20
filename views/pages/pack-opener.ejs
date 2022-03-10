@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Pack Opener</title>
+        <!-- <link rel="stylesheet" href="/../../stylesheets/main.css"> -->
+    </head>
+
+    <body>
+        <div class="Content">
+            <%- include ("../partials/aio_dld_header.ejs") %>
+            
+            <h1><%= name %></h1>
+
+            Card1: <%= card1 %><br>
+            Card2: <%= card2 %><br>
+            Card3: <%= card3 %><br> 
+            
+            <br>
+
+            <form action="/box/<%= num %>/open" method="get">
+                <input type="submit" value="New Pack">
+            </form> <br>
+
+            <script>
+                //javascript here
+            </script>
+
+        </div>
+    </body>
+</html>

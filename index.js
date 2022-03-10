@@ -9,8 +9,14 @@ const PORT = process.env.PORT || 5000
 
 const {Pool} = require('pg');
 var pool = new Pool({
-  connectionString: process.env.DATABASE_URL||"postgres://postgres:root@localhost/aio_dld_database"
-  ,ssl:{rejectUnauthorized: false}
+  connectionString: process.env.DATABASE_URL||"postgres://postgres:bootstrap@localhost/aio_dld_database"
+  //,ssl:{rejectUnauthorized: false}
+
+  // // connectionString: "postgres://postgres:bootstrap@localhost/users"
+  // connectionString: "postgres://djdnzwjfbngyrr:cb97dd3f8495d27f7a4b621316da8e5ee295b2abebb1a50c1050c24522683f1c@ec2-3-228-222-169.compute-1.amazonaws.com:5432/d402ckdamtdvna",
+  // ssl: {
+  //     rejectUnauthorized: false
+  // }
 })
 
 express()
@@ -99,6 +105,7 @@ express()
       }
     })
 
+    //landing
     .get('/landing', (req,res)=> {
       var data;
       if(req.session.user) {
@@ -111,7 +118,64 @@ express()
       res.render('pages/landing', data);
     })
   
+    //Pack Opener Box Selection
+    .get('/opener', (req,res)=>{
+      res.render('pages/pack-nav');
+    })
 
+    //Pack Opener Start
+    .get('/box/:id', (req,res)=>{
+      var boxnum = req.params.id;
+      var boxname = 'Placeholder Box';
+
+      if(boxnum == 1) {
+        boxname = 'The Ultimate Rising';
+      } else if(boxnum == 2) {
+        boxname = 'Age Of Discovery';
+      } else if(boxnum == 3) {
+        boxname = 'Neo Impact';
+      } else if(boxnum == 4) {
+        boxname = 'Flame Of The Tyrant';
+      }
+
+      var data = { num : boxnum, name : boxname, card1 : 0, card2 : 0, card3 : 0 };
+
+      res.render('pages/pack-opener', data);
+    })
+
+    //Pack Opener Opening
+    .get('/box/:id/open', (req,res)=>{
+      var boxnum = req.params.id;
+      var boxname = 'Placeholder Box';
+
+      var index1 = 0;
+      var index2 = 0;
+      var index3 = 0;
+
+      if(boxnum == 1 || boxnum == 3) {
+        index1 = Math.floor(Math.random() * 46) + 55;
+        index2 = Math.floor(Math.random() * 46) + 55;
+        index3 = Math.floor(Math.random() * 54) + 1;
+        if(boxnum == 1) {
+          boxname = 'The Ultimate Rising';
+        } else {
+          boxname = 'Neo Impact';
+        }
+      } else if(boxnum == 2 || boxnum == 4) {
+        index1 = Math.floor(Math.random() * 16) + 25;
+        index2 = Math.floor(Math.random() * 16) + 25;
+        index3 = Math.floor(Math.random() * 24) + 1;
+        if(boxnum == 2) {
+          boxname = 'Age Of Discovery';
+        } else {
+          boxname = 'Flame Of The Tyrant';
+        }
+      }
+
+      var data = { num : boxnum, name : boxname, card1 : index1, card2 : index2, card3 : index3 };
+
+      res.render('pages/pack-opener', data);
+    })
 
     // trading
     .get('/trade', async(req, res)=>{
