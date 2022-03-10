@@ -36,7 +36,10 @@ express()
     .get('/login', (req, res) => res.render('pages/login'))
     //.get('/login/admin', (req, res) => res.render('pages/login'))
     
-
+    //landing
+    .get('/landing', (req,res)=> {
+      res.render('pages/landing');
+    })
 
 
     //signup
@@ -105,19 +108,6 @@ express()
     .get('/logout', (req, res)=> {
       req.session.destroy();
       res.redirect('/');
-    })
-
-    //landing
-    .get('/landing', (req,res)=> {
-      var data;
-      if(req.session.user) {
-        data = {loggedIn : true,
-                name : req.session.user.name};
-      } else {
-        data = {loggedIn : false};
-      }
-      
-      res.render('pages/landing');
     })
   
     //Pack Opener Box Selection
