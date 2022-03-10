@@ -45,7 +45,7 @@ express()
         
         const client = await pool.connect();
         var addnewuser = await client.query(`Insert into users values('${username}','${hashedpassword}')`); // what esle to add to the user insert
-        var user = result.rows[0];
+        
 
         req.session.user = user;
         if(req.session.user) {
@@ -126,6 +126,20 @@ express()
         }
     })
 
+      // initiate trading. send traders' data to page
+    .get('/tradeSelection', async(req, res)=>{
+        try{
+            const client = await pool.connect();
+            const data = {user1: req.query.user1,
+                            user2: req.query.user2};
+            res.render('pages/tradeSelectionPage', data);
+            client.release();
+        }
+        catch(error){
+            res.send(error);
+        }
+    })
+
     // admin
     // send all user data to admin page
     .get('/admin', async(req, res)=>{
@@ -140,5 +154,6 @@ express()
             res.send(error);
         }
     })
+  
 
     .listen(PORT, () => console.log(`Listening on ${ PORT }`))
