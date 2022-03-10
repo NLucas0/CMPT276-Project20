@@ -7,23 +7,29 @@
 <div id="headerTop">
     <h1>All-in-One Duel Links Draft</h1>
 
-    <div id="loginDivBefore">
-        <button onclick="goToPage('/landing')">login</button>
-        <button onclick="goToPage('/signup')">signup</button>
-    </div>
+    <% if (user) {%>
+        <div id="loginDivAfter">
+            <button>Profile</button>
+            <label><%= user.name %></label>
+            <button onclick="goToPage('/logout')">Log out</button>
+        </div>
+    <% } else { %>
 
-    <div id="loginDivAfter" hidden="true">
-        <button>Profile</button>
-        <label>UserName</label>
-    </div>
+        <div id="loginDivBefore">
+            <button onclick="goToPage('/landing')">login</button>
+            <button onclick="goToPage('/signup')">signup</button>
+        </div>
+    <% } %>
+    
 </div>
 
 <div id="navBar">
     <button onclick="goToPage('/landing')">Home</button>
-    <button onclick="goToPage('/opener')">Pack Opener</button>
-    <button onclick="goToPage('/builder')">Deck Builder</button>
-    <button onclick="goToPage('/database')">Card Database</button>
-    <button onclick="goToPage('/trade')">Trade Cards</button>
-    <button onclick="goToPage('/admin')">Admin</button>
-    <button onclick="goToPage('/logout')">Log out</button>
+    <% if (user) {%>
+        <button onclick="goToPage('/opener')">Pack Opener</button>
+        <button onclick="goToPage('/builder')">Deck Builder</button>
+        <button onclick="goToPage('/database')">Card Database</button>
+        <button onclick="goToPage('/trade')">Trade Cards</button>
+        <button onclick="goToPage('/admin')">Admin</button>
+    <% } %>
 </div>

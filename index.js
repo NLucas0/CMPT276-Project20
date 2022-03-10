@@ -24,6 +24,10 @@ express()
       saveUninitialized: false,
       maxAge: 30 * 60 * 1000, //max time of the info that stays on the coockie is 500 hours?
     }))
+    .use((req, res, next) => {
+      res.locals.user = req.session.user
+      next()
+    })
 
     .set('views', path.join(__dirname, 'views'))
     .set('view engine', 'ejs')
@@ -114,7 +118,7 @@ express()
         data = {loggedIn : false};
       }
       
-      res.render('pages/landing', data);
+      res.render('pages/landing');
     })
   
     //Pack Opener Box Selection
