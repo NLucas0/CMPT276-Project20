@@ -204,7 +204,7 @@ express()
     .get('/admin', async(req, res)=>{
         try{
             const client = await pool.connect();
-            if(!req.session.user){throw error;}
+            if(!req.session.user || req.session.user.type != 'ADMIN'){throw error;}
             const result = await client.query(`SELECT * FROM users`);
             const data = {results: result.rows};
             res.render('pages/adminPage', data);
