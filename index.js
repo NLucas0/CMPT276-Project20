@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 5000
 
 const {Pool} = require('pg');
 var pool = new Pool({
-  connectionString: process.env.DATABASE_URL||"postgres://postgres:bootstrap@localhost/aio_dld_database"
+  connectionString: process.env.DATABASE_URL||"postgres://postgres:root@localhost/aio_dld_database"
   ,ssl:{rejectUnauthorized: false}
 })
 
@@ -97,6 +97,11 @@ express()
       } catch(error) {
         res.end(error);
       }
+    })
+
+    .get('/logout', (req, res)=> {
+      req.session.destroy();
+      res.redirect('/');
     })
 
     //landing
