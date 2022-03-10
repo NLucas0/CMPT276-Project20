@@ -28,7 +28,7 @@ express()
     .set('views', path.join(__dirname, 'views'))
     .set('view engine', 'ejs')
 
-    .get('/', (req, res) => res.render('pages/index'))
+    .get('/', (req, res) => res.redirect('/landing'))
     .get('/signup', (req, res) => res.render('pages/signup'))
     .get('/login', (req, res) => res.render('pages/login'))
     //.get('/login/admin', (req, res) => res.render('pages/login'))
@@ -100,13 +100,15 @@ express()
     })
 
     .get('/landing', (req,res)=> {
-      if (req.session.user){  // logged in??
-          res.send(`
-              Hi ${req.session.user.name}
-          `)
+      var data;
+      if(req.session.user) {
+        data = {loggedIn : true,
+                name : req.session.user.name};
       } else {
-          res.redirect('/login.html')
+        data = {loggedIn : false};
       }
+      
+      res.render('pages/landing', data);
     })
   
 

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to AIO DLD</title>
+</head>
+
+<body>
+    <% if (loggedIn) { %>
+        <%- include ("../partials/aio_dld_header.ejs") %>
+        <p>Hello <%= name %>,</p>
+        <p>Welcome to AIO DLD</p>
+    <% } else { %>
+        <p>Welcome to AIO DLD</p>
+        <p>Please Login</p>
+        <a href="login.html">Login Here</a>
+    <% } %>
+</body>
+
+</html>
