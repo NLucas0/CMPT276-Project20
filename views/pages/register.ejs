@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- basic register page -->
+<!-- basic Signup page -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,7 +9,21 @@
 </head>
 
 <body>
-    
+    <form action="/signup" method="post">
+        <div>Sign up</div>
+        <table id="register form">
+            <tr>
+                <th>Username:</th>
+                <td><input type="username" id="username" name="username"  placeholder="username"></td>  
+            </tr>
+            <tr>
+                <th>Password:</th>
+                <td><input type="password" id="password" name="password"  placeholder="password"></td> 
+            </tr>
+
+            <input type="submit"  onclick="check()" id="submit" value="Sign up">
+        </table>
+    </form>
 </body>
 
 </html>
