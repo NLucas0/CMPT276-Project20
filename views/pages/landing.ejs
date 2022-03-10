@@ -7,9 +7,9 @@
 </head>
 
 <body>
-    <% if (loggedIn) { %>
-        <%- include ("../partials/aio_dld_header.ejs") %>
-        <p>Hello <%= name %>,</p>
+    <%- include ("../partials/aio_dld_header.ejs") %>
+    <% if (user) { %>
+        <p>Hello <%= user.name %>,</p>
         <p>Welcome to AIO DLD</p>
     <% } else { %>
         <p>Welcome to AIO DLD</p>
