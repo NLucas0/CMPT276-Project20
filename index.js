@@ -2,6 +2,7 @@
 let USER_ID = 0;
 
 const express = require('express')
+const bcrypt = require('bcrypt') // for encrypting password
 const path = require('path')
 const session = require("express-session")
 const PORT = process.env.PORT || 5000
@@ -15,19 +16,57 @@ var pool = new Pool({
 express()
     .use(express.static(path.join(__dirname, 'public')))
     .use(express.json())
-    .use(express.urlencoded({extended: false}))
+    .use(express.urlencoded({extended: false})) //false does not let the id and info go in coockies
     .use(session({
       name: "session",
       secret: 'AIODLD',
       resave: false,
       saveUninitialized: false,
-      maxAge: 30 * 60 * 1000,
+      maxAge: 30 * 60 * 1000, //max time of the info that stays on the coockie is 500 hours?
     }))
 
     .set('views', path.join(__dirname, 'views'))
     .set('view engine', 'ejs')
 
     .get('/', (req, res) => res.render('pages/index'))
+    .get('/signup', (req, res) => res.render('pages/signup'))
+    .get('/login', (req, res) => res.render('pages/login'))
+    //.get('/login/admin', (req, res) => res.render('pages/login'))
+    
+
+
+
+    //signup
+    .post('/signup', async (req, res)=> {
+      try{
+        const hashedpassword = await bcrypt.hash(req.body.password,10);//creates a encrypted password using bcrypt into size 10, add salt? 
+        const username = req.body.username;
+        //let email= req.body.email;
+        
+        const client = await pool.connect();
+        var addnewuser = await client.query(`Insert into users values('${username}','${hashedpassword}')`); // what esle to add to the user insert
+        var user = result.rows[0];
+
+        req.session.user = user;
+        if(req.session.user) {
+          res.send(`
+          Your session id <code>${req.sessionID} </code>
+          <br>
+          <a href="/landing"> NEXT PAGE </a>
+          `)
+        } else {
+          res.send(`
+          Login Failed - bad username or password
+          <br>
+          <a href='/login.html'>Return to Login</a>
+          `)
+        }
+
+        client.release();
+      } catch(error) {
+        res.end(error);
+      }
+    })
 
     //login
     .post('/login', async (req, res)=> {
@@ -80,19 +119,6 @@ express()
             const data = {results: result.rows,
                             id:USER_ID};
             res.render('pages/tradingPage', data);
-            client.release();
-        }
-        catch(error){
-            res.send(error);
-        }
-    })
-    // initiate trading. send traders' data to page
-    .get('/tradeSelection', async(req, res)=>{
-        try{
-            const client = await pool.connect();
-            const data = {user1: req.query.user1,
-                            user2: req.query.user2};
-            res.render('pages/tradeSelectionPage', data);
             client.release();
         }
         catch(error){
