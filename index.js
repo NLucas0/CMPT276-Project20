@@ -1,5 +1,4 @@
-// store logged in user id
-let USER_ID = 0;
+
 
 const express = require('express')
 const bcrypt = require('bcrypt') // for encrypting password
@@ -10,7 +9,7 @@ const PORT = process.env.PORT || 5000
 const {Pool} = require('pg');
 var pool = new Pool({
   connectionString: process.env.DATABASE_URL||"postgres://postgres:root@localhost/aio_dld_database"
-  ,ssl:{rejectUnauthorized: false}
+  //,ssl:{rejectUnauthorized: false}
 })
 
 express()
@@ -182,12 +181,12 @@ express()
             const client = await pool.connect();
             const result = await client.query(`SELECT * FROM users`);
             const data = {results: result.rows,
-                            id:USER_ID};
+                            id:req.session.user.id};
             res.render('pages/tradingPage', data);
             client.release();
         }
         catch(error){
-            res.send(error);
+            res.redirect("/");
         }
     })
 
@@ -195,13 +194,14 @@ express()
     .get('/tradeSelection', async(req, res)=>{
         try{
             const client = await pool.connect();
+            if(!req.session.user){throw error;}
             const data = {user1: req.query.user1,
                             user2: req.query.user2};
             res.render('pages/tradeSelectionPage', data);
             client.release();
         }
         catch(error){
-            res.send(error);
+            res.redirect("/");
         }
     })
 
@@ -210,13 +210,14 @@ express()
     .get('/admin', async(req, res)=>{
         try{
             const client = await pool.connect();
+            if(!req.session.user){throw error;}
             const result = await client.query(`SELECT * FROM users`);
             const data = {results: result.rows};
             res.render('pages/adminPage', data);
             client.release();
         }
         catch(error){
-            res.send(error);
+            res.redirect("/");
         }
     })
   
