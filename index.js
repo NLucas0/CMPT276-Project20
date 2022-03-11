@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 5000
 const {Pool} = require('pg');
 var pool = new Pool({
   connectionString: process.env.DATABASE_URL||"postgres://postgres:root@localhost/aio_dld_database"
-  ,ssl:{rejectUnauthorized: false}
+  //,ssl:{rejectUnauthorized: false}
 })
 
 express()
@@ -47,13 +47,15 @@ express()
       const password = req.body.password;
       const username = req.body.username;
 
-      var cardsarray = new Array(4);
-      cardsarray[0]=  new Array(10).fill(0);
-      cardsarray[1]=  new Array(10).fill(0);
-      cardsarray[2]=  new Array(10).fill(0);
-      cardsarray[3]=  new Array(10).fill(0);
+      var cardsArray = new Array(4);
+      cardsArray[0] = new Array(10).fill(0);
+      cardsArray[1] = new Array(10).fill(0);
+      cardsArray[2] = new Array(10).fill(0);
+      cardsArray[3] = new Array(10).fill(0);
+      var friendArray = new Array();
+      var tradeArray = new Array();
 
-      await pool.query(`Insert into users (name, password, cards) values('${username}', '${password}', $1)`, [cardsarray]);
+      await pool.query(`Insert into users (name, password, cards, friends, trades, type) values('${username}', '${password}', $1, $2, $3, 'USER')`, [cardsArray, friendArray, tradeArray]);
       
       res.redirect('/login');
     })
@@ -120,7 +122,7 @@ express()
     })
 
     //Pack Opener Opening
-    .get('/box/:id/open', (req,res)=>{
+    .get('/box/:id/open', async (req,res)=>{
       var boxnum = req.params.id;
       var boxname = 'Placeholder Box';
 
@@ -148,7 +150,14 @@ express()
         }
       }
 
-      var data = { num : boxnum, name : boxname, card1 : index1, card2 : index2, card3 : index3 };
+      var card1Result = await pool.query(`SELECT * FROM cards WHERE box_id=${boxnum} and in_box_id=${index1}`);
+      var card1Data = card1Result.rows[0];
+      var card2Result = await pool.query(`SELECT * FROM cards WHERE box_id=${boxnum} and in_box_id=${index2}`);
+      var card2Data = card2Result.rows[0];
+      var card3Result = await pool.query(`SELECT * FROM cards WHERE box_id=${boxnum} and in_box_id=${index3}`);
+      var card3Data = card3Result.rows[0];
+
+      var data = { num : boxnum, name : boxname, card1 : card1Data, card2 : card2Data, card3 : card3Data };
 
       res.render('pages/pack-opener', data);
     })
