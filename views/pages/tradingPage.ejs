@@ -12,6 +12,7 @@
     <%- include ("../partials/aio_dld_header.ejs") %>
 
     <h1>Trading</h1>
+
     <!-- row template for users-->
     <table hidden="true">
         <tr class="tradeSampleRow">
@@ -30,22 +31,27 @@
 
     <!--tables with users-->
     <div id="tradeUsers">
+        <!--tab 1-->
         <table id="tradeUserListFriends">
+            <td class="noMatchMessage" hidden="true">No matching users</td>
         </table>
 
+        <!--tab 2-->
         <table id="tradeUserListAll" hidden="true">
             <tr>
                 <td colspan="4"><input placeholder="Search User" onkeyup="search(event)"></input></td>
             </tr>
+            <td class="noMatchMessage" hidden="true">No matching users</td>
         </table>
     </div>
 
     <!-- use to display cards info-->
-    <div class="popup" id="tradeTableInfoPopUp" onmouseup="toggleTable(true,0,0)" hidden="true">
+    <div class="popup" id="tradeTableInfoPopUp" onmouseup="toggleTable(true,event)" hidden="true">
         <table class="popupContents" id="tradeTableInfoTable">
             <thead>
                 <th>Cards</th>
             </thead>
+            <td class="noMatchMessage" hidden="true">No Cards</td>
             <tbody></tbody>
         </table>
     </div>

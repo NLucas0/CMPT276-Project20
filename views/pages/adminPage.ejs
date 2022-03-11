@@ -37,11 +37,11 @@
 
     <!-- search-->
     <div>
-        <input placeholder="Search User" onkeyup="search(event)"/>
+        <input id="searchBox" placeholder="Search User" onkeyup="filterUsers()"/>
         
-        <input type="checkbox" value="ADMIN" id="adminCheckbox1" checked="checked" onclick="toggleUserType(event)">
+        <input type="checkbox" value="ADMIN" id="adminCheckbox1" checked="checked" onclick="filterUsers()">
         <label for="adminCheckbox1">ADMIN</label>
-        <input type="checkbox" value="USER" id="adminCheckbox2" checked="checked" onclick="toggleUserType(event)">
+        <input type="checkbox" value="USER" id="adminCheckbox2" checked="checked" onclick="filterUsers()">
         <label for="adminCheckbox2">USER</label>
     </div>
 
@@ -58,15 +58,17 @@
                 <th>TRADES</th>
                 <th>TYPE</th>
             </tr>
+            <td class="noMatchMessage" hidden="true" colspan="8">No users</td>
         </table>
     </div>
 
     <!-- use to display card/friend/trade info-->
-    <div class="popup" id="adminTableInfoPopUp" onmouseup="toggleTable(true,0,0)" hidden="true">
+    <div class="popup" id="adminTableInfoPopUp" onmouseup="toggleTable(true,0,event)" hidden="true">
         <table class="popupContents" id="adminTableInfoTable">
             <thead>
                 <th id="adminTableInfoHeader">ColName</th>
             </thead>
+            <td class="noMatchMessage" hidden="true">Nothing to Show</td>
             <tbody></tbody>
         </table>
     </div>
