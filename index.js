@@ -81,7 +81,7 @@ express()
           res.send(`
           Login Failed - bad username or password
           <br>
-          <a href='/login.html'>Return to Login</a>
+          <a href='/login'>Return to Login</a>
           `)
         }
 
