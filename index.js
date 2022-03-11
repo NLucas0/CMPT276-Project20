@@ -32,7 +32,7 @@ express()
     .set('view engine', 'ejs')
 
     .get('/', (req, res) => res.redirect('/landing'))
-    .get('/signup', (req, res) => res.render('pages/signup'))
+    .get('/signup', (req, res) => res.render('pages/register'))
     .get('/login', (req, res) => res.render('pages/login'))
     //.get('/login/admin', (req, res) => res.render('pages/login'))
     
@@ -46,12 +46,13 @@ express()
     .post('/signup', async (req, res)=> {
       const password = req.body.password;
       const username = req.body.username;
+
       var cardsarray = new Array(4);
-            cardsarray[0]=  new Array(10).fill(0);
-            cardsarray[1]=  new Array(10).fill(0);
-            cardsarray[2]=  new Array(10).fill(0);
-            cardsarray[3]=  new Array(10).fill(0);
-      
+      cardsarray[0]=  new Array(10).fill(0);
+      cardsarray[1]=  new Array(10).fill(0);
+      cardsarray[2]=  new Array(10).fill(0);
+      cardsarray[3]=  new Array(10).fill(0);
+
       await pool.query(`Insert into users (name, password, cards) values('${username}', '${password}', $1)`, [cardsarray]);
       
       res.redirect('/login');
