@@ -44,34 +44,17 @@ express()
 
     //signup
     .post('/signup', async (req, res)=> {
-      try{
-        const hashedpassword = await bcrypt.hash(req.body.password,10);//creates a encrypted password using bcrypt into size 10, add salt? 
-        const username = req.body.username;
-        //let email= req.body.email;
-        
-        const client = await pool.connect();
-        var addnewuser = await client.query(`Insert into users values('${username}','${hashedpassword}')`); // what esle to add to the user insert
-        
-
-        req.session.user = user;
-        if(req.session.user) {
-          res.send(`
-          Your session id <code>${req.sessionID} </code>
-          <br>
-          <a href="/landing"> NEXT PAGE </a>
-          `)
-        } else {
-          res.send(`
-          Login Failed - bad username or password
-          <br>
-          <a href='/login.html'>Return to Login</a>
-          `)
-        }
-
-        client.release();
-      } catch(error) {
-        res.end(error);
-      }
+      const password = req.body.password;
+      const username = req.body.username;
+      var cardsarray = new Array(4);
+            cardsarray[0]=  new Array(10).fill(0);
+            cardsarray[1]=  new Array(10).fill(0);
+            cardsarray[2]=  new Array(10).fill(0);
+            cardsarray[3]=  new Array(10).fill(0);
+      
+      await pool.query(`Insert into users (name, password, cards) values('${username}', '${password}', $1)`, [cardsarray]);
+      
+      res.redirect('/login');
     })
 
     //login
