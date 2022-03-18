@@ -1,0 +1,55 @@
+<!--
+    Popups for all pages
+-->
+
+
+<!--/admin-->
+<!-- use to display card/friend/trade info in /admin-->
+<div class="popup" id="adminUserTableInfoPopUp" onmouseup="toggleTable(true, 0, event, 'user')"
+hidden="true">
+    <table class="popupContents" id="adminTableInfoTable">
+        <thead>
+            <tr>
+                <th id="adminTableInfoHeader" colspan="100">ColName</th>
+            </tr>
+        </thead>
+        <td class="noMatchMessage" hidden="true">Nothing to Show</td>
+    </table>
+</div>
+
+<!-- use to display trade card info in/admin-->
+<div class="popup" id="adminTradeTableInfoPopUp" onmouseup="toggleTable(true, 0, event, 'trade')" 
+hidden="true">
+    <table class="popupContents">
+        <tbody style="display:table;">
+            <tr style="height:10%;">
+                <th>Offered</th>
+                <th>Requested</th>
+            </tr>
+            <tr>
+                <td>
+                <table class="adminTradeTableInfoPopUpTable cardTable">
+                    <tbody></tbody>
+                </table>
+            </td>
+            <td>
+                <table class="adminTradeTableInfoPopUpTable cardTable">
+                    <tbody></tbody>
+                </table>
+            </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<!--trade-->
+<!-- use to display cards info in /trade-->
+<div class="popup" id="tradeTableInfoPopUp" onmouseup="toggleTable(true, event)" hidden="true">
+    <table class="popupContents" id="tradeTableInfoTable">
+        <thead>
+            <th>Cards</th>
+        </thead>
+        <td class="noMatchMessage" hidden="true">No Cards</td>
+    </table>
+</div>

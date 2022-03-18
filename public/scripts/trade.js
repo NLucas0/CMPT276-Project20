@@ -1,27 +1,39 @@
 let data;
 
+// setup tabs on load
 function tradePageSetUp(){
-    // logged in user data
     data = getUserById(userId)
     setUpFriends();
     setUpUsers();
+    setUpTrades();
 }
 
-// add friends to friends tab
-function setUpFriends(){
+// initialize tables
+function setUpRow(displayData, tableId, noMatchElement, classNames, attNames, events){
     try{
-        for(let friend of data.friends){
+        // check for no data
+        if(displayData.length<=0){throw TypeError;}
+
+        for(let user of displayData){
+            // if list of ids, convert to object
+            if(typeof user === 'number'){
+                user = getUserById(user);
+            }
+
+            // skip self
+            if(user.id == userId){continue;} 
+
+            // set data attributes
             let newRow = document.getElementsByClassName("tradeSampleRow")[0].cloneNode(true);
             try{
-                // set data attributes
-                newRow.getElementsByClassName("tradeName")[0].innerHTML = getUserById(friend).name;
-                newRow.getElementsByClassName("tradeId")[0].innerHTML = getUserById(friend).id;
+                newRow.getElementsByClassName("tradeName")[0].innerHTML = user.name;
+                newRow.getElementsByClassName("tradeId")[0].innerHTML = user.id;
                 newRow.getElementsByClassName("tradeButton")[0].href ="/tradeSelection/?user1="
-                                            +encodeURIComponent(JSON.stringify(getUserById(userId)))
+                                            +encodeURIComponent(JSON.stringify(data))
                                             +"&user2="
-                                            +encodeURIComponent(JSON.stringify(getUserById(friend)));
-
-                document.getElementById("tradeUserListFriends").appendChild(newRow);
+                                            +encodeURIComponent(JSON.stringify(user));
+        
+                document.getElementById(tableId).appendChild(newRow);
             }
             catch(error){
                 newRow.remove();
@@ -30,39 +42,34 @@ function setUpFriends(){
     }
     // if no friends
     catch(TypeError){
-        document.getElementsByClassName("noMatchMessage")[0].hidden = false;
+        noMatchElement.hidden = false;
     }
+}
+
+// add friends to friends tab
+function setUpFriends(){
+    setUpRow(data.friends, "tradeUserListFriends", document.getElementsByClassName("noMatchMessage")[0]);
 }
 
 // set up all users tab
 function setUpUsers(){
-    try{
-        if(userData.length<=0){throw TypeError;}
-        for(let user of userData){
-            if(user.id == userId){continue;} // skip self
+    setUpRow(userData, "tradeUserListAll", document.getElementsByClassName("noMatchMessage")[1]);
+}
 
-            let newRow = document.getElementsByClassName("tradeSampleRow")[0].cloneNode(true);
-            // set data attributes
-            newRow.getElementsByClassName("tradeName")[0].innerHTML = user.name;
-            newRow.getElementsByClassName("tradeId")[0].innerHTML = user.id;
-            newRow.getElementsByClassName("tradeButton")[0].href ="/tradeSelection/?user1="
-                                                        +encodeURIComponent(JSON.stringify(getUserById(userId)))
-                                                        +"&user2="
-                                                        +encodeURIComponent(JSON.stringify(user));
-
-            document.getElementById("tradeUserListAll").appendChild(newRow);
-        }
-    }
-    // if no users
-    catch(TypeError){
-        document.getElementsByClassName("noMatchMessage")[1].hidden = false;
+// set up ongoing trades tab
+function setUpTrades(){
+    for(let trade of data.trades){
+        let newRow = document.getElementsByClassName("tradeSampleRow2")[0].cloneNode(true);
+        document.getElementById("tradeTradesList").appendChild(newRow);
     }
 }
 
-// tabs
-function changeTab(type){
-    document.getElementById("tradeUserListAll").hidden = type =="friends";
-    document.getElementById("tradeUserListFriends").hidden = type !="friends";
+// hide all tabs except index
+function changeTab(index){
+    let tabs = document.getElementsByClassName("tab");
+    for(let i=0; i<tabs.length; i++){
+        tabs[i].hidden = i == parseInt(index)?false:true;
+    }
 }
 
 // return user data object from id
@@ -128,6 +135,7 @@ function displayData(userId){
         for(let i=0; i<array.length; i++){
                 let newCell = document.createElement("button");
                 newCell.innerHTML = array[i];
+                newCell.className = "card";
                 table.appendChild(newCell);
             
         }
@@ -136,73 +144,4 @@ function displayData(userId){
     catch(TypeError){
         document.getElementsByClassName("noMatchMessage")[2].hidden = false;
     }
-}
-
-
-// trade selection
-function tradeSelectionPageSetUp(){
-    displayCards(document.getElementById("initiatorCardsTable"), user1.cards);
-    displayCards(document.getElementById("receiverCardsTable"), user2.cards);
-}
-
-// display cards
-function displayCards(container, cards){
-    try{
-        // add cards to right table and setup onclick event
-        for(let card of cards){
-            let newCard = document.createElement("button");
-            newCard.innerHTML = card;
-            if(container.id == "initiatorCardsTable"){
-                newCard.onclick = function(event){selectCard(event, "OFFER", false);}
-            }
-            else{
-                newCard.onclick = function(event){selectCard(event, "RECEIVE", false);}
-            }
-            container.appendChild(newCard);
-        }
-    }
-    // if no cards
-    catch(TypeError){
-        checkTableEmpty("initiatorCardsTable");
-        checkTableEmpty("receiverCardsTable");
-    }
-}
-
-// move card to proper table on select
-function selectCard(event, type, deselect){
-    let card = event.target||event.srcElement;
-    let id;
-
-    // get id of table to move to
-    if(!deselect){
-        if(type=="OFFER"){
-            id = "offeredCardsTable";
-        }
-        else{
-            id = "wantedCardsTable";
-        }
-    }
-    else{
-        if(type=="OFFER"){
-            id = "initiatorCardsTable";
-        }
-        else{
-            id = "receiverCardsTable";
-        }
-    }
-
-    // store original table id and move card
-    let originalTable = card.parentElement.id;
-    document.getElementById(id).appendChild(card);
-    card.onclick = function(event){selectCard(event, type, !deselect);};
-
-    // update no contents message
-    checkTableEmpty(originalTable);
-    checkTableEmpty(id);
-}
-
-// display message if no items in table
-function checkTableEmpty(id){
-    let contents = document.getElementById(id).getElementsByTagName("button");
-    document.getElementById(id).getElementsByClassName("noMatchMessage")[0].hidden = contents.length > 0;
 }

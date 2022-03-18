@@ -10,49 +10,36 @@
 <body onload="tradePageSetUp()">
 
     <%- include ("../partials/aio_dld_header.ejs") %>
+    <%- include ("../partials/aio_dld_row_templates.ejs") %>
+    <%- include ("../partials/aio_dld_popups.ejs") %>
 
     <h1>Trading</h1>
 
-    <!-- row template for users-->
-    <table hidden="true">
-        <tr class="tradeSampleRow">
-            <td class="tradeId">Id</td>
-            <td class="tradeName">Name</td>
-            <td class="tradeDisplayCards"><button onclick="toggleTable(false,event)">See Cards</button></td>
-            <td><a class="tradeButton">Trade</a></td>
-        </tr>
-    </table>
-
     <!--buttons at top to toggle pages-->
     <div id="tradeTabs">
-        <button onclick="changeTab('friends')">Friends</button>
-        <button onclick="changeTab('all')">Search User</button>
+        <button onclick="changeTab(0)">Friends</button>
+        <button onclick="changeTab(1)">Search User</button>
+        <button onclick="changeTab(2)">Ongoing Trades</button>
     </div>
 
     <!--tables with users-->
     <div id="tradeUsers">
         <!--tab 1-->
-        <table id="tradeUserListFriends">
+        <table class="tab" id="tradeUserListFriends">
             <td class="noMatchMessage" hidden="true">No matching users</td>
         </table>
 
         <!--tab 2-->
-        <table id="tradeUserListAll" hidden="true">
+        <table class="tab" id="tradeUserListAll" hidden="true">
             <tr>
                 <td colspan="4"><input placeholder="Search User" onkeyup="search(event)"></input></td>
             </tr>
             <td class="noMatchMessage" hidden="true">No matching users</td>
         </table>
-    </div>
 
-    <!-- use to display cards info-->
-    <div class="popup" id="tradeTableInfoPopUp" onmouseup="toggleTable(true,event)" hidden="true">
-        <table class="popupContents" id="tradeTableInfoTable">
-            <thead>
-                <th>Cards</th>
-            </thead>
-            <td class="noMatchMessage" hidden="true">No Cards</td>
-            <tbody></tbody>
+        <!--tab 3-->
+        <table class="tab" id="tradeTradesList" hidden="true">
+
         </table>
     </div>
         

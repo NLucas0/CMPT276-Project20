@@ -1,0 +1,62 @@
+<!--
+    Row templates, used to display data in tables. Clone using id and move to
+    appropriate table.
+-->
+
+
+<!--/admin-->
+<!-- row template for user data in /admin-->
+<table hidden="true">
+    <tr class="adminUserSampleRow">
+        <td class="online">online</td>
+        <td class="id">id</td>
+        <td class="username">name</td>
+        <td class="password">pass</td>
+        <td><button onclick="toggleTable(false,'Owned Cards', event,'user')">cards</button></td>
+        <td><button onclick="toggleTable(false,'Friends', event,'user')">friends</button></td>
+        <td><button onclick="toggleTable(false,'Ongoing Trades', event,'user')">trades</button></td>
+        <td class="type">type</td>
+        <td><button onclick="deleteUser(event)">X</button></td>
+    </tr>
+</table>
+
+<!-- row template for trade data in /admin-->
+<table hidden="true">
+    <tr class="adminTradeSampleRow">
+        <td class="tradeId">id</td>
+        <td class="senderId">sender id</td>
+        <td class="receiverId">receiver id</td>
+        <td><button onclick="toggleTable(false,'Trade Cards', event,'trade')">offer cards</button></td>
+        <td>
+            <select class="tradeStatus" onchange="changeTradeStatus(event)">
+                <option value="PENDING">PENDING</option>
+                <option value="REJECTED">REJECTED</option>
+                <option value="ACCEPTED">ACCEPTED</option>
+                <option value="UPDATED">UPDATED</option>
+            </select>
+        </td>
+        <td><button onclick="deleteTrade(event)">X</button></td>
+    </tr>
+</table>
+
+
+<!--/trade-->
+<!-- row template for users in /trade-->
+<table hidden="true">
+    <tr class="tradeSampleRow">
+        <td class="tradeId">Id</td>
+        <td class="tradeName">Name</td>
+        <td class="tradeDisplayCards"><button onclick="toggleTable(false, event)">See Cards</button></td>
+        <td><a class="tradeButton">Trade</a></td>
+    </tr>
+</table>
+
+<!--row template for trades in /trade-->
+<table hidden="true">
+    <tr class="tradeSampleRow2">
+        <td class="tradeName" style="width: 50%;">Username</td>
+        <td style="width: 16%;"><button class="acceptButton">Accept</button></td>
+        <td style="width: 16%;"><button class="rejectButton">Reject</button></td>
+        <td style="width: 16%;"><button class="cancelButton">Cancel</button></td>
+    </tr>
+</table>

@@ -1,0 +1,19 @@
+.horizontalAlignContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: top;
+    align-items: top;
+    width: 98%;
+    height: 100%;
+    margin: 1%;
+}
+
+.tradeSelectionTable{
+    width:30%;
+    height: inherit;
+}
+
+h3{
+    height: 10%;
+    margin:0px;
+}

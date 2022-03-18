@@ -4,7 +4,8 @@
 	<meta charset = "utf-8"/>
 	<title>Trade Selection - AIO DLD</title>
 	<link rel="stylesheet" href="/stylesheets/main.css"/>
-    <script src="/scripts/trade.js" defer></script>
+	<link rel="stylesheet" href="/stylesheets/tradeSelection.css"/>
+    <script src="/scripts/tradeSelection.js" defer></script>
 </head>
 
 <body onload="tradeSelectionPageSetUp()">
@@ -12,42 +13,49 @@
     <%- include ("../partials/aio_dld_header.ejs") %>
 
     <h1>Trade Selection</h1>
-
-    <div id="tradeSelectionContainer">
+    <hr>
+    <div class="horizontalAlignContainer" style="height: 60vh;">
 
         <!--Display own card inventory-->
-        <div id="initiatorCards">
+        <div id="initiatorCards" class="tradeSelectionTable">
             <h3>Owned Cards</h3>
-            <table id="initiatorCardsTable" class="cardTable">
+            <table id="initiatorCardsTable" class="cardTable" style="height: 90%;">
                 <td class="noMatchMessage" hidden="true">No Cards</td>
             </table>
         </div>
 
-        <!--Display offered cards-->
-        <div id="offeredCards">
-            <h3>Offer</h3>
-            <table id="offeredCardsTable" class="cardTable">
-                <td class="noMatchMessage">No Cards</td>
-            </table>
+        <!--middle section-->
+        <div style="height:100%; width: 40%;">
+            <p id="tradeSelectionValue" style="text-align: center;">$999.99 Total Value $999.99</p>
+            <div class="horizontalAlignContainer" style="height: 90%;">
+                <!--Display offered cards-->
+                <div id="offeredCards" class="tradeSelectionTable" style="height: 100%; width: 50%;">
+                    <h3>Offer</h3>
+                    <table id="offeredCardsTable" class="cardTable" style="height: 90%;">
+                        <td class="noMatchMessage">No Cards</td>
+                    </table>
+                </div>
+
+                <!--Display wanted cards-->
+                <div id="wantedCards" class="tradeSelectionTable" style="height: 100%; width: 50%;">
+                    <h3>Request</h3>
+                    <table id="wantedCardsTable" class="cardTable" style="height: 90%;">
+                        <td class="noMatchMessage">No Cards</td>
+                    </table>
+                </div>
+            </div>
         </div>
 
-        <!--Display wanted cards-->
-        <div id="wantedCards">
-            <h3>Request</h3>
-            <table id="wantedCardsTable" class="cardTable">
-                <td class="noMatchMessage">No Cards</td>
-            </table>
-        </div>
         <!--Display receiver's card inventory-->
-        <div id="receiverCards">
+        <div id="receiverCards" class="tradeSelectionTable">
             <h3>Trader's Cards</h3>
-            <table id="receiverCardsTable" class="cardTable">
+            <table id="receiverCardsTable" class="cardTable" style="height: 90%;">
                 <td class="noMatchMessage" hidden="true">No Cards</td>
             </table>
         </div>
     </div>
     
-    <button disabled="true">Send Trade Request</button>
+    <button onclick="tradeSendRequest()" style="position:fixed; bottom: 0%; margin-bottom: 1%;">Send Trade Request</button>
         
     <!-- store data from database in local variables-->
     <script>
