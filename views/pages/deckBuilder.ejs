@@ -12,13 +12,8 @@
     <%- include ("../partials/aio_dld_header.ejs") %>
 
     <ul>
-        <% var offset = 0; %>
         <% for (var i = 0; i < collection.length; i++) { %>
-            <li>card pack <%= i%></li>
-            <% for (var j = 0; j < collection[i].length; j++) { %>
-                <li><%= cards[offset + j].name %> : x<%= collection[i][j] %></li>
-            <% }; %>
-            <% offset += collection[i].length %>
+            <li><%= cards[i].name %> : x<%= collection[i] %></li>
         <% }; %>
     </ul>
     

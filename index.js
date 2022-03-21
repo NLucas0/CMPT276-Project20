@@ -48,11 +48,7 @@ express()
       const password = req.body.password;
       const username = req.body.username;
 
-      var cardsArray = new Array(4);
-      cardsArray[0] = new Array(10).fill(0);
-      cardsArray[1] = new Array(10).fill(0);
-      cardsArray[2] = new Array(10).fill(0);
-      cardsArray[3] = new Array(10).fill(0);
+      var cardsArray = new Array(280).fill(0);
       var friendArray = new Array();
       var tradeArray = new Array();
 
