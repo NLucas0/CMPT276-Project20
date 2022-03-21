@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+	<meta charset = "utf-8"/>
+	<title><%=user.name%>'s Decks</title>
+	<link rel="stylesheet" href="/stylesheets/main.css"/>
+    
+</head>
+
+<body>
+
+    <%- include ("../partials/aio_dld_header.ejs") %>
+
+    <ul>
+        <% decks.forEach(function(deck) { %>
+            <li><%= deck.name %></li>
+        <% }); %>
+    </ul>
+
+    <button onclick="goToPage('/build')">New Deck</button>
+    
+</body>
