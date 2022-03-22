@@ -13,6 +13,9 @@ var pool = new Pool({
   ,ssl:{rejectUnauthorized: false}
 })
 
+
+// allow pool to be accessed by other files
+exports.pool = pool;
 var testVar = 0;
 
 express()
@@ -30,6 +33,9 @@ express()
       res.locals.user = req.session.user
       next()
     })
+    
+    // link files
+    .use("/trade", require('./endpoints/tradeEndpoints'))
 
     .set('views', path.join(__dirname, 'views'))
     .set('view engine', 'ejs')
@@ -192,58 +198,6 @@ express()
       client.release();
     })
 
-    // trading main page
-    // send all user data to trade page
-    .get('/trade', async(req, res)=>{
-        try{
-            const client = await pool.connect();
-            const result = await client.query(`SELECT * FROM users`);
-            const data = {results: result.rows,
-                            id:req.session.user.id};
-            res.render('pages/tradingPage', data);
-            client.release();
-        }
-        catch(error){
-            res.redirect("/");
-        }
-    })
-
-    // initiate trading. send traders' data to page
-    .get('/tradeSelection', async(req, res)=>{
-        try{
-            const client = await pool.connect();
-            if(!req.session.user){throw error;}
-            const data = {user1: req.query.user1,
-                            user2: req.query.user2};
-            res.render('pages/tradeSelectionPage', data);
-            client.release();
-        }
-        catch(error){
-            res.redirect("/");
-        }
-    })
-
-    // make new trade request
-    .post('/newTradeRequest', async(req, res)=>{
-        try{
-            const client = await pool.connect();
-            if(!req.session.user){throw error;}
-            // add new trade to data table
-            await client.query(`INSERT INTO trades 
-                                (sender_id, receiver_id, status, cards_offered, cards_wanted) VALUES
-                                ('${req.body.sender_id}', '${req.body.receiver_id}', 'PENDING',
-                                $1, $2)`,[req.body.offer, req.body.request]);
-            // add id to user trade list
-            let index = await client.query(`SELECT id FROM trades ORDER BY id DESC LIMIT 1`);
-            await client.query(`UPDATE users set trades=trades||'{${index.rows[0].id}}' 
-                                WHERE id=${req.body.sender_id} OR id=${req.body.receiver_id}`);
-            client.release();
-        }
-        catch(error){
-            res.redirect('/');
-        }
-    })
-
     // admin
     // send all user data to admin page
     .get('/admin', async(req, res)=>{
@@ -263,38 +217,6 @@ express()
         }
     })
 
-    // modify trade status from /admin
-    .post('/editTradeStatus', async(req, res)=>{
-        try{
-            const client = await pool.connect();
-            if(!req.session.user || req.session.user.type != 'ADMIN'){throw error;}
-
-            await client.query(`UPDATE trades SET status='${req.body.newValue}' WHERE id=${req.body.tradeId}`);
-            client.release();
-        }
-        catch(error){
-            res.redirect('/');
-        }
-    })
-    // delete trade item from /admin
-    .post('/deleteTrade', async(req, res)=>{
-        try{
-            const client = await pool.connect();
-            if(!req.session.user || req.session.user.type != 'ADMIN'){throw error;}
-
-            // delete trade from data table
-            let tradeData = await client.query(`SELECT * FROM trades WHERE id=${req.body.tradeId}`);
-            await client.query(`DELETE FROM trades WHERE id=${req.body.tradeId}`);
-
-            // delete trade id from involved users
-            await client.query(`UPDATE users SET trades=ARRAY_REMOVE(trades, ${req.body.tradeId})
-                                WHERE id=${tradeData.rows[0].sender_id} OR id=${tradeData.rows[0].receiver_id}`);
-            client.release();
-        }
-        catch(error){
-            res.redirect('/');
-        }
-    })
     // delete trade item from /admin
     .post('/deleteUser', async(req, res)=>{
         try{

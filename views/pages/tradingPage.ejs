@@ -39,7 +39,7 @@
 
         <!--tab 3-->
         <table class="tab" id="tradeTradesList" hidden="true">
-
+            <td class="noMatchMessage" hidden="true">No trades</td>
         </table>
     </div>
         
@@ -47,5 +47,6 @@
     <script>
         let userData = <%- JSON.stringify(results)%>;
         let userId = <%=id%>;
+        let tradeData = <%-JSON.stringify(trades)%>;
     </script>
 </body>
