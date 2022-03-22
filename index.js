@@ -33,7 +33,6 @@ exports.pool = pool;
           console.log(`Error has occurred! Something is wrong with ${cardName}`)
           console.log(error);
         })
-      console.log(`${cardName}\'s average price is:${cardPriceAverage}`)
     }
     await client.query('COMMIT')
   } catch (e) {
