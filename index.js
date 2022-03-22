@@ -36,6 +36,7 @@ express()
     
     // link files
     .use("/trade", require('./endpoints/tradeEndpoints'))
+    .use("/deckBuild", require('./endpoints/deckBuildEndpoints'))
 
     .set('views', path.join(__dirname, 'views'))
     .set('view engine', 'ejs')
@@ -167,35 +168,6 @@ express()
       var data = { num : boxnum, name : boxname, card1 : card1Data, card2 : card2Data, card3 : card3Data };
 
       res.render('pages/pack-opener', data);
-    })
-
-    //deck builder homepage
-    //list current users deck, along with a "New Deck" button
-    .get('/decks', async(req, res)=> {
-      try{
-        const client = await pool.connect();
-        var userDecksQuery = `SELECT * FROM decks WHERE owner_id=${req.session.user.id}`
-        const result = await client.query(userDecksQuery);
-        const data = {decks: result.rows};
-        res.render('pages/deckSelection', data);
-        client.release();
-      } catch(error) {
-        res.end(error);
-      }
-    })
-
-    //actual deck builder
-    .get('/build', async(req, res)=> {
-      const client = await pool.connect();
-      var userCollectionQuery = `SELECT cards FROM users WHERE id=${req.session.user.id}`
-      const collectionResult = await client.query(userCollectionQuery);
-      var cardsQuery = `SELECT * FROM cards`;
-      const cardsTable = await client.query(cardsQuery);
-      const data = {collection: collectionResult.rows[0].cards,
-                    cards: cardsTable.rows};
-      res.render('pages/deckBuilder', data);
-
-      client.release();
     })
 
     // admin
