@@ -26,7 +26,7 @@
         <td class="tradeId">id</td>
         <td class="senderId">sender id</td>
         <td class="receiverId">receiver id</td>
-        <td><button onclick="toggleTable(false,'Trade Cards', event,'trade')">offer cards</button></td>
+        <td><button onclick="toggleTable(false,'Trade Cards', event,'trade')">cards</button></td>
         <td>
             <select class="tradeStatus" onchange="changeTradeStatus(event)">
                 <option value="PENDING">PENDING</option>
@@ -54,9 +54,13 @@
 <!--row template for trades in /trade-->
 <table hidden="true">
     <tr class="tradeSampleRow2">
+        <td class="tradeId" hidden="true">ID</td>
+        <td class="tradeStatus">STATUS</td>
         <td class="tradeName" style="width: 50%;">Username</td>
-        <td style="width: 16%;"><button class="acceptButton">Accept</button></td>
-        <td style="width: 16%;"><button class="rejectButton">Reject</button></td>
-        <td style="width: 16%;"><button class="cancelButton">Cancel</button></td>
+        <td style="width: 10%;"><button onclick="toggleTable(false, event, 'trade')">Cards</button></td>
+        <td style="width: 10%;"><button class="acceptButton" onclick="tradeAction(event, 'ACCEPTED')">Accept</button></td>
+        <td style="width: 10%;"><button class="rejectButton" onclick="tradeAction(event, 'REJECTED')">Reject</button></td>
+        <td style="width: 10%;"><button class="cancelButton" onclick="tradeAction(event, 'CANCEL')">Cancel</button></td>
+        <td style="width: 10%;"><button class="counterButton" onclick="tradeAction(event, 'COUNTER')">Counter</button></td>
     </tr>
 </table>

@@ -2,6 +2,35 @@
 function tradeSelectionPageSetUp(){
     displayCards(document.getElementById("initiatorCardsTable"), user1.cards);
     displayCards(document.getElementById("receiverCardsTable"), user2.cards);
+
+    if(counter){
+        setUpTable(offered, wanted);
+    }
+}
+
+// if counter trade, move cards to correct table
+function setUpTable(offered, wanted){
+    if(!isNan(offered)){
+        let cards = documnet.getElementById("initiatorCards").getElementsByTagName("button");
+        for(let card of offered){
+            let cardButton = findCardButton(card, cards);
+            cardButton.click();
+        }
+    }
+    if(!isNan(wanted)){
+        cards = documnet.getElementById("receiverCards").getElementsByTagName("button");
+        for(let card of wanted){
+            let cardButton = findCardButton(card, cards);
+            cardButton.click();
+        }
+    }
+}
+
+// get card button from id
+function findCardButton(id, container){
+    for(let card of container){
+        if(card.innerHTML == id){return card;}
+    }
 }
 
 // display cards
@@ -86,7 +115,7 @@ function tradeSendRequest(){
 
     // make post request
     let xhr = new XMLHttpRequest();
-    xhr.open("POST","/newTradeRequest", true);
+    xhr.open("POST","/trade/newTradeRequest", true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify({
         offer:offeredCards,

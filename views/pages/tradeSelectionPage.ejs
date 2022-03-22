@@ -61,5 +61,11 @@
     <script>
         let user1 = <%- user1%>;
         let user2 = <%- user2%>;
+
+        let counter = <%- counter%>;
+        if(counter){
+            let wanted = <%- offered%>;
+            let offered = <%- JSON.stringify(wanted)%>;
+        }
     </script>
 </body>
