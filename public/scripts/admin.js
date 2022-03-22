@@ -135,6 +135,7 @@ function displayTradeData(tradeId){
 
 // add data to table
 function addToTable(table, array, elementTag, className){
+    if(array == null){return;}
     for(let item of array){
         let newItem = document.createElement(elementTag);
         newItem.innerHTML = item;
@@ -189,7 +190,7 @@ function changeTradeStatus(event){
     let id = select.parentElement.parentElement.getElementsByClassName("tradeId")[0].innerHTML;
 
     // make post request
-    post("/editTradeStatus", {newValue:select.value, tradeId:id});
+    post("/trade/editTradeStatus", {newValue:select.value, tradeId:id});
 }
 
 // delete trade from database
@@ -197,7 +198,7 @@ function deleteTrade(event){
     if(!confirm("Delete trade?")){return;}
     let select = event.target||event.srcElement;
     let id = select.parentElement.parentElement.getElementsByClassName("tradeId")[0].innerHTML;
-    post("/deleteTrade", {tradeId:id});
+    post("/trade/deleteTrade", {tradeId:id});
     select.parentElement.parentElement.remove();
     
     // reload page to get updated database
@@ -220,9 +221,16 @@ function deleteUser(event){
 }
 
 // make post request
-function post(endpoint, data){
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", endpoint, true);
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(JSON.stringify(data));
+// 500 returned if invalid trade attempted
+// source: https://stackoverflow.com/questions/6396101/pure-javascript-send-post-data-without-a-form
+async function post(endpoint, data){
+    let response = await fetch("http://" + window.location.host + endpoint,{
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {"Content-Type": "application/json"}
+    })
+    if(response.status == 500){
+        alert('Error: invalid trade');
+        window.location.href = window.location.href;
+    }
 }
