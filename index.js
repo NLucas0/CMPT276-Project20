@@ -13,7 +13,35 @@ var pool = new Pool({
   ,ssl:{rejectUnauthorized: false}
 })
 
-var testVar = 0;
+//note api used here is: https://yugiohprices.docs.apiary.io/#
+;(async () => { //database transaction for pulling price data for all cards (once on app startup)
+  const client = await pool.connect()
+
+  try {
+    await client.query('BEGIN')
+    const res = await client.query('select * from cards order by card_id')
+    for(i=1;i<=280;i++) {
+      let cardPriceAverage = 0;
+      const cardName = res.rows[i-1].name;
+      axios.get(`http://yugiohprices.com/api/get_card_prices/${cardName}`)
+        .then(response=>{
+          cardPriceAverage = response.data.data[0].price_data.data.prices.average;
+          client.query('UPDATE cards SET value=$1 WHERE name=$2',[cardPriceAverage,cardName])
+        })
+        .catch(error=>{
+          console.log(`Error has occurred! Something is wrong with ${cardName}`)
+          console.log(error);
+        })
+      console.log(`${cardName}\'s average price is:${cardPriceAverage}`)
+    }
+    await client.query('COMMIT')
+  } catch (e) {
+    await client.query('ROLLBACK')
+    throw e
+  } finally {
+    client.release()
+  }
+})().catch(e => console.error(e.stack))
 
 express()
     .use(express.static(path.join(__dirname, 'public')))
@@ -42,8 +70,6 @@ express()
     //landing
     .get('/landing', (req,res)=> {
       res.render('pages/landing');
-      testVar++;
-      console.log(testVar);
     })
 
 
