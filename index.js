@@ -13,6 +13,8 @@ var pool = new Pool({
   ,ssl:{rejectUnauthorized: false}
 })
 
+var testVar = 0;
+
 express()
     .use(express.static(path.join(__dirname, 'public')))
     .use(express.json())
@@ -40,6 +42,8 @@ express()
     //landing
     .get('/landing', (req,res)=> {
       res.render('pages/landing');
+      testVar++;
+      console.log(testVar);
     })
 
 
