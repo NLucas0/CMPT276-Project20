@@ -23,7 +23,7 @@ router.get('/build', async(req, res)=> {
     const client = await pool.connect();
     var userCollectionQuery = `SELECT cards FROM users WHERE id=${req.session.user.id}`
     const collectionResult = await client.query(userCollectionQuery);
-    var cardsQuery = `SELECT * FROM cards`;
+    var cardsQuery = `SELECT * FROM cards order by card_id`;
     const cardsTable = await client.query(cardsQuery);
     const data = {collection: collectionResult.rows[0].cards,
                     cards: cardsTable.rows};

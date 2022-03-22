@@ -5,10 +5,10 @@
 	<title>Deck Editor</title>
 	<link rel="stylesheet" href="/stylesheets/main.css"/>
     <link rel="stylesheet" href="/stylesheets/deckBuilder.css"/>
-    <script src="/scripts/deckBuilder.js" defer></script>
+    <script src="/scripts/deckBuilder.js"></script>
 </head>
 
-<body onload="deckBuilderPageSetUp()">
+<body>
 
     <%- include ("../partials/aio_dld_header.ejs") %>
 
@@ -28,10 +28,11 @@
         </div>
     </div>
 
-
     <script>
-        let cardCollection = [<%- collection%>];
-        let cards = [<%- cards%>];
+        let cardCollection = [<%- collection %>];
+        let cardsList = <%- JSON.stringify(cards) %>;
+        deckBuilderPageSetUp();
     </script>
+
     
 </body>
