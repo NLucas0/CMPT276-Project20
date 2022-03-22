@@ -27,8 +27,8 @@
     <button onclick="goToPage('/landing')">Home</button>
     <% if (user) {%>
         <button onclick="goToPage('/opener')">Pack Opener</button>
-        <button onclick="goToPage('/decks')">Deck Builder</button>
         <button onclick="goToPage('/database')">Card Database</button>
+        <button onclick="goToPage('/decks')">Deck Builder</button>
         <button onclick="goToPage('/trade')">Trade Cards</button>
         <% if (user.type == 'ADMIN') {%>
             <button onclick="goToPage('/admin')">Admin</button>
