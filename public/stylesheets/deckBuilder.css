@@ -8,9 +8,21 @@
     margin: 1%;
 }
 
+
+#collection{
+    margin-right: 10%;
+}
+#deck{
+    float: right;
+}
 .deckBuilderTable{
-    width:30%;
+    width:35%;
     height: inherit;
+}
+
+.card{
+    width: 5.9vw;
+    height: 8.6vw;
 }
 
 h3{
