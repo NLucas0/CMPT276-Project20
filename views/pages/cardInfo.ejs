@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>cardInformation</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/stylesheets/cardViewer.css">
+    </head>
+    <body>
+        <h1 style="text-align:center"><%=cardInfo.name%></h1>
+        <img src= "../<%=cardInfo.image%>", alt="<%=cardInfo.name%>" style="display:block; margin:auto">
+        <ul>
+            <li>Pack name: <%=cardInfo.box_name%></li>
+            <li>
+                Stars:
+                <% if(cardInfo.stars <= 0) { %>
+                    N/A
+                <% } else { %>
+                    <% for(i=0;i<cardInfo.stars;i++) { %>
+                        &#9733;
+                    <% } %>
+                <% } %>
+            </li>
+            <li>Value: $<%=cardInfo.value%> (average price)</li>
+        </ul>
+    </body>
+</html>

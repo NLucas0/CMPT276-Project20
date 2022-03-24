@@ -26,8 +26,13 @@ exports.pool = pool;
       const cardName = res.rows[i-1].name;
       axios.get(`http://yugiohprices.com/api/get_card_prices/${cardName}`)
         .then(response=>{
-          cardPriceAverage = response.data.data[0].price_data.data.prices.average;
-          client.query('UPDATE cards SET value=$1 WHERE name=$2',[cardPriceAverage,cardName])
+          if(response.data.data) {
+            cardPriceAverage = response.data.data[0].price_data.data.prices.average;
+            client.query('UPDATE cards SET value=$1 WHERE name=$2',[cardPriceAverage,cardName])
+          }
+          else {
+            client.query('UPDATE cards SET value=$1 WHERE name=$2',[0,cardName])
+          }
         })
         .catch(error=>{
           console.log(`Error has occurred! Something is wrong with ${cardName}`)
@@ -62,6 +67,7 @@ express()
     // link files
     .use("/trade", require('./endpoints/tradeEndpoints'))
     .use("/deckBuild", require('./endpoints/deckBuildEndpoints'))
+    .use("/cardView", require('./endpoints/cardViewingEndpoints'))
 
     .set('views', path.join(__dirname, 'views'))
     .set('view engine', 'ejs')

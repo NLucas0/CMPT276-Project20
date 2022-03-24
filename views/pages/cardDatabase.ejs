@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>cardDatabase</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/stylesheets/cardViewer.css">
+    </head>
+    <body>
+        <%- include ("../partials/aio_dld_header.ejs") %>
+        <div id="tableBody">
+            <button type="button" id="tabS" onclick="sTab(this.id)">View all available cards</button>
+            <button type="button" id="tabD" onclick="sTab(this.id)">View owned cards</button>
+            <div id="displayAll" style="clear:left">
+                <input type="text" class="searchbar" name="sBar" placeholder="SEARCH"> <!--search functionality for later-->
+                <table class="displayTable">
+                    <% for(i=0;i<280;i++) { %>
+                        <% if(i%4 == 0) { %>
+                            <tr>
+                        <% } %>
+                            <td>
+                                <img src= "<%=allCards[i].image%>", alt="<%=allCards[i].name%>", onclick="relocate('<%-allCards[i].name%>')">
+                            </td>
+                        <% if(i%4 == 3) { %> 
+                            </tr>
+                        <% } %>
+                     <% } %>
+                </table>
+            </div>
+            <div id="displayOwned" style="display:none; clear:left">
+                <input type="text" class="searchbar" name="sBar" placeholder="SEARCH"> <!--search functionality for later-->
+                <table class="displayTable">
+                    <%let counter = 0; %>
+                    <% for(i=0;i<userCards.length;i++) { %>
+                        <% if(userCards[i]>0) { %>
+                            <% for(j=0;j<userCards[i];j++) { %>
+                                <% if(counter%4 == 0) { %>
+                                    <tr>
+                                <% } %>
+                                    <td>
+                                        <% counter++; %>
+                                        <img src= "<%=allCards[i].image%>", alt="<%=allCards[i].name%>", onclick="relocate('<%-allCards[i].name%>')">
+                                    </td>
+                                <% if(counter%4 == 0 || counter==userCards.length) { %> 
+                                    </tr>
+                                <% } %>
+                            <% } %>
+                        <% } %>
+                    <% } %>
+                </table>
+            </div>
+        </div>
+        <script src="/scripts/cardViewer.js"></script>
+    </body>
+</html>
