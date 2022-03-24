@@ -8,16 +8,8 @@
     margin: 1%;
 }
 
-#collection{
-    margin-right: 10%;
-}
-
-#deck{
-    float: right;
-}
-
 .deckBuilderTable{
-    width:35%;
+    width:30%;
     height: inherit;
 }
 
