@@ -14,8 +14,7 @@ function displayCards(container, cardCollection){
                 newCard.style.backgroundImage = "url('/" + cardsList[i].image + "')";
                 newCard.style.backgroundSize = "contain";
                 newCard.src = "/" + cardsList[i].image;
-                // newCard.addEventListener("click", selectCard(false));
-                newCard.onclick = function(event){selectCard(event, false);}
+                newCard.onclick = function(event){selectCard(event, cardsList[i].card_id, false);}
                 container.getElementsByTagName("tbody")[0].appendChild(newCard);
             }
         }
@@ -26,7 +25,7 @@ function displayCards(container, cardCollection){
     }
 }
 
-function selectCard(event, deselect){
+function selectCard(event, cardId, deselect){
     let card = event.target||event.srcElement;
     let id;
 
@@ -35,29 +34,29 @@ function selectCard(event, deselect){
         id = "deckCardsTable";
         // store original table id and move card
         let originalTable = card.parentElement.parentElement.id;
-        if(cardCollection[card.innerHTML-1] > 1) {
+        if(cardCollection[cardId-1] > 1) {
+            console.log("Spare copies");
             let copyCard = card.cloneNode();
-            copyCard.innerHTML = card.innerHTML;
             document.getElementById(id).getElementsByTagName("tbody")[0].appendChild(copyCard);
-            copyCard.onclick = function(event){selectCard(event, !deselect);};
-            cardCollection[card.innerHTML-1] -= 1;
+            copyCard.onclick = function(event){selectCard(event, cardId, !deselect);};
+            cardCollection[cardId-1] -= 1;
         } else {
             document.getElementById(id).getElementsByTagName("tbody")[0].appendChild(card);
-            card.onclick = function(event){selectCard(event, !deselect);};
-            cardCollection[card.innerHTML-1] -= 1;
+            card.onclick = function(event){selectCard(event, cardId, !deselect);};
+            cardCollection[cardId-1] = 0;
         }
     } else {
         id = "collectionCardsTable";
         let originalTable = card.parentElement.parentElement.id;
-        if(cardCollection[card.innerHTML-1] < 1) {
+        if(cardCollection[cardId-1] < 1) {
             //if the collection has no cards of this type left, move this element over and add 1
             document.getElementById(id).getElementsByTagName("tbody")[0].appendChild(card);
-            card.onclick = function(event){selectCard(event, !deselect);};
-            cardCollection[card.innerHTML-1] += 1;
+            card.onclick = function(event){selectCard(event, cardId, !deselect);};
+            cardCollection[cardId-1] += 1;
         } else {
             //otherwise, simply delete this element and add one to the count
             card.remove();
-            cardCollection[card.innerHTML-1] += 1;
+            cardCollection[cardId-1] += 1;
         }
     }
 
