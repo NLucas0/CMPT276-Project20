@@ -1,4 +1,4 @@
-let ADMIN_PASSWORD = "password";
+let ADMIN_PASSWORD = "password"; // used to delete users
 
 // setup tabs on load
 function adminSetUp(){
@@ -78,12 +78,13 @@ function toggleTable(hidden, col, event, type){
     }
     // reset displayed data
     else{
+        let resetData = '<tr><td class="noMatchMessage" hidden="true">No Cards</td></tr>';
         document.getElementById("adminTableInfoTable")
-                .getElementsByTagName("tbody")[0].innerHTML = '';
+                .getElementsByTagName("tbody")[0].innerHTML = resetData;
         document.getElementsByClassName("adminTradeTableInfoPopUpTable")[0]
-                .getElementsByTagName("tbody")[0].innerHTML = '';
+                .getElementsByTagName("tbody")[0].innerHTML = resetData;
         document.getElementsByClassName("adminTradeTableInfoPopUpTable")[1]
-                .getElementsByTagName("tbody")[0].innerHTML = '';
+                .getElementsByTagName("tbody")[0].innerHTML = resetData;
     }
 }
 
@@ -105,18 +106,20 @@ function displayData(col, userId){
     }
 
     // display items
+    let table = document.getElementById("adminTableInfoTable").
+    getElementsByTagName("tbody")[0];
+        
+    document.getElementById("adminTableInfoTable").
+    getElementsByClassName("noMatchMessage")[0].hidden = true;
     try{
-        let table = document.getElementById("adminTableInfoTable").
-                                getElementsByTagName("tbody")[0];
-        let elementTag = col != "Owned Cards"? "label":"button";
+        let elementTag = col != "Owned Cards"? "label":"img";
         let className = col != "Owned Cards"? "": "card";
         addToTable(table, array, elementTag, className);
     }
     // if no data
     catch(TypeError){
-        let lbl = document.createElement("label");
-        lbl.innerHTML = "Nothing to Show";
-        table.appendChild(lbl);
+        document.getElementById("adminTableInfoTable").
+        getElementsByClassName("noMatchMessage")[0].hidden = false;
     }
 }
 
@@ -126,10 +129,10 @@ function displayTradeData(tradeId){
     let tables = document.getElementsByClassName("adminTradeTableInfoPopUpTable");
 
     // offered cards
-    addToTable(tables[0].getElementsByTagName("tbody")[0], tradeObj.cards_offered, "button",
+    addToTable(tables[0].getElementsByTagName("tbody")[0], tradeObj.cards_offered, "img",
                 "card");
     // wanted cards
-    addToTable(tables[1].getElementsByTagName("tbody")[0], tradeObj.cards_wanted, "button",
+    addToTable(tables[1].getElementsByTagName("tbody")[0], tradeObj.cards_wanted, "img",
                 "card");
 }
 
@@ -138,8 +141,13 @@ function addToTable(table, array, elementTag, className){
     if(array == null){return;}
     for(let item of array){
         let newItem = document.createElement(elementTag);
+        if(elementTag == "img"){
+            newItem.src = (cardData.find(x=>x.card_id == item)).image;
+        }
+
         newItem.innerHTML = item;
         newItem.className = className;
+
         table.appendChild(newItem);
     }
 }
@@ -191,18 +199,21 @@ function changeTradeStatus(event){
 
     // make post request
     post("/trade/editTradeStatus", {newValue:select.value, tradeId:id});
+    window.location = window.location;
 }
 
 // delete trade from database
 function deleteTrade(event){
     if(!confirm("Delete trade?")){return;}
+
     let select = event.target||event.srcElement;
     let id = select.parentElement.parentElement.getElementsByClassName("tradeId")[0].innerHTML;
+
     post("/trade/deleteTrade", {tradeId:id});
     select.parentElement.parentElement.remove();
     
     // reload page to get updated database
-    window.location.href = window.location.href;
+    window.location = window.location;
 }
 
 // delete user data from database
@@ -216,21 +227,23 @@ function deleteUser(event){
     
     let select = event.target||event.srcElement;
     let id = select.parentElement.parentElement.getElementsByClassName("id")[0].innerHTML;
+
     post("/deleteUser", {userId:id});
     select.parentElement.parentElement.remove();
 }
 
 // make post request
-// 500 returned if invalid trade attempted
+// 400 returned if invalid trade attempted
 // source: https://stackoverflow.com/questions/6396101/pure-javascript-send-post-data-without-a-form
 async function post(endpoint, data){
-    let response = await fetch("http://" + window.location.host + endpoint,{
+    let response = await fetch(window.location.protocol + "//" + window.location.host + endpoint,{
         method: 'POST',
         body: JSON.stringify(data),
-        headers: {"Content-Type": "application/json"}
+        headers: {"Content-Type": "application/json", 'Accept':'application/json'}
     })
-    if(response.status == 500){
+    
+    if(response.status == 400){
         alert('Error: invalid trade');
-        window.location.href = window.location.href;
+        window.location = window.location;
     }
 }

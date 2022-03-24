@@ -33,7 +33,7 @@ function setUpRow(displayData, tableId, noMatchElement, classNames, attNames, ev
                                             +encodeURIComponent(JSON.stringify(data))
                                             +"&user2="
                                             +encodeURIComponent(JSON.stringify(user))
-                                            +"&counter=0"
+                                            +"&counter=-1"
                                             +"&offered=0"
                                             +"&wanted=0";
         
@@ -62,8 +62,8 @@ function setUpUsers(){
 
 // set up ongoing trades tab
 function setUpTrades(){
-    if(data.trades == null){
-        let noTrades = document.getElementsByClassName("noMatchMessage")[4];
+    if(data.trades == null || data.trades.length < 1){
+        let noTrades = document.getElementById("tradeTradesList").getElementsByClassName("noMatchMessage")[0];
         noTrades.hidden = false;
         return;
     }
@@ -95,16 +95,23 @@ function setUpTrades(){
 function changeTab(index){
     let tabs = document.getElementsByClassName("tab");
     for(let i=0; i<tabs.length; i++){
-        tabs[i].hidden = i == parseInt(index)?false:true;
+        tabs[i].hidden = i == parseInt(index)? false:true;
     }
 
     // remove accepted/rejected trades after viewing
+    // change updated to pending
     if(index==2 && !viewedTrades){
         viewedTrades = true;
-        for(let trade of document.getElementsByClassName("tradeSampleRow2")){
+        for(let trade of document.getElementById("tradeTradesList").getElementsByClassName("tradeSampleRow2")){
             let status = trade.getElementsByClassName("tradeStatus")[0].innerHTML;
+            let tradeId = trade.getElementsByClassName("tradeId")[0].innerHTML;
+
             if(status == 'ACCEPTED' || status == 'REJECTED'){
-                deleteTrade(trade.getElementsByClassName("tradeId")[0].innerHTML);
+                post("trade/deleteTrade", {tradeId: tradeId});
+            }
+            else if(status == 'UPDATED'){
+                if((tradeData.find(x=>x.id == tradeId)).sender_id == data.id){return;}
+                post("trade/editTradeStatus", {newValue:"PENDING", tradeId: tradeId});
             }
         }
     }
@@ -162,8 +169,11 @@ function toggleTable(hidden, event, type=null){
         }
     }
     else{
-        //document.getElementById("adminTradeTableInfoPopup").getElementsByTagName("tbody")[0].innerHTML = '';
-        document.getElementById("tradeTableInfoTable").getElementsByTagName("tbody")[0].innerHTML = '';
+        // reset displayed data
+        let resetData = '<tr><td class="noMatchMessage" hidden="true">No Cards</td></tr>';
+        document.getElementsByClassName("adminTradeTableInfoPopUpTable")[0].getElementsByTagName("tbody")[0].innerHTML = resetData;
+        document.getElementsByClassName("adminTradeTableInfoPopUpTable")[1].getElementsByTagName("tbody")[0].innerHTML = resetData;
+        document.getElementById("tradeTableInfoTable").getElementsByTagName("tbody")[0].innerHTML = resetData;
     }
 }
 
@@ -180,16 +190,15 @@ function displayData(userId){
 
     try{
         for(let i=0; i<array.length; i++){
-                let newCell = document.createElement("button");
-                newCell.innerHTML = array[i];
-                newCell.className = "card";
-                table.appendChild(newCell);
-            
+            let newCell = document.createElement("img");
+            newCell.src = (cardData.find(x=> x.card_id==array[i])).image;
+            newCell.className = "card";
+            table.appendChild(newCell);   
         }
     }
     // if no data
-    catch(TypeError){
-        document.getElementsByClassName("noMatchMessage")[1].hidden = false;
+    catch(error){
+        table.getElementsByClassName("noMatchMessage")[0].hidden = false;
     }
 }
 
@@ -201,6 +210,10 @@ function addToTable(table, array, elementTag, className){
         let newItem = document.createElement(elementTag);
         newItem.innerHTML = item;
         newItem.className = className;
+
+        if(elementTag == "img"){
+            newItem.src = (cardData.find(x=> x.card_id==item)).image;
+        }
         table.appendChild(newItem);
     }
 }
@@ -212,10 +225,10 @@ function displayTrade(tradeId){
     let tables = document.getElementsByClassName("adminTradeTableInfoPopUpTable");
 
     // offered cards
-    addToTable(tables[0].getElementsByTagName("tbody")[0], tradeObj.cards_offered, "button",
+    addToTable(tables[0].getElementsByTagName("tbody")[0], tradeObj.cards_offered, "img",
                 "card");
     // wanted cards
-    addToTable(tables[1].getElementsByTagName("tbody")[0], tradeObj.cards_wanted, "button",
+    addToTable(tables[1].getElementsByTagName("tbody")[0], tradeObj.cards_wanted, "img",
                 "card");
 }
 
@@ -223,10 +236,16 @@ function displayTrade(tradeId){
 async function tradeAction(event, type){
     let id = (event.target||event.srcElement).parentElement.parentElement.getElementsByClassName("tradeId")[0].innerHTML;
 
+    // remove item
+   // (event.target||event.srcElement).parentElement.parentElement.remove();
+    
     // make post request
     if(type == 'CANCEL'){
-        deleteTrade(id);
+        post("/trade/deleteTrade", {tradeId:id});
+        window.location = window.location;
     }
+
+    // issue counter trade
     else if(type == 'COUNTER'){
         let objData;
         for(let data of tradeData){
@@ -235,40 +254,40 @@ async function tradeAction(event, type){
                 break;
             }
         }
-        console.log(JSON.stringify(objData.cards_offered));
-        window.location.href = "/trade/tradeSelection/?user1="
-                                +encodeURIComponent(JSON.stringify(getUserById(objData.receiver_id)))
-                                +"&user2="
-                                +encodeURIComponent(JSON.stringify(getUserById(objData.sender_id)))
-                                +"&counter=1"
-                                +"&offered="
-                                + +encodeURIComponent(JSON.stringify(objData.cards_offered))
-                                +"&wanted="
-                                + +encodeURIComponent(JSON.stringify(objData.cards_wanted));
+        window.location = "/trade/tradeSelection/?user1="
+                            +encodeURIComponent(JSON.stringify(getUserById(objData.receiver_id)))
+                            +"&user2="
+                            +encodeURIComponent(JSON.stringify(getUserById(objData.sender_id)))
+                            +"&counter="
+                            + objData.id
+                            +"&offered="
+                            + JSON.stringify(objData.cards_offered)
+                            +"&wanted="
+                            + JSON.stringify(objData.cards_wanted);
     }
     else{
-        let response = await fetch("http://" + window.location.host + "/trade/editTradeStatus",{
+        window.location = window.location;
+        let response = await fetch(window.location.protocol + "//" + window.location.host + "/trade/editTradeStatus",{
             method: 'POST',
             body: JSON.stringify({
                 newValue: type,
                 tradeId: id
             }),
-            headers: {"Content-Type": "application/json"}
+            headers: {"Content-Type": "application/json", 'Accept':'application/json'}
         });
-        if(response.status == 500){
+        if(response.status == 400){
             alert('Either you or the other party do not have the required cards. Trade cancelled.');
         }
+        else{
+            alert('Trade '+newValue);
+        }
     }
-
-    // remove item
-    (event.target||event.srcElement).parentElement.parentElement.remove();
 }
 
-function deleteTrade(id){
+// send post request
+function post(endpoint, data){
     let xhr = new XMLHttpRequest();
-    xhr.open("POST","/trade/deleteTrade", true);
+    xhr.open("POST", endpoint, true);
     xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(JSON.stringify({
-        tradeId: id
-    }));
+    xhr.send(JSON.stringify(data));
 }

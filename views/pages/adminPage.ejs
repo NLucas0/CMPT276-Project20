@@ -13,6 +13,15 @@
     <%- include ("../partials/aio_dld_header.ejs") %>
     <%- include ("../partials/aio_dld_row_templates.ejs") %>
     <%- include ("../partials/aio_dld_popups.ejs") %>
+    <h1 class="title">Admin</h1>
+    <p class="subtitle">
+        Click on "friends", "trades", "cards" to view full array in a popup. </br>
+        Enter "password" when prompted to delete user.</br>
+        Click outside the popup to close.</br>
+
+        To finish/implement:</br>
+        - online status
+    </p>
 
     <!--tabs-->
     <div>
@@ -22,14 +31,6 @@
 
     <!--user data-->
     <div class="tab" id="adminUsersTab">
-        <p>Click on "friends", "trades", "cards" to view full array in a popup. 
-            Click outside the popup to close.</br>
-
-            To finish/implement:</br>
-            - online status </br>
-            - formatting fixes
-        </p>
-
         <!-- search-->
         <div>
             <input id="searchBox" placeholder="Search User" onkeyup="filterUsers()"/>
@@ -81,5 +82,6 @@
     <script>
         let userData = <%- JSON.stringify(userResults)%>;
         let tradeData = <%- JSON.stringify(tradeResults)%>;
+        let cardData = <%- JSON.stringify(cardData)%>;
     </script>
 </body>

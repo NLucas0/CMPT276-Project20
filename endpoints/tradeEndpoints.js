@@ -38,9 +38,11 @@ router.get('/', async(req, res)=>{
         const result = await client.query(`SELECT * FROM users`);
         const trades = await pool.query(`SELECT * FROM trades WHERE sender_id=${req.session.user.id} OR
                                         receiver_id=${req.session.user.id}`);
+        const cardData = await getCardData(client, "card_id, image");
         const data = {results: result.rows,
                         id:req.session.user.id,
-                        trades: trades.rows};
+                        trades: trades.rows,
+                        cardData: cardData};
         res.render('pages/tradingPage', data);
         client.release();
     }
@@ -53,32 +55,40 @@ router.get('/', async(req, res)=>{
 // url: /trade/tradeSelection
 router.get('/tradeSelection', async(req, res)=>{
     try{
-        const client = await pool.connect();
         if(!req.session.user){throw error;}
+
+        const client = await pool.connect();
+        const cardResults = await getCardData(client, "card_id, image, value");
+        
         const data = {user1: req.query.user1,
-                        user2: req.query.user2,
-                        counter: req.query.counter||false,
-                        offered: req.query.offered||[],
-                        wanted: req.query.wanted||[]};
+                    user2: req.query.user2,
+                    cardData: cardResults,
+                    counter: req.query.counter||-1,
+                    offered: req.query.offered||[],
+                    wanted: req.query.wanted||[]};
         res.render('pages/tradeSelectionPage', data);
         client.release();
     }
     catch(error){
-        res.redirect("/");
+        res.redirect("/trade");
     }
 })
 
 // make new trade request
 // url: /trade/newTradeRequest
+// input: sender_id, receiver_id, counter (-1 if not counter trade), offer, request
 router.post('/newTradeRequest', async(req, res)=>{
     try{
-        const client = await pool.connect();
         if(!req.session.user){throw error;}
+        const client = await pool.connect();
+
         // add new trade to data table
         await client.query(`INSERT INTO trades 
                             (sender_id, receiver_id, status, cards_offered, cards_wanted) VALUES
-                            ('${req.body.sender_id}', '${req.body.receiver_id}', 'PENDING',
+                            ('${req.body.sender_id}', '${req.body.receiver_id}', 
+                            '${req.body.counter == -1?'PENDING':'UPDATED'}',
                             $1, $2)`,[req.body.offer, req.body.request]);
+
         // add id to user trade list
         let index = await client.query(`SELECT id FROM trades ORDER BY id DESC LIMIT 1`);
         await client.query(`UPDATE users set trades=trades||'{${index.rows[0].id}}' 
@@ -92,21 +102,28 @@ router.post('/newTradeRequest', async(req, res)=>{
 
 // modify trade status from /admin
 // url: /trade/editTradeStatus
+// input: newValue, tradeId
 router.post('/editTradeStatus', async(req, res)=>{
     try{
+        if(!req.session.user){throw error;}
         const client = await pool.connect();
 
+        // set new status
         await client.query(`UPDATE trades SET status='${req.body.newValue}' WHERE id=${req.body.tradeId}`);
         let tradeItem = (await client.query(`SELECT * FROM trades WHERE id=${req.body.tradeId}`)).rows[0];
 
         switch(req.body.newValue){
             // update cards and remove from receiver trades
             case 'ACCEPTED':
-                let check1 = await client.query(`SELECT * FROM users WHERE id=${tradeItem.receiver_id} AND cards @> $1`, [tradeItem.cards_wanted]);
-                let check2 = await client.query(`SELECT * FROM users WHERE id=${tradeItem.sender_id} AND cards @> $1`,[tradeItem.cards_offered]);
+                let check1 = await client.query(`SELECT * FROM users 
+                                                WHERE id=${tradeItem.receiver_id} 
+                                                AND cards @> $1`, [tradeItem.cards_wanted]);
+                let check2 = await client.query(`SELECT * FROM users 
+                                                WHERE id=${tradeItem.sender_id} 
+                                                AND cards @> $1`,[tradeItem.cards_offered]);
                 
+                // trade cards if both users own required cards
                 if(check1.rows.length > 0 && check2.rows.length > 0){
-                    // exchange cards
                     addToArray(client, 'users', tradeItem.cards_offered, 'cards', 'id', tradeItem.receiver_id);
                     addToArray(client, 'users', tradeItem.cards_wanted, 'cards', 'id', tradeItem.sender_id);
 
@@ -114,10 +131,11 @@ router.post('/editTradeStatus', async(req, res)=>{
                     removeFromArray(client, 'users', tradeItem.cards_offered, 'cards', 'id', tradeItem.sender_id);
                 }
                 else{
-                    res.status(500);
+                    res.status(400);
                     res.json('MISSING CARDS');
                     await client.query(`UPDATE trades SET status='REJECTED' WHERE id=${req.body.tradeId}`);
                 }
+
                 // remove trade from receiver
                 removeTrade(client, tradeItem.receiver_id, tradeItem.id);
                 break;
@@ -145,8 +163,10 @@ router.post('/editTradeStatus', async(req, res)=>{
 
 // delete trade item from /admin
 // url: /trade/deleteTrade
+// input: tradeId
 router.post('/deleteTrade', async(req, res)=>{
     try{
+        if(!req.session.user){throw error;}
         const client = await pool.connect();
 
         // delete trade from data table
@@ -192,6 +212,12 @@ async function addToArray(client, tableName, elements, arrayName, searchCol, sea
     for(let element of elements){
         await client.query(`UPDATE ${tableName} SET ${arrayName}=ARRAY_APPEND(${arrayName},${element}) WHERE ${searchCol}=${searchTerm}`);
     }
+}
+
+// get specific card data
+async function getCardData(client, attributes="*", contraints=""){
+    let results = await client.query(`SELECT ${attributes} from cards ${contraints}`);
+    return results.rows;
 }
 
 module.exports = router;

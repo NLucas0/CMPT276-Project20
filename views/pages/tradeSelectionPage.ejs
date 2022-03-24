@@ -12,10 +12,11 @@
 
     <%- include ("../partials/aio_dld_header.ejs") %>
 
-    <h1>Trade Selection</h1>
+    <h1 class="title">Trade Selection</h1>
+    <p class="subtitle">Select cards to send/request</p>
     <hr>
-    <div class="horizontalAlignContainer" style="height: 60vh;">
 
+    <div class="horizontalAlignContainer" style="height: 60vh;">
         <!--Display own card inventory-->
         <div id="initiatorCards" class="tradeSelectionTable">
             <h3>Owned Cards</h3>
@@ -26,7 +27,11 @@
 
         <!--middle section-->
         <div style="height:100%; width: 40%;">
-            <p id="tradeSelectionValue" style="text-align: center;">$999.99 Total Value $999.99</p>
+            <div>
+                <label class="priceLabel">$0.00</label>
+                <label class="priceLabel">Total Value</label>
+                <label class="priceLabel">$0.00</label>
+            </div>
             <div class="horizontalAlignContainer" style="height: 90%;">
                 <!--Display offered cards-->
                 <div id="offeredCards" class="tradeSelectionTable" style="height: 100%; width: 50%;">
@@ -61,11 +66,11 @@
     <script>
         let user1 = <%- user1%>;
         let user2 = <%- user2%>;
+        let cardData = <%- JSON.stringify(cardData)%>;
+        console.log(cardData);
 
         let counter = <%- counter%>;
-        if(counter){
-            let wanted = <%- offered%>;
-            let offered = <%- JSON.stringify(wanted)%>;
-        }
+        let wanted = <%- offered%> || [];
+        let offered = <%- wanted%> || [];
     </script>
 </body>

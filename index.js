@@ -208,8 +208,11 @@ express()
 
             const userResult = await client.query(`SELECT * FROM users`);
             const tradeResult = await client.query(`SELECT * FROM trades`);
+            const cardResult = await client.query(`SELECT card_id, image FROM cards`);
+            
             const data = {userResults: userResult.rows,
-                            tradeResults: tradeResult.rows};
+                            tradeResults: tradeResult.rows,
+                            cardData: cardResult.rows};
             res.render('pages/adminPage', data);
             client.release();
         }
@@ -219,11 +222,16 @@ express()
     })
 
     // delete trade item from /admin
+    // input: userId
     .post('/deleteUser', async(req, res)=>{
         try{
             const client = await pool.connect();
             if(!req.session.user || req.session.user.type != 'ADMIN'){throw error;}
             await client.query(`DELETE FROM users WHERE id=${req.body.userId}`);
+
+            // delete trades associated with user
+            await client.query(`DELETE FROM trades WHERE sender_id=${req.body.userId}
+                                OR receiver_id=${req.body.userId}`);
             client.release();
         }
         catch(error){

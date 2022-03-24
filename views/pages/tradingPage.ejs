@@ -13,7 +13,8 @@
     <%- include ("../partials/aio_dld_row_templates.ejs") %>
     <%- include ("../partials/aio_dld_popups.ejs") %>
 
-    <h1>Trading</h1>
+    <h1 class="title">Trading</h1>
+    <p class="subtitle">Exchange cards with friends and other users</p>
 
     <!--buttons at top to toggle pages-->
     <div id="tradeTabs">
@@ -38,8 +39,8 @@
         </table>
 
         <!--tab 3-->
-        <table class="tab" id="tradeTradesList" hidden="true">
-            <td class="noMatchMessage" hidden="true">No trades</td>
+        <table class="tab" id="tradeTradesList" hidden="true" style="min-height: 3%;">
+            <tr><td class="noMatchMessage" hidden="true">No trades</td></tr>
         </table>
     </div>
         
@@ -48,5 +49,6 @@
         let userData = <%- JSON.stringify(results)%>;
         let userId = <%=id%>;
         let tradeData = <%-JSON.stringify(trades)%>;
+        let cardData = <%- JSON.stringify(cardData)%>
     </script>
 </body>

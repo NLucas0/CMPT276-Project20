@@ -10,10 +10,19 @@
 
 .tradeSelectionTable{
     width:30%;
-    height: inherit;
 }
 
 h3{
     height: 10%;
     margin:0px;
+}
+
+.horizontalAlignContainer .card{
+    width: 100%;
+}
+
+.priceLabel{
+    display: inline-block;
+    width: 32%;
+    text-align: center;
 }
