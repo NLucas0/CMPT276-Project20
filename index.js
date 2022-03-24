@@ -7,8 +7,8 @@ const PORT = process.env.PORT || 5000
 
 const {Pool} = require('pg');
 var pool = new Pool({
-  connectionString: process.env.DATABASE_URL||"postgres://postgres:root@localhost/aio_dld_database"
-  ,ssl:{rejectUnauthorized: false}
+  connectionString: process.env.DATABASE_URL||"postgres://postgres:186714569@localhost/aio_dld_database"
+  //,ssl:{rejectUnauthorized: false}
 })
 
 // allow pool to be accessed by other files

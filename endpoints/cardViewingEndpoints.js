@@ -1,4 +1,5 @@
 var router = require('express').Router();
+const axios = require('axios');
 var { pool } = require('../index.js');
 
 //deck viewer main
@@ -22,12 +23,30 @@ router.get('/', async(req,res)=> {
 })
 
 router.get('/:cardName', async(req,res)=> {
+    const client = await pool.connect();
     try {
-        const { rows } = await pool.query('select * from cards where name=$1',[req.params.cardName]);
+        //retrieve price data for this card, this is to ensure up-to-date information
+        axios.get(`http://yugiohprices.com/api/get_card_prices/${req.params.cardName}`)
+        .then(response=>{
+          if(response.data.data) {
+            cardPriceAverage = response.data.data[0].price_data.data.prices.average;
+            client.query('UPDATE cards SET value=$1 WHERE name=$2',[cardPriceAverage,req.params.cardName])
+          }
+          else {
+            client.query('UPDATE cards SET value=$1 WHERE name=$2',[0,req.params.cardName])
+          }
+        })
+        .catch(error=>{
+          console.log(error);
+        })
+        //now I render info page with the data
+        const { rows } = await client.query('select * from cards where name=$1',[req.params.cardName]);
         const result = { cardInfo:rows[0] };
         res.render('pages/cardInfo',result);
     } catch(e) {
         console.error(e.stack);
+    } finally {
+        client.release();
     }
 })
 
