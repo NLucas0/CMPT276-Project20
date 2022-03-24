@@ -5,6 +5,11 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/stylesheets/cardViewer.css">
+        <script>
+            let sortType = 0;
+            let cardList = <%-JSON.stringify(allCards)%>;
+            let uCards = <%-JSON.stringify(userCards)%>;
+        </script>
     </head>
     <body>
         <%- include ("../partials/aio_dld_header.ejs") %>
@@ -13,15 +18,17 @@
             <button type="button" id="tabD" onclick="sTab(this.id)">View owned cards</button>
             <div id="displayAll" style="clear:left">
                 <input type="text" class="searchbar" name="sBar" placeholder="SEARCH"> <!--search functionality for later-->
-                <!-- <button style="float:right">asdf</button>
-                <button style="float:right">ghjk</button> -->
+                <button style="float:right" onclick="setSort('s1', sortType, cardList, uCards)" class="s1">abc</button>
+                <button style="float:right" onclick="setSort('s2', sortType, cardList, uCards)" class="s2">stars</button>
+                <button style="float:right" onclick="setSort('s3', sortType, cardList, uCards)" class="s3">value</button>
+                <p style="text-align:right; margin:0">sort by: </p>
                 <table class="displayTable">
                     <% for(i=0;i<280;i++) { %>
                         <% if(i%4 == 0) { %>
                             <tr>
                         <% } %>
                             <td>
-                                <img src= "<%=allCards[i].image%>", alt="<%=allCards[i].name%>", onclick="relocate('<%-allCards[i].name%>')">
+                                <img id= "aimg<%=i%>" src= "<%=allCards[i].image%>", alt="<%=allCards[i].name%>", onclick="relocate('<%-allCards[i].name%>')">
                             </td>
                         <% if(i%4 == 3) { %> 
                             </tr>
@@ -41,7 +48,7 @@
                                     <% } %>
                                         <td>
                                             <% counter++; %>
-                                            <img src= "<%=allCards[i].image%>", alt="<%=allCards[i].name%>", onclick="relocate('<%-allCards[i].name%>')">
+                                            <img id= "uimg<%=counter%>" src= "<%=allCards[i].image%>", alt="<%=allCards[i].name%>", onclick="relocate('<%-allCards[i].name%>')">
                                         </td>
                                     <% if(counter%4 == 0 || counter==userCards.length) { %> 
                                         </tr>
@@ -52,7 +59,11 @@
                     </table>
                     <div>
                         <input type="text" class="searchbar" name="sBar" placeholder="SEARCH" > <!--search functionality for later-->
-                        <p style="float:left">You currently own: <%=counter%> cards.</p>
+                        <p style="float:left; margin:0">You currently own: <%=counter%> cards.</p>
+                        <button style="float:right" onclick="setSort('s1', sortType, cardList, uCards)" class="s1">abc</button>
+                        <button style="float:right" onclick="setSort('s2', sortType, cardList, uCards)" class="s2">stars</button>
+                        <button style="float:right" onclick="setSort('s3', sortType, cardList, uCards)" class="s3">value</button>
+                        <p style="text-align:right; margin:0">sort by: </p>                       
                     </div>
                 </div>
             </div>
