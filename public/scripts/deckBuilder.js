@@ -1,5 +1,4 @@
 function deckBuilderPageSetUp(){
-    console.log(cardsList[227].name);
     const cardsInDeck = [];
     displayCards(document.getElementById("collectionCardsTable"), cardCollection);
 }
@@ -10,9 +9,9 @@ function displayCards(container, cardCollection){
         // add cards to right table and setup onclick event
         for(let i = 0; i < cardCollection.length; i++){
             if(cardCollection[i] > 1) {
-                let newCard = document.createElement("button");
+                let newCard = document.createElement("img");
                 newCard.className = "card";
-                newCard.innerHTML = cardsList[i].card_id;
+                newCard.src = "/" + cardsList[i].image;
                 newCard.onclick = function(event){selectCard(event, false);}
                 container.getElementsByTagName("tbody")[0].appendChild(newCard);
             }
