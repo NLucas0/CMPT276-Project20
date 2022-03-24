@@ -41,3 +41,11 @@
     margin: 0.5% 35%;
     text-align:center;
 }
+
+.s1, .s2, .s3 {
+    height:2%;
+    width:4%;
+    border-radius:0;
+    border-width:1px;
+    background-color:white;
+}
