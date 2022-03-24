@@ -13,6 +13,8 @@
             <button type="button" id="tabD" onclick="sTab(this.id)">View owned cards</button>
             <div id="displayAll" style="clear:left">
                 <input type="text" class="searchbar" name="sBar" placeholder="SEARCH"> <!--search functionality for later-->
+                <!-- <button style="float:right">asdf</button>
+                <button style="float:right">ghjk</button> -->
                 <table class="displayTable">
                     <% for(i=0;i<280;i++) { %>
                         <% if(i%4 == 0) { %>
@@ -50,7 +52,7 @@
                     </table>
                     <div>
                         <input type="text" class="searchbar" name="sBar" placeholder="SEARCH" > <!--search functionality for later-->
-                        <p style="float:right">You currently own: <%=counter%> cards.</p>
+                        <p style="float:left">You currently own: <%=counter%> cards.</p>
                     </div>
                 </div>
             </div>
