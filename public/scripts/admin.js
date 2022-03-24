@@ -140,6 +140,8 @@ function displayTradeData(tradeId){
 function addToTable(table, array, elementTag, className){
     if(array == null){return;}
     for(let item of array){
+        if(elementTag == "img" && item == 0){continue;}
+        
         let newItem = document.createElement(elementTag);
         if(elementTag == "img"){
             newItem.src = (cardData.find(x=>x.card_id == item)).image;

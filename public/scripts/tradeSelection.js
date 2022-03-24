@@ -35,6 +35,7 @@ function displayCards(container, cards){
     try{
         // add cards to right table and setup onclick event
         for(let card of cards){
+            if(card == 0){continue;}
             let newCard = document.createElement("img");
             newCard.className = "card";
             newCard.data = card;

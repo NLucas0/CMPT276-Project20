@@ -190,6 +190,8 @@ function displayData(userId){
 
     try{
         for(let i=0; i<array.length; i++){
+            if(array[i] == 0){continue;}
+
             let newCell = document.createElement("img");
             newCell.src = (cardData.find(x=> x.card_id==array[i])).image;
             newCell.className = "card";
@@ -207,6 +209,8 @@ function displayData(userId){
 function addToTable(table, array, elementTag, className){
     if(array == null){return;}
     for(let item of array){
+        if(elementTag == "img" && item == 0){continue;}
+        
         let newItem = document.createElement(elementTag);
         newItem.innerHTML = item;
         newItem.className = className;
