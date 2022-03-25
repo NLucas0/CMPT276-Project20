@@ -52,4 +52,25 @@ describe('New Deck Test', function() {
             done();
         });
     });
+
+    it('should not add a deck on /deckBuild/save, with existing name and owner_id', function(done) {
+        global.chai.request(global.server).post('/login').send({'username':'tester','password':'mctesty'})
+            .end(function(err, res) {
+                global.chai.request(global.server).get('/deckBuild/decks').end(function(err,res){
+                    var numDecks = res.body.length;
+                    global.chai.request(global.server).post('/deckBuild/save').send({'name':'testDeck', 'cards':'{}','extra':'{}'})
+                        .end(function(err, res) {
+                            global.chai.request(global.server).get('/deckBuild/decks').end(function(err,res){
+                                var numDecksAfter = res.body.length;
+                                (numDecks-numDecksAfter).should.equal(0);
+                                res.should.have.status(200);
+                                res.should.be.json;
+                                res.body.should.be.a('array');
+                                res.body[length-1].name.should.equal('testDeck');
+                            });
+                        });
+                    });
+            done();
+        });
+    });
 });
