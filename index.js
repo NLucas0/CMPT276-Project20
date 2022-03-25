@@ -97,23 +97,14 @@ var app = express()
       var userId = await pool.query(`Insert into users (name, password, cards, friends, trades, type) values('${username}', '${password}', $1, $2, $3, 'USER') RETURNING id`, [cardsArray, friendArray, tradeArray]);
 
       //create box progress
-      console.log("tests start");
       var newBox1 = new Array(100);
-      console.log("array1 formed");
       newBox1 = [1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,9,9,9,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,9,8,8,8,8,8,8,9,8,8,8,8,8,8,9,8,8,8];
-      console.log("array1 assigned");
       var newBox2 = new Array(40);
-      console.log("array2 formed");
       newBox2 = [1,1,1,1,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,5,5,5,5,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10];
-      console.log("array2 assigned");
       var newBox3 = new Array(100);
-      console.log("array3 formed");
       newBox3 = [1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,9,9,9,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,9,8,8,8,8,8,8,8,9,8,8,8,8,8,9,8,8,8];
-      console.log("array3 assigned");
       var newBox4 = new Array(40);
-      console.log("array4 formed");
       newBox4 = [1,1,1,1,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,5,5,5,5,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10];
-      console.log("array4 assigned");
 
       await pool.query(`Insert into progress values(${userId.rows[0].id}, $1, $2, $3, $4, $5, $6, $7)`, [newBox1,newBox2,newBox3,newBox4,newBox1,newBox3,newBox2]);
       
