@@ -21,7 +21,14 @@
                     <% } %>
                 <% } %>
             </li>
-            <li>Value: $<%=cardInfo.value%> (average price)</li>
+            <li>
+                Value:
+                <% if(cardInfo.value <= 0) { %>
+                    Could not retrieve price
+                <% } else { %> 
+                    $<%=cardInfo.value%> (average price)
+                <% } %>
+            </li>
         </ul>
         <a onclick="window.history.back()" style="cursor:pointer; color:rgb(53, 57, 255)">Back</a>
     </body>

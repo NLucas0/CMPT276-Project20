@@ -3,14 +3,14 @@
 // add export before all function calls
 const { expect } = require('chai');
 
-describe('trade tests', function(){
+describe('Trade tests', function(){
     // before(function(){})
     // after(function(){})
     // beforeEach(function(){})
     // afterEach('optional description', function(){})
 
     describe("#test 1", function(){
-        it('shoudl work', function(done){
+        it('should work', function(done){
             global.chai.request(global.server).get('/test').end(function(err,res){
               res.should.have.status(200);
               res.should.be.json;

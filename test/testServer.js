@@ -10,3 +10,4 @@ chai.use(chaiHttp);
 
 require('./tradeTest.js');
 require('./deckTest.js');
+require('./cardViewerTest.js');
