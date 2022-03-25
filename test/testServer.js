@@ -9,4 +9,5 @@ chai.use(chaiHttp);
 // mocha.run() in js
 
 require('./tradeTest.js');
+require('./deckTest.js');
 require('./cardViewerTest.js');
