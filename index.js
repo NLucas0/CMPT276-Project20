@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 5000
 
 const {Pool} = require('pg');
 var pool = new Pool({
-  connectionString: process.env.DATABASE_URL||"postgres://postgres:root@localhost/aio_dld_database"
+  connectionString: process.env.DATABASE_URL||"postgres://postgres:bootstrap@localhost/aio_dld_database"
   ,ssl:{rejectUnauthorized: false}
 })
 
@@ -93,6 +93,18 @@ express()
       var tradeArray = new Array();
 
       await pool.query(`Insert into users (name, password, cards, friends, trades, type) values('${username}', '${password}', $1, $2, $3, 'USER')`, [cardsArray, friendArray, tradeArray]);
+
+      //create box progress
+      var newBox1 = new Array(100);
+      newBox1 = [1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,9,9,9,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,9,8,8,8,8,8,8,9,8,8,8,8,8,8,9,8,8,8];
+      var newBox2 = new Array(40);
+      newBox2 = [1,1,1,1,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,5,5,5,5,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10];
+      var newBox3 = new Array(100);
+      newBox3 = [1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,9,9,9,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,9,8,8,8,8,8,8,8,9,8,8,8,8,8,9,8,8,8];
+      var newBox4 = new Array(40);
+      newBox4 = [1,1,1,1,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,5,5,5,5,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10];
+
+      await pool.query(`Insert into progress (box_1_progress, box_2_progress, box_3_progress, box_4_progress, box_1_ratios, box_3_ratios, box_2_4_ratios) values($1, $2, $3, $4, $5, $6, $7)`, [newBox1,newBox2,newBox3,newBox4,newBox1,newBox3,newBox2]);
       
       res.redirect('/login');
     })
@@ -139,21 +151,39 @@ express()
     })
 
     //Pack Opener Start
-    .get('/box/:id', (req,res)=>{
+    .get('/box/:id', async (req,res)=>{
       var boxnum = req.params.id;
       var boxname = 'Placeholder Box';
+      var cardNames = null;
+      var loops = 0;
 
       if(boxnum == 1) {
         boxname = 'The Ultimate Rising';
+        var cardNamesRes = await pool.query(`select * from cards where box_id=${boxnum} order by in_box_id`);
+        cardNames = cardNamesRes.rows;
+        cardRarities = ['UR','UR','UR','UR','UR','UR','UR','UR','UR','UR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N'];
+        loops = 100;
       } else if(boxnum == 2) {
         boxname = 'Age Of Discovery';
+        var cardNamesRes = await pool.query(`select * from cards where box_id=${boxnum} order by in_box_id`);
+        cardNames = cardNamesRes.rows;
+        cardRarities = ['UR','UR','SR','SR','SR','SR','SR','SR','SR','SR','R','R','R','R','R','R','R','R','R','R','R','R','R','R','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N'];
+        loops = 40;
       } else if(boxnum == 3) {
         boxname = 'Neo Impact';
+        var cardNamesRes = await pool.query(`select * from cards where box_id=${boxnum} order by in_box_id`);
+        cardNames = cardNamesRes.rows;
+        cardRarities = ['UR','UR','UR','UR','UR','UR','UR','UR','UR','UR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N'];
+        loops = 100;
       } else if(boxnum == 4) {
         boxname = 'Flame Of The Tyrant';
+        var cardNamesRes = await pool.query(`select * from cards where box_id=${boxnum} order by in_box_id`);
+        cardNames = cardNamesRes.rows;
+        cardRarities = ['UR','UR','SR','SR','SR','SR','SR','SR','SR','SR','R','R','R','R','R','R','R','R','R','R','R','R','R','R','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N'];
+        loops = 40;
       }
 
-      var data = { num : boxnum, name : boxname, card1 : 0, card2 : 0, card3 : 0 };
+      var data = { num : boxnum, name : boxname, card1 : 0, card2 : 0, card3 : 0 , cardnames : cardNames, cardrarities : cardRarities, numOfLoops : loops };
 
       res.render('pages/pack-opener', data);
     })
@@ -162,6 +192,8 @@ express()
     .get('/box/:id/open', async (req,res)=>{
       var boxnum = req.params.id;
       var boxname = 'Placeholder Box';
+      var cardNames = null;
+      var loops = 0;
 
       var index1 = 0;
       var index2 = 0;
@@ -171,6 +203,10 @@ express()
         index1 = Math.floor(Math.random() * 46) + 55;
         index2 = Math.floor(Math.random() * 46) + 55;
         index3 = Math.floor(Math.random() * 54) + 1;
+        var cardNamesRes = await pool.query(`select * from cards where box_id=${boxnum} order by in_box_id`);
+        cardNames = cardNamesRes.rows;
+        cardRarities = ['UR','UR','UR','UR','UR','UR','UR','UR','UR','UR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N'];
+        loops = 100;
         if(boxnum == 1) {
           boxname = 'The Ultimate Rising';
         } else {
@@ -180,6 +216,10 @@ express()
         index1 = Math.floor(Math.random() * 16) + 25;
         index2 = Math.floor(Math.random() * 16) + 25;
         index3 = Math.floor(Math.random() * 24) + 1;
+        var cardNamesRes = await pool.query(`select * from cards where box_id=${boxnum} order by in_box_id`);
+        cardNames = cardNamesRes.rows;
+        cardRarities = ['UR','UR','SR','SR','SR','SR','SR','SR','SR','SR','R','R','R','R','R','R','R','R','R','R','R','R','R','R','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N'];
+        loops = 40;
         if(boxnum == 2) {
           boxname = 'Age Of Discovery';
         } else {
@@ -194,7 +234,7 @@ express()
       var card3Result = await pool.query(`SELECT * FROM cards WHERE box_id=${boxnum} and in_box_id=${index3}`);
       var card3Data = card3Result.rows[0];
 
-      var data = { num : boxnum, name : boxname, card1 : card1Data, card2 : card2Data, card3 : card3Data };
+      var data = { num : boxnum, name : boxname, card1 : card1Data, card2 : card2Data, card3 : card3Data , cardnames : cardNames, cardrarities : cardRarities, numOfLoops : loops };
 
       res.render('pages/pack-opener', data);
     })

@@ -2,13 +2,13 @@
 <html>
     <head>
         <title>Pack Opener</title>
-        <!-- <link rel="stylesheet" href="/../../stylesheets/main.css"> -->
+        <link rel="stylesheet" href="/stylesheets/packOpener.css">
     </head>
 
     <body>
-        <div class="Content">
-            <%- include ("../partials/aio_dld_header.ejs") %>
-            
+        <%- include ("../partials/aio_dld_header.ejs") %>
+
+        <div class="columnLeft">
             <h1><%= name %></h1>
 
             Card1: <%= card1.name %><br>
@@ -20,11 +20,30 @@
             <form action="/box/<%= num %>/open" method="get">
                 <input type="submit" value="New Pack">
             </form> <br>
-
-            <script>
-                //javascript here
-            </script>
-
         </div>
+
+        <div class="columnRight">
+            <h2>Remaining Cards:</h2>
+
+            <table style="width:100%">
+                <tr>
+                    <th style="width:10%">#</th>
+                    <th style="width:20%">Rarity</th>
+                    <th style="width:70%">Card Name</th>
+                </tr>
+                <% for(let i = 0; i < numOfLoops; i++) { %>
+                    <tr>
+                        <td>XD</td>
+                        <td><%= cardrarities[i] %></td>
+                        <td><%= cardnames[i].name %></td>
+                    </tr>
+                <% } %>
+            </table>
+        </div>
+
+        <script>
+            //javascript here
+        </script>
+
     </body>
 </html>
