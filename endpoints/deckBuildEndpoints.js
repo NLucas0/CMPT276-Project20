@@ -26,8 +26,30 @@ router.get('/build', async(req, res) => {
         const collectionResult = await client.query(userCollectionQuery);
         var cardsQuery = `SELECT * FROM cards order by card_id`;
         const cardsTable = await client.query(cardsQuery);
+        var savedDeck = [];
         const data = {collection: collectionResult.rows[0].cards,
-                        cards: cardsTable.rows};
+                        cards: cardsTable.rows,
+                        deck: savedDeck};
+        res.render('pages/deckBuilder', data);
+
+        client.release();
+    } catch(error) {
+        res.end(error);
+    }
+})
+
+router.get('/edit/:id', async(req, res) => {
+    try {
+        const client = await pool.connect();
+        var userCollectionQuery = `SELECT cards FROM users WHERE id=${req.session.user.id}`
+        const collectionResult = await client.query(userCollectionQuery);
+        var cardsQuery = `SELECT * FROM cards order by card_id`;
+        const cardsTable = await client.query(cardsQuery);
+        var deckQuery = `SELECT * FROM decks where id=${req.params.id}`
+        const savedDeck = await client.query(deckQuery);
+        const data = {collection: collectionResult.rows[0].cards,
+                        cards: cardsTable.rows,
+                        deck: savedDeck.rows[0]};
         res.render('pages/deckBuilder', data);
 
         client.release();
@@ -38,9 +60,13 @@ router.get('/build', async(req, res) => {
 
 router.post('/save', async (req, res) => {
     try{
-        console.log("Check");
         const client = await pool.connect();
-        await client.query(`insert into decks (owner_id, name, cards, extra_deck) values (${req.session.user.id}, '${req.body.name}', $1, $2)`, [req.body.cards, req.body.extra]);
+        var existingDeck = await client.query(`SELECT * FROM decks where owner_id=${req.session.user.id} AND name='${req.body.name}'`);
+        if(existingDeck.rows == 0) {
+            await client.query(`insert into decks (owner_id, name, cards, extra_deck) values (${req.session.user.id}, '${req.body.name}', $1, $2)`, [req.body.cards, req.body.extra]);
+        } else {
+            await client.query(`UPDATE decks SET cards=$1, extra_deck=$2 WHERE owner_id=${req.session.user.id} AND name='${req.body.name}'`, [req.body.cards, req.body.extra]);
+        }
         client.release();
     } catch(error) {
         res.end(error);
