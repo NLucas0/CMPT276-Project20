@@ -7,8 +7,10 @@
         <link rel="stylesheet" href="/stylesheets/cardViewer.css">
         <script>
             let sortType = 0;
-            let cardList = <%-JSON.stringify(allCards)%>;
-            let uCards = <%-JSON.stringify(userCards)%>;
+            const cardList = <%-JSON.stringify(allCards)%>;
+            let cardListOnScrn = <%-JSON.stringify(allCards)%>;
+            const uCards = <%-JSON.stringify(userCards)%>;
+            let uCardsOnScrn = <%-JSON.stringify(userCards)%>;
         </script>
     </head>
     <body>
@@ -17,18 +19,18 @@
             <button type="button" id="tabS" onclick="sTab(this.id)">View all available cards</button>
             <button type="button" id="tabD" onclick="sTab(this.id)">View owned cards</button>
             <div id="displayAll" style="clear:left">
-                <input type="text" class="searchbar" name="sBar" placeholder="SEARCH"> <!--search functionality for later-->
-                <button style="float:right" onclick="setSort('s1', sortType, cardList, uCards)" class="s1">abc</button>
-                <button style="float:right" onclick="setSort('s2', sortType, cardList, uCards)" class="s2">stars</button>
-                <button style="float:right" onclick="setSort('s3', sortType, cardList, uCards)" class="s3">value</button>
+                <input type="text" class="searchbar" name="sBar" placeholder="SEARCH" onkeyup="searchAll(this.value)">
+                <button style="float:right" onclick="setSort('s1')" class="s1">abc</button>
+                <button style="float:right" onclick="setSort('s2')" class="s2">stars</button>
+                <button style="float:right" onclick="setSort('s3')" class="s3">value</button>
                 <p style="text-align:right; margin:0">sort by: </p>
-                <table class="displayTable">
+                <table class="displayTable" id="tableAll">
                     <% for(i=0;i<280;i++) { %>
                         <% if(i%4 == 0) { %>
                             <tr>
                         <% } %>
-                            <td>
-                                <img id= "aimg<%=i%>" src= "<%=allCards[i].image%>", alt="<%=allCards[i].name%>", onclick="relocate('<%-allCards[i].name%>')">
+                            <td style="text-align:center">
+                                <img id= "aimg<%=i%>" src= "<%=allCards[i].image%>" alt="<%=allCards[i].name%>" onclick='relocate("<%=allCards[i].name%>")'>
                             </td>
                         <% if(i%4 == 3) { %> 
                             </tr>
@@ -37,8 +39,8 @@
                 </table>
             </div>
             <div id="displayOwned" style="display:none; clear:left"> 
-                <div style="display:flex; flex-direction:column-reverse">
-                    <table class="displayTable" style>
+                <div style="display:flex; flex-direction:column-reverse" id="divOwned">
+                    <table class="displayTable" id="tableUsr">
                         <%let counter = 0; %>
                         <% for(i=0;i<userCards.length;i++) { %>
                             <% if(userCards[i]>0) { %>
@@ -46,9 +48,9 @@
                                     <% if(counter%4 == 0) { %>
                                         <tr>
                                     <% } %>
-                                        <td>
+                                        <td style="text-align:center">
                                             <% counter++; %>
-                                            <img id= "uimg<%=counter%>" src= "<%=allCards[i].image%>", alt="<%=allCards[i].name%>", onclick="relocate('<%-allCards[i].name%>')">
+                                            <img id= "uimg<%=counter%>" src= "<%=allCards[i].image%>" alt="<%=allCards[i].name%>" onclick='relocate("<%=allCards[i].name%>")'>
                                         </td>
                                     <% if(counter%4 == 0 || counter==userCards.length) { %> 
                                         </tr>
@@ -57,12 +59,12 @@
                             <% } %>
                         <% } %>
                     </table>
-                    <div>
-                        <input type="text" class="searchbar" name="sBar" placeholder="SEARCH" > <!--search functionality for later-->
+                    <div id="topDiv">
+                        <input type="text" class="searchbar" name="sBar" placeholder="SEARCH" onkeyup="searchUsr(this.value)">
                         <p style="float:left; margin:0">You currently own: <%=counter%> cards.</p>
-                        <button style="float:right" onclick="setSort('s1', sortType, cardList, uCards)" class="s1">abc</button>
-                        <button style="float:right" onclick="setSort('s2', sortType, cardList, uCards)" class="s2">stars</button>
-                        <button style="float:right" onclick="setSort('s3', sortType, cardList, uCards)" class="s3">value</button>
+                        <button style="float:right" onclick="setSort('s1')" class="s1">abc</button>
+                        <button style="float:right" onclick="setSort('s2')" class="s2">stars</button>
+                        <button style="float:right" onclick="setSort('s3')" class="s3">value</button>
                         <p style="text-align:right; margin:0">sort by: </p>                       
                     </div>
                 </div>
