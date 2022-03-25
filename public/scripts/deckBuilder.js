@@ -101,11 +101,16 @@ function selectCard(event, cardId, deselect){
 
 function saveDeck() {
     var deckName = document.getElementById("deckName").value;
-    post('/save', { name: deckName, cards: deck, extra: extraDeck });
 
-    alert("Deck Saved");
-    window.location = window.location.protocol + "//" +
-                    window.location.host + "/deckBuild/decks";
+    if(deckName.length > 0) {
+        post('/save', { name: deckName, cards: deck, extra: extraDeck });
+    
+        alert("Deck Saved");
+        window.location = window.location.protocol + "//" +
+                        window.location.host + "/deckBuild/decks";
+    } else {
+        alert("Please give your deck a name");
+    }
 }
 
 function post(endpoint, data){
