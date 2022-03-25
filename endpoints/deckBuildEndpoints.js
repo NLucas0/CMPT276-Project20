@@ -5,7 +5,7 @@ module.exports = router;
 
 //deck builder homepage
     //list current users deck, along with a "New Deck" button
-router.get('/decks', async(req, res)=> {
+router.get('/decks', async (req, res) => {
     try{
         const client = await pool.connect();
         var userDecksQuery = `SELECT * FROM decks WHERE owner_id=${req.session.user.id}`
@@ -19,15 +19,31 @@ router.get('/decks', async(req, res)=> {
 })
   
       //actual deck builder
-router.get('/build', async(req, res)=> {
-    const client = await pool.connect();
-    var userCollectionQuery = `SELECT cards FROM users WHERE id=${req.session.user.id}`
-    const collectionResult = await client.query(userCollectionQuery);
-    var cardsQuery = `SELECT * FROM cards order by card_id`;
-    const cardsTable = await client.query(cardsQuery);
-    const data = {collection: collectionResult.rows[0].cards,
-                    cards: cardsTable.rows};
-    res.render('pages/deckBuilder', data);
+router.get('/build', async(req, res) => {
+    try {
+        const client = await pool.connect();
+        var userCollectionQuery = `SELECT cards FROM users WHERE id=${req.session.user.id}`
+        const collectionResult = await client.query(userCollectionQuery);
+        var cardsQuery = `SELECT * FROM cards order by card_id`;
+        const cardsTable = await client.query(cardsQuery);
+        const data = {collection: collectionResult.rows[0].cards,
+                        cards: cardsTable.rows};
+        res.render('pages/deckBuilder', data);
 
-    client.release();
+        client.release();
+    } catch(error) {
+        res.end(error);
+    }
+})
+
+router.post('/save', async (req, res) => {
+    try{
+        console.log("Check");
+        const client = await pool.connect();
+        await client.query(`insert into decks (owner_id, name, cards, extra_deck) values (${req.session.user.id}, '${req.body.name}', $1, $2)`, [req.body.cards, req.body.extra]);
+        client.release();
+    } catch(error) {
+        res.end(error);
+        res.redirect('/');
+    }
 })

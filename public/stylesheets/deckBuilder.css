@@ -10,7 +10,7 @@
 
 
 #collection{
-    margin-right: 10%;
+    margin-right: 6%;
 }
 #deck{
     float: right;
@@ -21,8 +21,8 @@
 }
 
 .card{
-    width: 5.9vw;
-    height: 8.6vw;
+    width: 8.85vw;
+    height: 12.9vw;
 }
 
 h3{

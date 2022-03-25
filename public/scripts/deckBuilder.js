@@ -1,3 +1,6 @@
+var deck = [];
+var extraDeck = [];
+
 function deckBuilderPageSetUp(){
     const cardsInDeck = [];
     displayCards(document.getElementById("collectionCardsTable"), cardCollection);
@@ -31,11 +34,17 @@ function selectCard(event, cardId, deselect){
 
     // get id of table to move to
     if(!deselect){
-        id = "deckCardsTable";
+        //deck build limits go here
+        if(cardsList[cardId-1].extra) {
+            extraDeck.push(cardId);
+            id = "extraDeckCardsTable";
+        } else {
+            deck.push(cardId);
+            id = "deckCardsTable";
+        }
         // store original table id and move card
         let originalTable = card.parentElement.parentElement.id;
         if(cardCollection[cardId-1] > 1) {
-            console.log("Spare copies");
             let copyCard = card.cloneNode();
             document.getElementById(id).getElementsByTagName("tbody")[0].appendChild(copyCard);
             copyCard.onclick = function(event){selectCard(event, cardId, !deselect);};
@@ -58,10 +67,37 @@ function selectCard(event, cardId, deselect){
             card.remove();
             cardCollection[cardId-1] += 1;
         }
+        if(cardsList[cardId-1].extra) {
+            var cardIndex = extraDeck.indexOf(cardId);
+            if(cardIndex > 1) {
+                extraDeck.splice(cardIndex, 1);
+            }
+        } else {
+            var cardIndex = deck.indexOf(cardId);
+            if(cardIndex > 1) {
+                deck.splice(cardIndex, 1);
+            }
+        }
     }
 
 
     // update no contents message
     // checkTableEmpty(originalTable);
     // checkTableEmpty(id);
+}
+
+function saveDeck() {
+    var deckName = document.getElementById("deckName").value;
+    post('/save', { name: deckName, cards: deck, extra: extraDeck });
+
+    alert("Deck Saved");
+    window.location = window.location.protocol + "//" +
+                    window.location.host + "/deckBuild/decks";
+}
+
+function post(endpoint, data){
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST","/deckBuild"+ endpoint, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify(data));
 }
