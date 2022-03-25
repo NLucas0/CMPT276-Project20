@@ -4,7 +4,6 @@
 	<meta charset = "utf-8"/>
 	<title><%=user.name%>'s Decks</title>
 	<link rel="stylesheet" href="/stylesheets/main.css"/>
-    
 </head>
 
 <body>
@@ -13,7 +12,7 @@
 
     <ul>
         <% decks.forEach(function(deck) { %>
-            <li><%= deck.name %></li>
+            <li><a href="/deckBuild/edit/<%= deck.id %>"><%= deck.name %></a></li>
         <% }); %>
     </ul>
 

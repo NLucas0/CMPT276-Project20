@@ -2,7 +2,7 @@ var deck = [];
 var extraDeck = [];
 
 function deckBuilderPageSetUp(){
-    const cardsInDeck = [];
+    
     displayCards(document.getElementById("collectionCardsTable"), cardCollection);
 }
 
@@ -19,6 +19,19 @@ function displayCards(container, cardCollection){
                 newCard.src = "/" + cardsList[i].image;
                 newCard.onclick = function(event){selectCard(event, cardsList[i].card_id, false);}
                 container.getElementsByTagName("tbody")[0].appendChild(newCard);
+                if(cardsList[i].extra) {
+                    for(var j = 0; j < savedExtra.length; j++) {
+                        if(cardsList[i].card_id == savedExtra[j]) {
+                            newCard.click();
+                        }
+                    }
+                } else {
+                    for(var j = 0; j < savedDeck.length; j++) {
+                        if(cardsList[i].card_id == savedDeck[j]) {
+                            newCard.click();
+                        }
+                    }
+                }
             }
         }
     }
@@ -88,11 +101,16 @@ function selectCard(event, cardId, deselect){
 
 function saveDeck() {
     var deckName = document.getElementById("deckName").value;
-    post('/save', { name: deckName, cards: deck, extra: extraDeck });
 
-    alert("Deck Saved");
-    window.location = window.location.protocol + "//" +
-                    window.location.host + "/deckBuild/decks";
+    if(deckName.length > 0) {
+        post('/save', { name: deckName, cards: deck, extra: extraDeck });
+    
+        alert("Deck Saved");
+        window.location = window.location.protocol + "//" +
+                        window.location.host + "/deckBuild/decks";
+    } else {
+        alert("Please give your deck a name");
+    }
 }
 
 function post(endpoint, data){

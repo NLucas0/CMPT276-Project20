@@ -207,7 +207,11 @@ function displayData(userId){
 // refactor later
 // add data to table
 function addToTable(table, array, elementTag, className){
-    if(array == null){return;}
+    if(array == null || array.length < 1){
+        table.getElementsByClassName("noMatchMessage")[0].hidden = false;
+        return;
+    }
+    
     for(let item of array){
         if(elementTag == "img" && item == 0){continue;}
         

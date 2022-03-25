@@ -21,7 +21,8 @@
         </div>
     
         <div id="deck" class="deckBuilderTable">
-            <input type="text" id="deckName" placeholder="Name this deck">
+            <input type="text" id="deckName" value="<%- deck.name %>">
+            <label for="deckName">Name</label>
             <h3>Deck</h3>
             <table id="deckCardsTable" class="cardTable" style="height: 90%;">
                 <td class="noMatchMessage" hidden="true">No Cards</td>
@@ -37,6 +38,9 @@
     <script>
         let cardCollection = [<%- collection %>];
         let cardsList = <%- JSON.stringify(cards) %>;
+        let savedDeck = [<%- deck.cards %>];
+        let savedExtra = [<%- deck.extra_deck %>];
+        
         deckBuilderPageSetUp();
     </script>
 
