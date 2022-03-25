@@ -91,7 +91,7 @@ function doSort() { //handles sorting
     })
 }
 
-function searchAll(searchStr) {
+function searchAll(searchStr) { //search function for all cards
     cardListOnScrn = [];
     cardList.forEach((card)=>{
         if(card.name.toLowerCase().includes(searchStr.toLowerCase())) {
@@ -120,7 +120,7 @@ function searchAll(searchStr) {
     doSort();
 }
 
-function searchUsr(searchStr) {
+function searchUsr(searchStr) { //search function for viewing user's cards
     uCardsOnScrn.fill(0);
     let foundCount=0;
     cardList.forEach((card,index)=>{
