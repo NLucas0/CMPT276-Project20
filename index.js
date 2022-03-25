@@ -8,8 +8,8 @@ const PORT = process.env.PORT || 5000
 
 const {Pool} = require('pg');
 var pool = new Pool({
-  connectionString: process.env.DATABASE_URL||"postgres://postgres:root@localhost/aio_dld_database"
-  , ssl:{rejectUnauthorized: false}
+  connectionString: process.env.DATABASE_URL||"postgres://postgres:bootstrap@localhost/aio_dld_database"
+  // , ssl:{rejectUnauthorized: false}
 })
 
 // allow pool to be accessed by other files
@@ -94,7 +94,7 @@ var app = express()
       var friendArray = new Array();
       var tradeArray = new Array();
 
-      await pool.query(`Insert into users (name, password, cards, friends, trades, type) values('${username}', '${password}', $1, $2, $3, 'USER')`, [cardsArray, friendArray, tradeArray]);
+      var userId = await pool.query(`Insert into users (name, password, cards, friends, trades, type) values('${username}', '${password}', $1, $2, $3, 'USER') RETURNING id`, [cardsArray, friendArray, tradeArray]);
 
       //create box progress
       var newBox1 = new Array(100);
@@ -106,7 +106,7 @@ var app = express()
       var newBox4 = new Array(40);
       newBox4 = [1,1,1,1,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,5,5,5,5,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10];
 
-      await pool.query(`Insert into progress (box_1_progress, box_2_progress, box_3_progress, box_4_progress, box_1_ratios, box_3_ratios, box_2_4_ratios) values($1, $2, $3, $4, $5, $6, $7)`, [newBox1,newBox2,newBox3,newBox4,newBox1,newBox3,newBox2]);
+      await pool.query(`Insert into progress values(${userId.rows[0].id}, $1, $2, $3, $4, $5, $6, $7)`, [newBox1,newBox2,newBox3,newBox4,newBox1,newBox3,newBox2]);
       
       res.redirect('/login');
     })
