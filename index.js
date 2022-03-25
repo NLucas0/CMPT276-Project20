@@ -2,13 +2,14 @@ const express = require('express')
 const bcrypt = require('bcrypt') // for encrypting password
 const axios = require('axios') // convenient http request sending
 const path = require('path')
+var cors = require('cors');
 const session = require("express-session")
 const PORT = process.env.PORT || 5000
 
 const {Pool} = require('pg');
 var pool = new Pool({
   connectionString: process.env.DATABASE_URL||"postgres://postgres:root@localhost/aio_dld_database"
-  ,ssl:{rejectUnauthorized: false}
+  //,ssl:{rejectUnauthorized: false}
 })
 
 // allow pool to be accessed by other files
@@ -48,7 +49,7 @@ exports.pool = pool;
   }
 })().catch(e => console.error(e.stack))
 
-express()
+var app = express()
     .use(express.static(path.join(__dirname, 'public')))
     .use(express.json())
     .use(express.urlencoded({extended: false})) //false does not let the id and info go in coockies
@@ -65,6 +66,7 @@ express()
     })
     
     // link files
+    .use('/', cors())
     .use("/trade", require('./endpoints/tradeEndpoints'))
     .use("/deckBuild", require('./endpoints/deckBuildEndpoints'))
     .use("/cardView", require('./endpoints/cardViewingEndpoints'))
@@ -239,5 +241,10 @@ express()
         }
     })
   
+    .get('/test', async(req, res)=>{
+        res.json('test');
+    })
 
     .listen(PORT, () => console.log(`Listening on ${ PORT }`))
+
+module.exports = app;
