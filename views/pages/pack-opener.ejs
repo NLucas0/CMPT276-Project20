@@ -11,15 +11,26 @@
         <div class="columnLeft">
             <h1><%= name %></h1>
 
+            Packs Left: <%= packsleft %><br><br>
+
             Card1: <%= card1.name %><br>
             Card2: <%= card2.name %><br>
             Card3: <%= card3.name %><br> 
             
             <br>
 
-            <form action="/box/<%= num %>/open" method="get">
-                <input type="submit" value="New Pack">
-            </form> <br>
+            <div class="columnLeft">
+                <form action="/box/<%= num %>/open" method="get">
+                    <input type="submit" value="New Pack">
+                </form> 
+            </div>
+            <div class="columnRight">
+                <form action="/box/<%= num %>/reset" method="get">
+                    <input type="submit" value="Reset Box">
+                </form>
+            </div>
+            
+            <br>
         </div>
 
         <div class="columnRight">
@@ -33,7 +44,7 @@
                 </tr>
                 <% for(let i = 0; i < numOfLoops; i++) { %>
                     <tr>
-                        <td>XD</td>
+                        <td><%= boxprogress[i] %></td>
                         <td><%= cardrarities[i] %></td>
                         <td><%= cardnames[i].name %></td>
                     </tr>
