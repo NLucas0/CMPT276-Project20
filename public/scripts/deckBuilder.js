@@ -5,13 +5,13 @@ const MAXIMUM_EXTRA_SIZE = 7;
 const MAXIMUM_COPIES = 3;
 
 function deckBuilderPageSetUp(){
-    
-    displayCards(document.getElementById("collectionCardsTable"), cardCollection);
+    //removeDeckFromCollection(cardCollection);
+    displayCollection(document.getElementById("collectionCardsTable"), cardCollection);
+    //displayCards(document.getElementById("deckCardsTable"), cardCollection);
 }
 
-function displayCards(container, cardCollection){
+function displayCollection(container, cardCollection){
     try{
-        
         // add cards to right table and setup onclick event
         for(let i = 0; i < cardCollection.length; i++){
             if(cardCollection[i] > 0) {
@@ -19,8 +19,10 @@ function displayCards(container, cardCollection){
                 newCard.className = "card";
                 newCard.style.backgroundImage = "url('/" + cardsList[i].image + "')";
                 newCard.style.backgroundSize = "contain";
-                newCard.src = "/" + cardsList[i].image;
                 newCard.innerHTML = "X " + cardCollection[i];
+                newCard.dataset.id = cardsList[i].card_id;
+                newCard.dataset.name = cardsList[i].name;
+                newCard.dataset.stars = cardsList[i].stars;
                 newCard.onclick = function(event){selectCard(event, cardsList[i].card_id);}
                 container.getElementsByTagName("tbody")[0].appendChild(newCard);
                 if(cardsList[i].extra) {
@@ -38,6 +40,7 @@ function displayCards(container, cardCollection){
                 }
             }
         }
+        sortTable(container);
     }
     // if no cards
     catch(TypeError){
@@ -66,8 +69,7 @@ function selectCard(event, cardId){
         cardCollection[cardId-1] -= 1;
         updateCardCount(card, cardId);
     }
-
-    console.log(deck);
+    sortTable(document.getElementById("deckCardsTable"));
 }
 
 function deselectCard(event, cardId, originalCard) {
@@ -90,6 +92,7 @@ function deselectCard(event, cardId, originalCard) {
             deck.splice(cardIndex, 1);
         }
     }
+   
     console.log(deck);
 }
 
@@ -108,6 +111,20 @@ function validateCard(cardId) {
 
 function updateCardCount(card, cardId) {
     card.innerHTML = "X " + cardCollection[cardId-1];
+}
+
+function sortTable(container) {
+    var cards = [].slice.call(container.getElementsByClassName("card"));
+    cards.sort((a,b) => {
+        let nameA = a.dataset.name.toLowerCase();
+        let nameB = b.dataset.name.toLowerCase();
+        if(nameA > nameB) return 1;
+        if(nameA < nameB) return -1;
+        return 0;
+    });
+    for(let card of cards) {
+        card.parentElement.appendChild(card);
+    }
 }
 
 
