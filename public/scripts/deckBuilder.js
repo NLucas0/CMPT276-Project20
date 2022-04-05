@@ -1,5 +1,8 @@
 var deck = [];
 var extraDeck = [];
+const MAXIMUM_DECK_SIZE = 30;
+const MAXIMUM_EXTRA_SIZE = 7;
+const MAXIMUM_COPIES = 3;
 
 function deckBuilderPageSetUp(){
     
@@ -17,7 +20,8 @@ function displayCards(container, cardCollection){
                 newCard.style.backgroundImage = "url('/" + cardsList[i].image + "')";
                 newCard.style.backgroundSize = "contain";
                 newCard.src = "/" + cardsList[i].image;
-                newCard.onclick = function(event){selectCard(event, cardsList[i].card_id, false);}
+                newCard.innerHTML = "X " + cardCollection[i];
+                newCard.onclick = function(event){selectCard(event, cardsList[i].card_id);}
                 container.getElementsByTagName("tbody")[0].appendChild(newCard);
                 if(cardsList[i].extra) {
                     for(var j = 0; j < savedExtra.length; j++) {
@@ -41,13 +45,12 @@ function displayCards(container, cardCollection){
     }
 }
 
-function selectCard(event, cardId, deselect){
+function selectCard(event, cardId){
     let card = event.target||event.srcElement;
     let id;
 
-    // get id of table to move to
-    if(!deselect){
-        //deck build limits go here
+    if(validateCard(cardId)){
+        // get id of table to move to
         if(cardsList[cardId-1].extra) {
             extraDeck.push(cardId);
             id = "extraDeckCardsTable";
@@ -57,47 +60,55 @@ function selectCard(event, cardId, deselect){
         }
         // store original table id and move card
         let originalTable = card.parentElement.parentElement.id;
-        if(cardCollection[cardId-1] > 1) {
-            let copyCard = card.cloneNode();
-            document.getElementById(id).getElementsByTagName("tbody")[0].appendChild(copyCard);
-            copyCard.onclick = function(event){selectCard(event, cardId, !deselect);};
-            cardCollection[cardId-1] -= 1;
-        } else {
-            document.getElementById(id).getElementsByTagName("tbody")[0].appendChild(card);
-            card.onclick = function(event){selectCard(event, cardId, !deselect);};
-            cardCollection[cardId-1] = 0;
-        }
-    } else {
-        id = "collectionCardsTable";
-        let originalTable = card.parentElement.parentElement.id;
-        if(cardCollection[cardId-1] < 1) {
-            //if the collection has no cards of this type left, move this element over and add 1
-            document.getElementById(id).getElementsByTagName("tbody")[0].appendChild(card);
-            card.onclick = function(event){selectCard(event, cardId, !deselect);};
-            cardCollection[cardId-1] += 1;
-        } else {
-            //otherwise, simply delete this element and add one to the count
-            card.remove();
-            cardCollection[cardId-1] += 1;
-        }
-        if(cardsList[cardId-1].extra) {
-            var cardIndex = extraDeck.indexOf(cardId);
-            if(cardIndex > 1) {
-                extraDeck.splice(cardIndex, 1);
-            }
-        } else {
-            var cardIndex = deck.indexOf(cardId);
-            if(cardIndex > 1) {
-                deck.splice(cardIndex, 1);
-            }
-        }
+        let copyCard = card.cloneNode();
+        document.getElementById(id).getElementsByTagName("tbody")[0].appendChild(copyCard);
+        copyCard.onclick = function(event){deselectCard(event, cardId, card);};
+        cardCollection[cardId-1] -= 1;
+        updateCardCount(card, cardId);
     }
 
-
-    // update no contents message
-    // checkTableEmpty(originalTable);
-    // checkTableEmpty(id);
+    console.log(deck);
 }
+
+function deselectCard(event, cardId, originalCard) {
+    let card = event.target||event.srcElement;
+    let id = "collectionCardsTable";
+    let originalTable = card.parentElement.parentElement.id;
+    
+    card.remove();
+    cardCollection[cardId-1] += 1;    
+    updateCardCount(originalCard, cardId);
+
+    if(cardsList[cardId-1].extra) {
+        var cardIndex = extraDeck.indexOf(cardId);
+        if(cardIndex > 1) {
+            extraDeck.splice(cardIndex, 1);
+        }
+    } else {
+        var cardIndex = deck.indexOf(cardId);
+        if(cardIndex > 1) {
+            deck.splice(cardIndex, 1);
+        }
+    }
+}
+
+
+function validateCard(cardId) {
+    if(cardsList[cardId-1].extra) {
+        return extraDeck.length < MAXIMUM_EXTRA_SIZE && 
+               extraDeck.filter(x => x === cardId).length < MAXIMUM_COPIES && 
+               cardCollection[cardId-1] > 0;
+    } else {
+        return deck.length < MAXIMUM_DECK_SIZE && 
+        deck.filter(x => x === cardId).length < MAXIMUM_COPIES && 
+        cardCollection[cardId-1] > 0;
+    }
+}
+
+function updateCardCount(card, cardId) {
+    card.innerHTML = "X " + cardCollection[cardId-1];
+}
+
 
 function saveDeck() {
     var deckName = document.getElementById("deckName").value;

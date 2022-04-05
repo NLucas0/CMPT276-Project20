@@ -12,9 +12,11 @@
 #collection{
     margin-right: 6%;
 }
+
 #deck{
     float: right;
 }
+
 .deckBuilderTable{
     width:45%;
     height: inherit;
@@ -23,6 +25,15 @@
 .card{
     width: 8.85vw;
     height: 12.9vw;
+    padding-top: 95%;
+    padding-left: 80%;
+}
+
+.quantity {
+    background-color: white;
+    float: right;
+    width: 10%;
+    height: 10%;
 }
 
 h3{
