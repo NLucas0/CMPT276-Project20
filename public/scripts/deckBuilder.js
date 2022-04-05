@@ -81,15 +81,16 @@ function deselectCard(event, cardId, originalCard) {
 
     if(cardsList[cardId-1].extra) {
         var cardIndex = extraDeck.indexOf(cardId);
-        if(cardIndex > 1) {
+        if(cardIndex >= 0) {
             extraDeck.splice(cardIndex, 1);
         }
     } else {
         var cardIndex = deck.indexOf(cardId);
-        if(cardIndex > 1) {
+        if(cardIndex >= 0) {
             deck.splice(cardIndex, 1);
         }
     }
+    console.log(deck);
 }
 
 
