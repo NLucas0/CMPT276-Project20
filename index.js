@@ -147,7 +147,11 @@ var app = express()
   
     //Pack Opener Box Selection
     .get('/opener', (req,res)=>{
-      res.render('pages/pack-nav');
+      if(req.session.user) {
+        res.render('pages/pack-nav');
+      } else {
+        res.redirect("/");
+      }
     })
 
     //Pack Opener Start
