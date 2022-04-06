@@ -8,8 +8,8 @@ const PORT = process.env.PORT || 5000
 
 const {Pool} = require('pg');
 var pool = new Pool({
-  connectionString: process.env.DATABASE_URL||"postgres://postgres:root@localhost/aio_dld_database"
-  , ssl:{rejectUnauthorized: false}
+  connectionString: process.env.DATABASE_URL||"postgres://postgres:bootstrap@localhost/aio_dld_database"
+  // , ssl:{rejectUnauthorized: false}
 })
 
 // allow pool to be accessed by other files
@@ -152,229 +152,255 @@ var app = express()
 
     //Pack Opener Start
     .get('/box/:number', async (req,res)=>{
-      var boxnum = req.params.number;
-      var boxname = 'Invalid Box';
-      var cardNames = null;
-      var boxProgress = null;
-      var packsLeft = 0;
-      var loops = 0;
+      if(req.session.user) {
+        var boxnum = req.params.number;
+        var boxname = 'Invalid Box';
+        var cardNames = null;
+        var boxProgress = null;
+        var packsLeft = 0;
+        var loops = 0;
 
-      if(boxnum >= 1 && boxnum <= 4) {
-        var cardNamesRes = await pool.query(`select * from cards where box_id=${boxnum} order by in_box_id`);
-        cardNames = cardNamesRes.rows;
-        var idQuantity = await pool.query(`select box_${boxnum}_progress from progress where owner_id=${req.session.user.id}`);
-        var packsNum = await pool.query(`select box_${boxnum}_packs from progress where owner_id=${req.session.user.id}`);
-        if(boxnum == 1 || boxnum == 3) {
-          cardRarities = ['UR','UR','UR','UR','UR','UR','UR','UR','UR','UR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N'];
-          loops = 100;
-          if(boxnum == 1) {
-            boxname = 'The Ultimate Rising';
-            boxProgress = idQuantity.rows[0].box_1_progress;
-            packsLeft = packsNum.rows[0].box_1_packs;
-          } else {
-            boxname = 'Neo Impact';
-            boxProgress = idQuantity.rows[0].box_3_progress;
-            packsLeft = packsNum.rows[0].box_3_packs;
+        if(boxnum >= 1 && boxnum <= 4) {
+          var cardNamesRes = await pool.query(`select * from cards where box_id=${boxnum} order by in_box_id`);
+          cardNames = cardNamesRes.rows;
+          var idQuantity = await pool.query(`select box_${boxnum}_progress from progress where owner_id=${req.session.user.id}`);
+          var packsNum = await pool.query(`select box_${boxnum}_packs from progress where owner_id=${req.session.user.id}`);
+          if(boxnum == 1 || boxnum == 3) {
+            cardRarities = ['UR','UR','UR','UR','UR','UR','UR','UR','UR','UR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N'];
+            loops = 100;
+            if(boxnum == 1) {
+              boxname = 'The Ultimate Rising';
+              boxProgress = idQuantity.rows[0].box_1_progress;
+              packsLeft = packsNum.rows[0].box_1_packs;
+            } else {
+              boxname = 'Neo Impact';
+              boxProgress = idQuantity.rows[0].box_3_progress;
+              packsLeft = packsNum.rows[0].box_3_packs;
+            }
+          } else if(boxnum == 2 || boxnum == 4) {
+            cardRarities = ['UR','UR','SR','SR','SR','SR','SR','SR','SR','SR','R','R','R','R','R','R','R','R','R','R','R','R','R','R','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N'];
+            loops = 40;
+            if(boxnum == 2) {
+              boxname = 'Age Of Discovery';
+              boxProgress = idQuantity.rows[0].box_2_progress;
+              packsLeft = packsNum.rows[0].box_2_packs;
+            } else {
+              boxname = 'Flame Of The Tyrant';
+              boxProgress = idQuantity.rows[0].box_4_progress;
+              packsLeft = packsNum.rows[0].box_4_packs;
+            }
           }
-        } else if(boxnum == 2 || boxnum == 4) {
-          cardRarities = ['UR','UR','SR','SR','SR','SR','SR','SR','SR','SR','R','R','R','R','R','R','R','R','R','R','R','R','R','R','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N'];
-          loops = 40;
-          if(boxnum == 2) {
-            boxname = 'Age Of Discovery';
-            boxProgress = idQuantity.rows[0].box_2_progress;
-            packsLeft = packsNum.rows[0].box_2_packs;
-          } else {
-            boxname = 'Flame Of The Tyrant';
-            boxProgress = idQuantity.rows[0].box_4_progress;
-            packsLeft = packsNum.rows[0].box_4_packs;
-          }
+
+          var data = { num : boxnum, name : boxname, card1 : 0, card2 : 0, card3 : 0 , cardnames : cardNames, cardrarities : cardRarities, boxprogress : boxProgress, packsleft : packsLeft, numOfLoops : loops };
+
+          res.render('pages/pack-opener', data);
+        } else {
+          res.redirect("/opener");
         }
+      } else {
+        res.redirect("/");
       }
-
-      var data = { num : boxnum, name : boxname, card1 : 0, card2 : 0, card3 : 0 , cardnames : cardNames, cardrarities : cardRarities, boxprogress : boxProgress, packsleft : packsLeft, numOfLoops : loops };
-
-      res.render('pages/pack-opener', data);
     })
 
     //Pack Opener Opening
     .get('/box/:number/open', async (req,res)=>{
-      var boxnum = req.params.number;
-      var boxname = 'Invalid Box';
-      var cardNames = null;
-      var boxProgress = null;
-      var packsLeft = 0;
-      var loops = 0;
+      if(req.session.user) {
+        var boxnum = req.params.number;
+        var boxname = 'Invalid Box';
+        var cardNames = null;
+        var boxProgress = null;
+        var packsLeft = 0;
+        var loops = 0;
 
-      var index1 = 0;
-      var index2 = 0;
-      var index3 = 0;
+        var index1 = 0;
+        var index2 = 0;
+        var index3 = 0;
 
-      if(boxnum >= 1 && boxnum <= 4) {
-        var cardNamesRes = await pool.query(`select * from cards where box_id=${boxnum} order by in_box_id`);
-        cardNames = cardNamesRes.rows;
-        var origQuantity = await pool.query(`select box_${boxnum}_progress from progress where owner_id=${req.session.user.id}`);
-        var packsNum = await pool.query(`select box_${boxnum}_packs from progress where owner_id=${req.session.user.id}`);
+        if(boxnum >= 1 && boxnum <= 4) {
+          var cardNamesRes = await pool.query(`select * from cards where box_id=${boxnum} order by in_box_id`);
+          cardNames = cardNamesRes.rows;
+          var origQuantity = await pool.query(`select box_${boxnum}_progress from progress where owner_id=${req.session.user.id}`);
+          var packsNum = await pool.query(`select box_${boxnum}_packs from progress where owner_id=${req.session.user.id}`);
 
-        var userCards = await pool.query(`select cards from users where id=${req.session.user.id}`);
-        var updatedCards = userCards.rows[0].cards;
+          var userCards = await pool.query(`select cards from users where id=${req.session.user.id}`);
+          var updatedCards = userCards.rows[0].cards;
 
-        if(boxnum == 1 || boxnum == 3) {
-          if(boxnum == 1) {
-            boxname = 'The Ultimate Rising';
-            boxProgress = origQuantity.rows[0].box_1_progress;
-            packsLeft = packsNum.rows[0].box_1_packs;
-          } else /*boxnum == 3*/ {
-            boxname = 'Neo Impact';
-            boxProgress = origQuantity.rows[0].box_3_progress;
-            packsLeft = packsNum.rows[0].box_3_packs;
+          if(boxnum == 1 || boxnum == 3) {
+            if(boxnum == 1) {
+              boxname = 'The Ultimate Rising';
+              boxProgress = origQuantity.rows[0].box_1_progress;
+              packsLeft = packsNum.rows[0].box_1_packs;
+            } else /*boxnum == 3*/ {
+              boxname = 'Neo Impact';
+              boxProgress = origQuantity.rows[0].box_3_progress;
+              packsLeft = packsNum.rows[0].box_3_packs;
+            }
+
+            if(packsLeft > 0) {
+              do {
+                index1 = Math.floor(Math.random() * 46) + 55;
+              } while (boxProgress[index1 - 1] < 1);
+              boxProgress[index1 - 1] -= 1;
+              if(packsLeft <= 26) {
+                do {
+                  index2 = Math.floor(Math.random() * 32) + 23;
+                } while (boxProgress[index2 - 1] < 1);
+              } else {
+                do {
+                  index2 = Math.floor(Math.random() * 46) + 55;
+                } while (boxProgress[index2 - 1] < 1);
+              }
+              boxProgress[index2 - 1] -= 1;
+              do {
+                index3 = Math.floor(Math.random() * 54) + 1;
+              } while (boxProgress[index3 - 1] < 1);
+              boxProgress[index3 - 1] -= 1;
+
+              if(boxnum == 1) {
+                updatedCards[index1 - 1] += 1;
+                updatedCards[index2 - 1] += 1;
+                updatedCards[index3 - 1] += 1;
+              } else /*boxnum == 3*/ {
+                updatedCards[index1 + 139] += 1;
+                updatedCards[index2 + 139] += 1;
+                updatedCards[index3 + 139] += 1;
+              }
+            }
+
+            cardRarities = ['UR','UR','UR','UR','UR','UR','UR','UR','UR','UR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N'];
+            loops = 100;
+          } else if(boxnum == 2 || boxnum == 4) {
+            if(boxnum == 2) {
+              boxname = 'Age Of Discovery';
+              boxProgress = origQuantity.rows[0].box_2_progress;
+              packsLeft = packsNum.rows[0].box_2_packs;
+            } else /*boxnum == 4*/ {
+              boxname = 'Flame Of THe Tyrant';
+              boxProgress = origQuantity.rows[0].box_4_progress;
+              packsLeft = packsNum.rows[0].box_4_packs;
+            }
+
+            if(packsLeft > 0) {
+              do {
+                index1 = Math.floor(Math.random() * 16) + 25;
+              } while (boxProgress[index1 - 1] < 1);
+              boxProgress[index1 - 1] -= 1;
+              do {
+                index2 = Math.floor(Math.random() * 16) + 25;
+              } while (boxProgress[index2 - 1] < 1);
+              boxProgress[index2 - 1] -= 1;
+              do {
+                index3 = Math.floor(Math.random() * 24) + 1;
+              } while (boxProgress[index3 - 1] < 1);
+              boxProgress[index3 - 1] -= 1;
+  
+              if(boxnum == 2) {
+                updatedCards[index1 + 99] += 1;
+                updatedCards[index2 + 99] += 1;
+                updatedCards[index3 + 99] += 1;
+              } else /*boxnum == 3*/ {
+                updatedCards[index1 + 239] += 1;
+                updatedCards[index2 + 239] += 1;
+                updatedCards[index3 + 239] += 1;
+              }
+            }
+
+            cardRarities = ['UR','UR','SR','SR','SR','SR','SR','SR','SR','SR','R','R','R','R','R','R','R','R','R','R','R','R','R','R','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N'];
+            loops = 40;
           }
 
-          do {
-            index1 = Math.floor(Math.random() * 46) + 55;
-          } while (boxProgress[index1 - 1] < 1);
-          boxProgress[index1 - 1] -= 1;
-          
-          if(packsLeft <= 26) {
-            do {
-              index2 = Math.floor(Math.random() * 32) + 23;
-            } while (boxProgress[index2 - 1] < 1);
+          await pool.query(`update users set cards=$1 where id=${req.session.user.id}`, [updatedCards]);
+
+          if(packsLeft <= 0) {
+            var goToReset = "/box/" + boxnum + "/reset";
+            res.redirect(goToReset);
           } else {
-            do {
-              index2 = Math.floor(Math.random() * 46) + 55;
-            } while (boxProgress[index2 - 1] < 1);
+            packsLeft -= 1;
+  
+            var card1Result = await pool.query(`SELECT * FROM cards WHERE box_id=${boxnum} and in_box_id=${index1}`);
+            var card1Data = card1Result.rows[0];
+            var card2Result = await pool.query(`SELECT * FROM cards WHERE box_id=${boxnum} and in_box_id=${index2}`);
+            var card2Data = card2Result.rows[0];
+            var card3Result = await pool.query(`SELECT * FROM cards WHERE box_id=${boxnum} and in_box_id=${index3}`);
+            var card3Data = card3Result.rows[0];
+  
+            await pool.query(`update progress set box_${boxnum}_progress=$1 where owner_id=${req.session.user.id}`, [boxProgress]);
+            await pool.query(`update progress set box_${boxnum}_packs=${packsLeft} where owner_id=${req.session.user.id}`);
+  
+            var data = { num : boxnum, name : boxname, card1 : card1Data, card2 : card2Data, card3 : card3Data, cardnames : cardNames, cardrarities : cardRarities, boxprogress : boxProgress, packsleft : packsLeft, numOfLoops : loops };
+  
+            res.render('pages/pack-opener', data);
           }
-          boxProgress[index2 - 1] -= 1;
-
-          do {
-            index3 = Math.floor(Math.random() * 54) + 1;
-          } while (boxProgress[index3 - 1] < 1);
-          boxProgress[index3 - 1] -= 1;
-
-          if(boxnum == 1) {
-            updatedCards[index1 - 1] += 1;
-            updatedCards[index2 - 1] += 1;
-            updatedCards[index3 - 1] += 1;
-          } else /*boxnum == 3*/ {
-            updatedCards[index1 + 139] += 1;
-            updatedCards[index2 + 139] += 1;
-            updatedCards[index3 + 139] += 1;
-          }
-
-          packsLeft -= 1;
-          cardRarities = ['UR','UR','UR','UR','UR','UR','UR','UR','UR','UR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N'];
-          loops = 100;
-        } else if(boxnum == 2 || boxnum == 4) {
-          if(boxnum == 2) {
-            boxname = 'Age Of Discovery';
-            boxProgress = origQuantity.rows[0].box_2_progress;
-            packsLeft = packsNum.rows[0].box_2_packs;
-          } else /*boxnum == 4*/ {
-            boxname = 'Flame Of THe Tyrant';
-            boxProgress = origQuantity.rows[0].box_4_progress;
-            packsLeft = packsNum.rows[0].box_4_packs;
-          }
-
-          do {
-            index1 = Math.floor(Math.random() * 16) + 25;
-          } while (boxProgress[index1 - 1] < 1);
-          boxProgress[index1 - 1] -= 1;
-          do {
-            index2 = Math.floor(Math.random() * 16) + 25;
-          } while (boxProgress[index2 - 1] < 1);
-          boxProgress[index2 - 1] -= 1;
-          do {
-            index3 = Math.floor(Math.random() * 24) + 1;
-          } while (boxProgress[index3 - 1] < 1);
-          boxProgress[index3 - 1] -= 1;
-
-          if(boxnum == 2) {
-            updatedCards[index1 + 99] += 1;
-            updatedCards[index2 + 99] += 1;
-            updatedCards[index3 + 99] += 1;
-          } else /*boxnum == 3*/ {
-            updatedCards[index1 + 239] += 1;
-            updatedCards[index2 + 239] += 1;
-            updatedCards[index3 + 239] += 1;
-          }
-
-          packsLeft -= 1;
-          cardRarities = ['UR','UR','SR','SR','SR','SR','SR','SR','SR','SR','R','R','R','R','R','R','R','R','R','R','R','R','R','R','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N'];
-          loops = 40;
-        }
-
-        await pool.query(`update users set cards=$1 where id=${req.session.user.id}`, [updatedCards]);
+        } else {
+          res.redirect("/opener");
+        }        
+      } else {
+        res.redirect("/");
       }
-
-      var card1Result = await pool.query(`SELECT * FROM cards WHERE box_id=${boxnum} and in_box_id=${index1}`);
-      var card1Data = card1Result.rows[0];
-      var card2Result = await pool.query(`SELECT * FROM cards WHERE box_id=${boxnum} and in_box_id=${index2}`);
-      var card2Data = card2Result.rows[0];
-      var card3Result = await pool.query(`SELECT * FROM cards WHERE box_id=${boxnum} and in_box_id=${index3}`);
-      var card3Data = card3Result.rows[0];
-
-      await pool.query(`update progress set box_${boxnum}_progress=$1 where owner_id=${req.session.user.id}`, [boxProgress]);
-      await pool.query(`update progress set box_${boxnum}_packs=${packsLeft} where owner_id=${req.session.user.id}`);
-
-      var data = { num : boxnum, name : boxname, card1 : card1Data, card2 : card2Data, card3 : card3Data, cardnames : cardNames, cardrarities : cardRarities, boxprogress : boxProgress, packsleft : packsLeft, numOfLoops : loops };
-
-      res.render('pages/pack-opener', data);
     })
 
     //Box Opener Reset Progress
     .get('/box/:number/reset', async (req,res)=>{
-      var boxnum = req.params.number;
-      var boxname = 'Invalid Box';
-      var cardNames = null;
-      var boxProgress = null;
-      var packsLeft = 0;
-      var loops = 0;
+      if(req.session.user) {
+        var boxnum = req.params.number;
+        var boxname = 'Invalid Box';
+        var cardNames = null;
+        var boxProgress = null;
+        var packsLeft = 0;
+        var loops = 0;
 
-      if(boxnum >= 1 && boxnum <= 4) {
-        var cardNamesRes = await pool.query(`select * from cards where box_id=${boxnum} order by in_box_id`);
-        cardNames = cardNamesRes.rows;
-        if(boxnum == 1 || boxnum == 3) {
-          cardRarities = ['UR','UR','UR','UR','UR','UR','UR','UR','UR','UR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N'];
-          loops = 100;
-          await pool.query(`update progress set box_${boxnum}_packs=200 where owner_id=${req.session.user.id}`);
-          if(boxnum == 1) {
-            var ratios = [1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,9,9,9,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,9,8,8,8,8,8,8,9,8,8,8,8,8,8,9,8,8,8];
-            await pool.query(`update progress set box_${boxnum}_progress=$1 where owner_id=${req.session.user.id}`, [ratios]);
-          } else if(boxnum == 3) {
-            var ratios = [1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,9,9,9,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,9,8,8,8,8,8,8,8,9,8,8,8,8,8,9,8,8,8];
+        if(boxnum >= 1 && boxnum <= 4) {
+          var cardNamesRes = await pool.query(`select * from cards where box_id=${boxnum} order by in_box_id`);
+          cardNames = cardNamesRes.rows;
+          if(boxnum == 1 || boxnum == 3) {
+            cardRarities = ['UR','UR','UR','UR','UR','UR','UR','UR','UR','UR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','SR','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','R','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N'];
+            loops = 100;
+            await pool.query(`update progress set box_${boxnum}_packs=200 where owner_id=${req.session.user.id}`);
+            if(boxnum == 1) {
+              var ratios = [1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,9,9,9,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,9,8,8,8,8,8,8,9,8,8,8,8,8,8,9,8,8,8];
+              await pool.query(`update progress set box_${boxnum}_progress=$1 where owner_id=${req.session.user.id}`, [ratios]);
+            } else if(boxnum == 3) {
+              var ratios = [1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,9,9,9,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,9,8,8,8,8,8,8,8,9,8,8,8,8,8,9,8,8,8];
+              await pool.query(`update progress set box_${boxnum}_progress=$1 where owner_id=${req.session.user.id}`, [ratios]);
+            }
+          } else if(boxnum == 2 || boxnum == 4) {
+            cardRarities = ['UR','UR','SR','SR','SR','SR','SR','SR','SR','SR','R','R','R','R','R','R','R','R','R','R','R','R','R','R','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N'];
+            loops = 40;
+            await pool.query(`update progress set box_${boxnum}_packs=80 where owner_id=${req.session.user.id}`);
+            var ratios = [1,1,1,1,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,5,5,5,5,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10];
             await pool.query(`update progress set box_${boxnum}_progress=$1 where owner_id=${req.session.user.id}`, [ratios]);
           }
-        } else if(boxnum == 2 || boxnum == 4) {
-          cardRarities = ['UR','UR','SR','SR','SR','SR','SR','SR','SR','SR','R','R','R','R','R','R','R','R','R','R','R','R','R','R','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N'];
-          loops = 40;
-          await pool.query(`update progress set box_${boxnum}_packs=80 where owner_id=${req.session.user.id}`);
-          var ratios = [1,1,1,1,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,5,5,5,5,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10];
-          await pool.query(`update progress set box_${boxnum}_progress=$1 where owner_id=${req.session.user.id}`, [ratios]);
-        }
 
-        var idQuantity = await pool.query(`select box_${boxnum}_progress from progress where owner_id=${req.session.user.id}`);
-        var packsNum = await pool.query(`select box_${boxnum}_packs from progress where owner_id=${req.session.user.id}`);
-        if(boxnum == 1) {
-          boxname = 'The Ultimate Rising';
-          boxProgress = idQuantity.rows[0].box_1_progress;
-          packsLeft = packsNum.rows[0].box_1_packs;
-        } else if(boxnum == 2) {
-          boxname = 'Age Of Discovery';
-          boxProgress = idQuantity.rows[0].box_2_progress;
-          packsLeft = packsNum.rows[0].box_2_packs;
-        } else if(boxnum == 3) {
-          boxname = 'Neo Impact';
-          boxProgress = idQuantity.rows[0].box_3_progress;
-          packsLeft = packsNum.rows[0].box_3_packs;
-        } else if(boxnum == 4) {
-          boxname = 'Flame Of The Tyrant';
-          boxProgress = idQuantity.rows[0].box_4_progress;
-          packsLeft = packsNum.rows[0].box_4_packs;
+          var idQuantity = await pool.query(`select box_${boxnum}_progress from progress where owner_id=${req.session.user.id}`);
+          var packsNum = await pool.query(`select box_${boxnum}_packs from progress where owner_id=${req.session.user.id}`);
+          if(boxnum == 1) {
+            boxname = 'The Ultimate Rising';
+            boxProgress = idQuantity.rows[0].box_1_progress;
+            packsLeft = packsNum.rows[0].box_1_packs;
+          } else if(boxnum == 2) {
+            boxname = 'Age Of Discovery';
+            boxProgress = idQuantity.rows[0].box_2_progress;
+            packsLeft = packsNum.rows[0].box_2_packs;
+          } else if(boxnum == 3) {
+            boxname = 'Neo Impact';
+            boxProgress = idQuantity.rows[0].box_3_progress;
+            packsLeft = packsNum.rows[0].box_3_packs;
+          } else if(boxnum == 4) {
+            boxname = 'Flame Of The Tyrant';
+            boxProgress = idQuantity.rows[0].box_4_progress;
+            packsLeft = packsNum.rows[0].box_4_packs;
+          }
+
+          var data = { num : boxnum, name : boxname, card1 : 0, card2 : 0, card3 : 0 , cardnames : cardNames, cardrarities : cardRarities, boxprogress : boxProgress, packsleft : packsLeft, numOfLoops : loops };
+
+          res.render('pages/pack-opener', data);
+        } else {
+          res.redirect("/opener");
         }
+      } else {
+        res.redirect("/");
       }
-
-      var data = { num : boxnum, name : boxname, card1 : 0, card2 : 0, card3 : 0 , cardnames : cardNames, cardrarities : cardRarities, boxprogress : boxProgress, packsleft : packsLeft, numOfLoops : loops };
-
-      res.render('pages/pack-opener', data);
+      
     })
 
     // admin
