@@ -1,29 +1,23 @@
-var deck = [];
-var extraDeck = [];
 const MAXIMUM_DECK_SIZE = 30;
 const MAXIMUM_EXTRA_SIZE = 7;
 const MAXIMUM_COPIES = 3;
+const COLLECTION_TABLE = "collectionCardsTable";
+const DECK_TABLE = "deckCardsTable";
+const EXTRA_DECK_TABLE = "extraDeckCardsTable";
+var deck = [];
+var extraDeck = [];
+var sortType = 1; //1 = name, 2 == star, 3 = price(asc), 4 = price (dsc)
 
 function deckBuilderPageSetUp(){
-    //removeDeckFromCollection(cardCollection);
-    displayCollection(document.getElementById("collectionCardsTable"), cardCollection);
-    //displayCards(document.getElementById("deckCardsTable"), cardCollection);
+    displayCards(document.getElementById("collectionCardsTable"), cardCollection);
 }
 
-function displayCollection(container, cardCollection){
+function displayCards(container, cardCollection){
     try{
         // add cards to right table and setup onclick event
         for(let i = 0; i < cardCollection.length; i++){
             if(cardCollection[i] > 0) {
-                let newCard = document.createElement("button");
-                newCard.className = "card";
-                newCard.style.backgroundImage = "url('/" + cardsList[i].image + "')";
-                newCard.style.backgroundSize = "contain";
-                newCard.innerHTML = "X " + cardCollection[i];
-                newCard.dataset.id = cardsList[i].card_id;
-                newCard.dataset.name = cardsList[i].name;
-                newCard.dataset.stars = cardsList[i].stars;
-                newCard.onclick = function(event){selectCard(event, cardsList[i].card_id);}
+                let newCard = createCard(i);
                 container.getElementsByTagName("tbody")[0].appendChild(newCard);
                 if(cardsList[i].extra) {
                     for(var j = 0; j < savedExtra.length; j++) {
@@ -48,33 +42,56 @@ function displayCollection(container, cardCollection){
     }
 }
 
-function selectCard(event, cardId){
-    let card = event.target||event.srcElement;
+function createCard(cardIndex) {
+    let newCard = document.createElement("button");
+    newCard.className = "card";
+    newCard.style.backgroundImage = "url('/" + cardsList[cardIndex].image + "')";
+    newCard.style.backgroundSize = "contain";
+
+    let quantityLabel = document.createElement("p");
+    quantityLabel.className = "quantity";
+    quantityLabel.innerHTML = "X " + cardCollection[cardIndex];
+    newCard.appendChild(quantityLabel);
+
+    let valueLabel = document.createElement("p");
+    valueLabel.className = "value";
+    valueLabel.innerHTML = "$" + cardsList[cardIndex].value;
+    newCard.appendChild(valueLabel);
+
+    newCard.dataset.id = cardsList[cardIndex].card_id;
+    newCard.dataset.name = cardsList[cardIndex].name;
+    newCard.dataset.stars = cardsList[cardIndex].stars;
+    newCard.dataset.value = cardsList[cardIndex].value;
+    newCard.onclick = function(event){selectCard(newCard, event, cardsList[cardIndex].card_id);}
+    return newCard;
+}
+
+function selectCard(card, event, cardId){
+    console.log("Click");
     let id;
 
     if(validateCard(cardId)){
         // get id of table to move to
         if(cardsList[cardId-1].extra) {
             extraDeck.push(cardId);
-            id = "extraDeckCardsTable";
+            id = EXTRA_DECK_TABLE;
         } else {
             deck.push(cardId);
-            id = "deckCardsTable";
+            id = DECK_TABLE;
         }
         // store original table id and move card
         let originalTable = card.parentElement.parentElement.id;
         let copyCard = card.cloneNode();
         document.getElementById(id).getElementsByTagName("tbody")[0].appendChild(copyCard);
-        copyCard.onclick = function(event){deselectCard(event, cardId, card);};
+        copyCard.onclick = function(event){deselectCard(copyCard, event, cardId, card);};
         cardCollection[cardId-1] -= 1;
         updateCardCount(card, cardId);
     }
-    sortTable(document.getElementById("deckCardsTable"));
+    sortTable(document.getElementById(id));
 }
 
-function deselectCard(event, cardId, originalCard) {
-    let card = event.target||event.srcElement;
-    let id = "collectionCardsTable";
+function deselectCard(card, event, cardId, originalCard) {
+    let id = COLLECTION_TABLE;
     let originalTable = card.parentElement.parentElement.id;
     
     card.remove();
@@ -92,16 +109,14 @@ function deselectCard(event, cardId, originalCard) {
             deck.splice(cardIndex, 1);
         }
     }
-   
-    console.log(deck);
 }
 
 
 function validateCard(cardId) {
     if(cardsList[cardId-1].extra) {
         return extraDeck.length < MAXIMUM_EXTRA_SIZE && 
-               extraDeck.filter(x => x === cardId).length < MAXIMUM_COPIES && 
-               cardCollection[cardId-1] > 0;
+        extraDeck.filter(x => x === cardId).length < MAXIMUM_COPIES && 
+        cardCollection[cardId-1] > 0;
     } else {
         return deck.length < MAXIMUM_DECK_SIZE && 
         deck.filter(x => x === cardId).length < MAXIMUM_COPIES && 
@@ -110,18 +125,64 @@ function validateCard(cardId) {
 }
 
 function updateCardCount(card, cardId) {
-    card.innerHTML = "X " + cardCollection[cardId-1];
+    quantityLabel = card.getElementsByClassName("quantity")[0];
+    quantityLabel.innerHTML = "X " + cardCollection[cardId-1];
+}
+
+function changeSortType(type) {
+    sortType = type;
+    console.log(type);
+    sortTable(document.getElementById(COLLECTION_TABLE));
+    sortTable(document.getElementById(DECK_TABLE));
+    sortTable(document.getElementById(EXTRA_DECK_TABLE));
 }
 
 function sortTable(container) {
     var cards = [].slice.call(container.getElementsByClassName("card"));
-    cards.sort((a,b) => {
-        let nameA = a.dataset.name.toLowerCase();
-        let nameB = b.dataset.name.toLowerCase();
-        if(nameA > nameB) return 1;
-        if(nameA < nameB) return -1;
-        return 0;
-    });
+    console.log(sortType);
+    switch (sortType) {
+        case 1:
+           cards.sort((a,b) => {
+               let nameA = a.dataset.name.toLowerCase();
+               let nameB = b.dataset.name.toLowerCase();
+               if(nameA > nameB) return 1;
+               if(nameA < nameB) return -1;
+               return 0;
+           });
+           break;
+        case 2:
+            cards.sort((a,b) => {
+                let starsA = a.dataset.stars;
+                let starsB = b.dataset.stars;
+                if(starsA > starsB) return 1;
+                if(starsA < starsB) return -1;
+                let nameA = a.dataset.name.toLowerCase();
+                let nameB = b.dataset.name.toLowerCase();
+                if(nameA > nameB) return 1;
+                if(nameA < nameB) return -1;
+                return 0;
+            });
+            break;
+        case 3:
+            cards.sort((a,b) => {
+                let valueA = a.dataset.value;
+                let valueB = b.dataset.value;
+                if(valueA > valueB) return 1;
+                if(valueA < valueB) return -1;
+                return 0;
+            });
+            break;
+        case 4:
+            cards.sort((a,b) => {
+                let valueA = a.dataset.value;
+                let valueB = b.dataset.value;
+                if(valueA > valueB) return -1;
+                if(valueA < valueB) return 1;
+                return 0;
+            });
+            break;
+    }
+    
     for(let card of cards) {
         card.parentElement.appendChild(card);
     }

@@ -18,22 +18,34 @@
 }
 
 .deckBuilderTable{
-    width:45%;
+    width: 45%;
     height: inherit;
 }
 
 .card{
     width: 8.85vw;
     height: 12.9vw;
-    padding-top: 95%;
-    padding-left: 70%;
+    padding-top: 85%;
 }
 
 .quantity {
     background-color: white;
     float: right;
-    width: 10%;
-    height: 10%;
+    clear: right;
+    padding: 1%;
+    width: auto;
+    height: auto;
+    margin: 0;
+}
+
+.value {
+    background-color: white;
+    float: right;
+    clear: right;
+    padding: 1%;
+    width: auto;
+    height: auto;
+    margin: 0;
 }
 
 h3{
