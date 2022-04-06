@@ -9,15 +9,14 @@
 
     <% if (user) {%>
         <div id="loginDivAfter">
-            <button>Profile</button>
             <label><%= user.name %></label>
-            <button onclick="goToPage('/logout')">Log out</button>
+            <button onclick="goToPage('/logout')">Log Out</button>
         </div>
     <% } else { %>
 
         <div id="loginDivBefore">
-            <button onclick="goToPage('/login')">login</button>
-            <button onclick="goToPage('/signup')">signup</button>
+            <button onclick="goToPage('/login')">Log in</button>
+            <button onclick="goToPage('/signup')">Sign up</button>
         </div>
     <% } %>
     

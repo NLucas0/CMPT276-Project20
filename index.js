@@ -8,8 +8,8 @@ const PORT = process.env.PORT || 5000
 
 const {Pool} = require('pg');
 var pool = new Pool({
-  connectionString: process.env.DATABASE_URL||"postgres://postgres:root@localhost/aio_dld_database"
-  , ssl:{rejectUnauthorized: false}
+  connectionString: process.env.DATABASE_URL||"postgres://postgres:bootstrap@localhost/aio_dld_database"
+  // , ssl:{rejectUnauthorized: false}
 })
 
 // allow pool to be accessed by other files
@@ -90,23 +90,41 @@ var app = express()
       const password = req.body.password;
       const username = req.body.username;
 
-      var cardsArray = new Array(280).fill(0);
-      var friendArray = new Array();
-      var tradeArray = new Array();
-
-      var userId = await pool.query(`Insert into users (name, password, cards, friends, trades, type) values('${username}', '${password}', $1, $2, $3, 'USER') RETURNING id`, [cardsArray, friendArray, tradeArray]);
-
-      //create box progress
-      var newBox1 = new Array(100);
-      newBox1 = [1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,9,9,9,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,9,8,8,8,8,8,8,9,8,8,8,8,8,8,9,8,8,8];
-      var newBox2_4 = new Array(40);
-      newBox2_4 = [1,1,1,1,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,5,5,5,5,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10];
-      var newBox3 = new Array(100);
-      newBox3 = [1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,9,9,9,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,9,8,8,8,8,8,8,8,9,8,8,8,8,8,9,8,8,8];
-
-      await pool.query(`Insert into progress values(${userId.rows[0].id}, $1, $2, $3, $2, 200, 80, 200, 80)`, [newBox1,newBox2_4,newBox3]);
+      var users = await pool.query(`select name from users`);
       
-      res.redirect('/login');
+      var valid = true;
+
+      for(let i = 0; users.rows[i] != null; i++) {
+        if(users.rows[i].name == username) {
+          valid = false;
+        }
+      }
+
+      if(valid == true) {
+        var cardsArray = new Array(280).fill(0);
+        var friendArray = new Array();
+        var tradeArray = new Array();
+
+        var userId = await pool.query(`Insert into users (name, password, cards, friends, trades, type) values('${username}', '${password}', $1, $2, $3, 'USER') RETURNING id`, [cardsArray, friendArray, tradeArray]);
+
+        //create box progress
+        var newBox1 = new Array(100);
+        newBox1 = [1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,9,9,9,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,9,8,8,8,8,8,8,9,8,8,8,8,8,8,9,8,8,8];
+        var newBox2_4 = new Array(40);
+        newBox2_4 = [1,1,1,1,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,5,5,5,5,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10];
+        var newBox3 = new Array(100);
+        newBox3 = [1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,9,9,9,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,9,8,8,8,8,8,8,8,9,8,8,8,8,8,9,8,8,8];
+
+        await pool.query(`Insert into progress values(${userId.rows[0].id}, $1, $2, $3, $2, 200, 80, 200, 80)`, [newBox1,newBox2_4,newBox3]);
+      
+        res.redirect('/login');
+      } else {
+        res.send(`
+        Username already exists. Please pick another
+        <br>
+        <a href='/signup'>Return to Sign-up</a>
+        `)
+      }
     })
 
     //login
@@ -121,11 +139,7 @@ var app = express()
 
         req.session.user = user;
         if(req.session.user) {
-          res.send(`
-          Your session id <code>${req.sessionID} </code>
-          <br>
-          <a href="/landing"> NEXT PAGE </a>
-          `)
+          res.redirect("/")
         } else {
           res.send(`
           Login Failed - bad username or password
@@ -148,7 +162,7 @@ var app = express()
     //Pack Opener Box Selection
     .get('/opener', (req,res)=>{
       if(req.session.user) {
-        res.render('pages/pack-nav');
+        res.render("pages/pack-nav");
       } else {
         res.redirect("/");
       }
