@@ -1,14 +1,17 @@
 var deck = [];
 var extraDeck = [];
+const MAXIMUM_DECK_SIZE = 30;
+const MAXIMUM_EXTRA_SIZE = 7;
+const MAXIMUM_COPIES = 3;
 
 function deckBuilderPageSetUp(){
-    
-    displayCards(document.getElementById("collectionCardsTable"), cardCollection);
+    //removeDeckFromCollection(cardCollection);
+    displayCollection(document.getElementById("collectionCardsTable"), cardCollection);
+    //displayCards(document.getElementById("deckCardsTable"), cardCollection);
 }
 
-function displayCards(container, cardCollection){
+function displayCollection(container, cardCollection){
     try{
-        
         // add cards to right table and setup onclick event
         for(let i = 0; i < cardCollection.length; i++){
             if(cardCollection[i] > 0) {
@@ -16,8 +19,11 @@ function displayCards(container, cardCollection){
                 newCard.className = "card";
                 newCard.style.backgroundImage = "url('/" + cardsList[i].image + "')";
                 newCard.style.backgroundSize = "contain";
-                newCard.src = "/" + cardsList[i].image;
-                newCard.onclick = function(event){selectCard(event, cardsList[i].card_id, false);}
+                newCard.innerHTML = "X " + cardCollection[i];
+                newCard.dataset.id = cardsList[i].card_id;
+                newCard.dataset.name = cardsList[i].name;
+                newCard.dataset.stars = cardsList[i].stars;
+                newCard.onclick = function(event){selectCard(event, cardsList[i].card_id);}
                 container.getElementsByTagName("tbody")[0].appendChild(newCard);
                 if(cardsList[i].extra) {
                     for(var j = 0; j < savedExtra.length; j++) {
@@ -34,6 +40,7 @@ function displayCards(container, cardCollection){
                 }
             }
         }
+        sortTable(container);
     }
     // if no cards
     catch(TypeError){
@@ -41,13 +48,12 @@ function displayCards(container, cardCollection){
     }
 }
 
-function selectCard(event, cardId, deselect){
+function selectCard(event, cardId){
     let card = event.target||event.srcElement;
     let id;
 
-    // get id of table to move to
-    if(!deselect){
-        //deck build limits go here
+    if(validateCard(cardId)){
+        // get id of table to move to
         if(cardsList[cardId-1].extra) {
             extraDeck.push(cardId);
             id = "extraDeckCardsTable";
@@ -57,47 +63,70 @@ function selectCard(event, cardId, deselect){
         }
         // store original table id and move card
         let originalTable = card.parentElement.parentElement.id;
-        if(cardCollection[cardId-1] > 1) {
-            let copyCard = card.cloneNode();
-            document.getElementById(id).getElementsByTagName("tbody")[0].appendChild(copyCard);
-            copyCard.onclick = function(event){selectCard(event, cardId, !deselect);};
-            cardCollection[cardId-1] -= 1;
-        } else {
-            document.getElementById(id).getElementsByTagName("tbody")[0].appendChild(card);
-            card.onclick = function(event){selectCard(event, cardId, !deselect);};
-            cardCollection[cardId-1] = 0;
+        let copyCard = card.cloneNode();
+        document.getElementById(id).getElementsByTagName("tbody")[0].appendChild(copyCard);
+        copyCard.onclick = function(event){deselectCard(event, cardId, card);};
+        cardCollection[cardId-1] -= 1;
+        updateCardCount(card, cardId);
+    }
+    sortTable(document.getElementById("deckCardsTable"));
+}
+
+function deselectCard(event, cardId, originalCard) {
+    let card = event.target||event.srcElement;
+    let id = "collectionCardsTable";
+    let originalTable = card.parentElement.parentElement.id;
+    
+    card.remove();
+    cardCollection[cardId-1] += 1;    
+    updateCardCount(originalCard, cardId);
+
+    if(cardsList[cardId-1].extra) {
+        var cardIndex = extraDeck.indexOf(cardId);
+        if(cardIndex >= 0) {
+            extraDeck.splice(cardIndex, 1);
         }
     } else {
-        id = "collectionCardsTable";
-        let originalTable = card.parentElement.parentElement.id;
-        if(cardCollection[cardId-1] < 1) {
-            //if the collection has no cards of this type left, move this element over and add 1
-            document.getElementById(id).getElementsByTagName("tbody")[0].appendChild(card);
-            card.onclick = function(event){selectCard(event, cardId, !deselect);};
-            cardCollection[cardId-1] += 1;
-        } else {
-            //otherwise, simply delete this element and add one to the count
-            card.remove();
-            cardCollection[cardId-1] += 1;
-        }
-        if(cardsList[cardId-1].extra) {
-            var cardIndex = extraDeck.indexOf(cardId);
-            if(cardIndex > 1) {
-                extraDeck.splice(cardIndex, 1);
-            }
-        } else {
-            var cardIndex = deck.indexOf(cardId);
-            if(cardIndex > 1) {
-                deck.splice(cardIndex, 1);
-            }
+        var cardIndex = deck.indexOf(cardId);
+        if(cardIndex >= 0) {
+            deck.splice(cardIndex, 1);
         }
     }
-
-
-    // update no contents message
-    // checkTableEmpty(originalTable);
-    // checkTableEmpty(id);
+   
+    console.log(deck);
 }
+
+
+function validateCard(cardId) {
+    if(cardsList[cardId-1].extra) {
+        return extraDeck.length < MAXIMUM_EXTRA_SIZE && 
+               extraDeck.filter(x => x === cardId).length < MAXIMUM_COPIES && 
+               cardCollection[cardId-1] > 0;
+    } else {
+        return deck.length < MAXIMUM_DECK_SIZE && 
+        deck.filter(x => x === cardId).length < MAXIMUM_COPIES && 
+        cardCollection[cardId-1] > 0;
+    }
+}
+
+function updateCardCount(card, cardId) {
+    card.innerHTML = "X " + cardCollection[cardId-1];
+}
+
+function sortTable(container) {
+    var cards = [].slice.call(container.getElementsByClassName("card"));
+    cards.sort((a,b) => {
+        let nameA = a.dataset.name.toLowerCase();
+        let nameB = b.dataset.name.toLowerCase();
+        if(nameA > nameB) return 1;
+        if(nameA < nameB) return -1;
+        return 0;
+    });
+    for(let card of cards) {
+        card.parentElement.appendChild(card);
+    }
+}
+
 
 function saveDeck() {
     var deckName = document.getElementById("deckName").value;

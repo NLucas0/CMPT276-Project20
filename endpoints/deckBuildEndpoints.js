@@ -7,6 +7,9 @@ module.exports = router;
     //list current users deck, along with a "New Deck" button
 router.get('/decks', async (req, res) => {
     try{
+        if(!req.session.user) {
+            throw "Not Logged In";
+        }
         const client = await pool.connect();
         var userDecksQuery = `SELECT * FROM decks WHERE owner_id=${req.session.user.id}`
         const result = await client.query(userDecksQuery);
@@ -14,13 +17,16 @@ router.get('/decks', async (req, res) => {
         res.render('pages/deckSelection', data);
         client.release();
     } catch(error) {
-        res.end(error);
+        res.redirect('/');
     }
 })
   
       //actual deck builder
 router.get('/build', async(req, res) => {
     try {
+        if(!req.session.user) {
+            throw "Not Logged In";
+        }
         const client = await pool.connect();
         var userCollectionQuery = `SELECT cards FROM users WHERE id=${req.session.user.id}`
         const collectionResult = await client.query(userCollectionQuery);
@@ -34,12 +40,15 @@ router.get('/build', async(req, res) => {
 
         client.release();
     } catch(error) {
-        res.end(error);
+        res.redirect('/');
     }
 })
 
 router.get('/edit/:id', async(req, res) => {
     try {
+        if(!req.session.user) {
+            throw "Not Logged In";
+        }
         const client = await pool.connect();
         var userCollectionQuery = `SELECT cards FROM users WHERE id=${req.session.user.id}`
         const collectionResult = await client.query(userCollectionQuery);
@@ -47,6 +56,10 @@ router.get('/edit/:id', async(req, res) => {
         const cardsTable = await client.query(cardsQuery);
         var deckQuery = `SELECT * FROM decks where id=${req.params.id}`
         const savedDeck = await client.query(deckQuery);
+        if(req.session.user.id !== savedDeck.rows[0].owner_id ||
+            savedDeck.rows.length < 1) {
+            throw "The selected deck does not belong to this user";
+        }
         const data = {collection: collectionResult.rows[0].cards,
                         cards: cardsTable.rows,
                         deck: savedDeck.rows[0]};
@@ -54,12 +67,15 @@ router.get('/edit/:id', async(req, res) => {
 
         client.release();
     } catch(error) {
-        res.end(error);
+        res.redirect('/');
     }
 })
 
 router.post('/save', async (req, res) => {
     try{
+        if(!req.session.user) {
+            throw "Not Logged In";
+        }
         const client = await pool.connect();
         var existingDeck = await client.query(`SELECT * FROM decks where owner_id=${req.session.user.id} AND name='${req.body.name}'`);
         if(existingDeck.rows == 0) {
@@ -69,7 +85,6 @@ router.post('/save', async (req, res) => {
         }
         client.release();
     } catch(error) {
-        res.end(error);
         res.redirect('/');
     }
 })
