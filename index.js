@@ -96,7 +96,7 @@ var app = express()
       var valid = true;
       var taken = false;
 
-      if(username == null || password == null) {
+      if(username == "" || password == "") {
         valid = false;
       }
 
@@ -126,7 +126,7 @@ var app = express()
         await pool.query(`Insert into progress values(${userId.rows[0].id}, $1, $2, $3, $2, 200, 80, 200, 80)`, [newBox1,newBox2_4,newBox3]);
       
         res.redirect('/login');
-      } else if(valid == true) {
+      } else if(valid == false) {
         res.send(`
         Invalid credentials. Please Try Again.
         <br>
