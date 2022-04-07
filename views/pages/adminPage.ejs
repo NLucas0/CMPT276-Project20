@@ -15,28 +15,23 @@
     <%- include ("../partials/aio_dld_popups.ejs") %>
     <h1 class="title">Admin</h1>
     <p class="subtitle">
-        Click on "friends", "trades", "cards" to view full array in a popup. </br>
-        Enter "password" when prompted to delete user.</br>
-        Click outside the popup to close.</br>
-
-        To finish/implement:</br>
-        - online status
+        View and manage user and trade data in database
     </p>
 
     <!--tabs-->
     <div>
-        <button onclick="changeTab(0)">User Data</button>
-        <button onclick="changeTab(1)">Trade Data</button>
+        <button onclick="changeTab(0)" class="tabButton">User Data</button>
+        <button onclick="changeTab(1)" class="tabButton">Trade Data</button>
     </div>
 
     <!--user data-->
-    <div class="tab" id="adminUsersTab">
+    <div class="tab" id="adminUsersTab" style="background-color: var(--bg_highlight); padding: 1%;">
         <!-- search-->
         <div>
-            <input id="searchBox" placeholder="Search User" onkeyup="filterUsers()"/>
-            
+            <input style="width: 80%; margin-left: 10%;" id="searchBox" placeholder="Search User" onkeyup="filterUsers()"/>
+            </br>
             <input type="checkbox" value="ADMIN" id="adminCheckbox1" checked="checked" onclick="filterUsers()">
-            <label for="adminCheckbox1">ADMIN</label>
+            <label for="adminCheckbox1">ADMIN</label></br>
             <input type="checkbox" value="USER" id="adminCheckbox2" checked="checked" onclick="filterUsers()">
             <label for="adminCheckbox2">USER</label>
         </div>
@@ -45,7 +40,6 @@
         <div id="userTableContainer">
             <table id="userTable">
                 <tr>
-                    <th>ONLINE</th>
                     <th>ID</th>
                     <th>USERNAME</th>
                     <th>PASSWORD</th>
@@ -53,6 +47,7 @@
                     <th>FRIENDS</th>
                     <th>TRADES</th>
                     <th>TYPE</th>
+                    <th>DELETE</th>
                 </tr>
                 <td class="noMatchMessage" hidden="true" colspan="8">No users</td>
             </table>
@@ -61,7 +56,6 @@
 
     <!--trade data-->
     <div class="tab" id="adminTradesTab" hidden="true">
-        <p>Click outside the popup to close.</p>
 
         <!-- table with all user data-->
         <div id="tradeTableContainer">
@@ -72,6 +66,7 @@
                     <th>RECEIVER ID</th>
                     <th>CARDS</th>
                     <th>STATUS</th>
+                    <th>DELETE</th>
                 </tr>
                 <td class="noMatchMessage" hidden="true" colspan="8">No trades</td>
             </table>

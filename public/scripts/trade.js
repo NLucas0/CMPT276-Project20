@@ -1,16 +1,41 @@
 let data;
 let viewedTrades = false;
+let activeTabColor = "#6f6f6f";
+let deactivatedTabColor = "#434343";
+
+// help popup contents
+function help(hidden){
+    document.getElementById("helpPagePopUp").hidden = hidden;
+    if(hidden) return;
+
+    document.getElementById("helpPageName").innerHTML = document.getElementsByTagName("h1")[2].innerHTML + " Page";
+    document.getElementById("helpPageInfo").innerHTML = 
+    '<hr>Click on <b>See Cards</b> to view an user\'s cards.</br>'+
+    '</br>Click <b>Trade</b> to initiate trade. You will be redirected to the trade selection page</br><hr>' +
+
+    'Type either a <b>ID</b> or <b>username</b> into the search bar to find an user.</br>' +
+    '</br>Click <b>Ongoing Trades</b> to see trades sent to/from you.</br>' +
+
+    '<hr>Click <b>Cards</b> to see the trade details.</br>' +
+    '</br>Click <b>Cancel</b>, <b>Accept</b> or <b>Reject</b> to perform said action.</br>' +
+    '</br>Click <b>Counter</b> to initiate a counter-trade. ' +
+    'You will be redirected to the trade Selection Screen to edit trade details.</br>' +
+    '(Note if you sent the trade, the accept/reject/counter options will not be visible)<hr>';
+}
 
 // setup tabs on load
 function tradePageSetUp(){
+    
+    document.getElementsByClassName("helpButton")[0].hidden = false;
     data = getUserById(userId)
     setUpFriends();
     setUpUsers();
     setUpTrades();
+    changeTab(0);
 }
 
 // initialize tables
-function setUpRow(displayData, tableId, noMatchElement, classNames, attNames, events){
+function setUpRow(displayData, tableId, noMatchElement){
     try{
         // check for no data
         if(displayData == null || displayData.length <= 0){throw TypeError;}
@@ -94,8 +119,11 @@ function setUpTrades(){
 // hide all tabs except index
 function changeTab(index){
     let tabs = document.getElementsByClassName("tab");
+    let buttons = document.getElementsByClassName("tabButton");
     for(let i=0; i<tabs.length; i++){
-        tabs[i].hidden = i == parseInt(index)? false:true;
+        let check = i == parseInt(index);
+        tabs[i].hidden = check? false:true;
+        buttons[i].style.backgroundColor = check? activeTabColor:deactivatedTabColor;
     }
 
     // remove accepted/rejected trades after viewing
@@ -138,23 +166,41 @@ function search(event){
 
     // if no matching users
     if(count <= 0){
-        document.getElementsByClassName("noMatchMessage")[3].hidden = false;
+        document.getElementById("tradeUserListAll").getElementsByClassName("noMatchMessage")[0].hidden = false;
         return;
     }
     else{
-        document.getElementsByClassName("noMatchMessage")[3].hidden = true;
+        document.getElementById("tradeUserListAll").getElementsByClassName("noMatchMessage")[0].hidden = true;
     }
 }
 
 // show/hide popup with additional information
-function toggleTable(hidden, event, type=null){
+function toggleTable(hidden, event, type=null, doc=document){
+    // reset table if card viewer open
+    try{
+        if(type == 'iframe' || doc.getElementById("cardViewer")){
+            doc.getElementById("cardViewer").remove();
+            hideChildren(doc.getElementById("tradeTableInfoTable").getElementsByTagName("tbody")[0], false);
+            
+            doc.getElementById("tradeTableInfoTable").style.overflowY = "scroll";
+            doc.getElementById("tradeTableInfoTable").style += "padding: %5;";
+
+            // don't close if back button pressed
+            if(type == 'iframe') return;
+        }
+    }
+    catch(TypeError){}
+    
+    let eventObj = event.target || event.srcElement;
+
     // ignore clicks inside content
-    if(document.getElementsByClassName("popupContents")[0].contains(event.target)){
+    if(eventObj == document.getElementById("tradeTableInfoTable") || 
+        document.getElementById("tradeTableInfoTable").contains(eventObj)){
         return;
     }
 
-    document.getElementById("tradeTableInfoPopUp").hidden = hidden || type=='trade';
-    document.getElementById("adminTradeTableInfoPopUp").hidden = hidden || type!='trade';
+    document.getElementById("tradeTableInfoPopUp").hidden = hidden || type =='trade';
+    document.getElementById("adminTradeTableInfoPopUp").hidden = hidden || type !='trade';
 
     // get id of user and display data
     if(!hidden){
@@ -164,6 +210,7 @@ function toggleTable(hidden, event, type=null){
         if(type=='trade'){
             displayTrade(userId);
         }
+
         else{
             displayData(userId);
         }
@@ -192,19 +239,55 @@ function displayData(userId){
         for(let i=0; i<array.length; i++){
             if(array[i] == 0){continue;}
 
-            let newCell = document.createElement("img");
+            let newCard = document.getElementsByClassName("cardImgSample")[0].cloneNode(true);
+            newCard.hidden = false;
+            let newCell = newCard.getElementsByClassName("card")[0];
             newCell.src = (cardData.find(x=> x.card_id==array[i])).image;
-            newCell.className = "card";
-            table.appendChild(newCell);   
-        }
+            newCell.name = (cardData.find(x=> x.card_id==array[i])).name;
+            newCell.data = array[i];
+            newCell.onclick = function(event){showCardDetails(event);};
+            table.prepend(newCard);  
+            
+        } 
+        displayCards(array, table);
+        
     }
     // if no data
     catch(error){
         table.getElementsByClassName("noMatchMessage")[0].hidden = false;
+        table.insertBefore(table.getElementsByClassName("noMatchMessage")[0], table.getElementsByClassName("cardImgSample")[0]);
     }
 }
 
-// refactor later
+// show card details in popup
+function showCardDetails(event, hide=false){
+    let cardName = (event.target || event.srcElement).name;
+
+    // open card viewer in popup
+    let iframe = document.createElement("iframe");
+    iframe.id = "cardViewPopup";
+    iframe.style = "width:100%; height:100%; display:block;";
+    iframe.src = window.location.protocol + '/cardView/' + cardName;
+    iframe.onclick = toggleTable(false, event, null);
+    iframe.id = "cardViewer";
+
+    document.getElementById("tradeTableInfoTable").style.overflowY = "hidden";
+    document.getElementById("tradeTableInfoTable").style.padding = 0;
+
+    // hide previous contents
+    hideChildren(document.getElementById("tradeTableInfoTable").getElementsByTagName("tbody")[0]);
+    document.getElementById("tradeTableInfoTable").prepend(iframe);
+}
+
+// set all children to hidden (ignore noMatchMessages)
+function hideChildren(component, hidden=true){
+    for(let child of component.children){
+        if(child.className == "noMatchMessage"){continue;}
+        child.hidden = hidden;
+        hideChildren(child, hidden);
+    }
+}
+
 // add data to table
 function addToTable(table, array, elementTag, className){
     if(array == null || array.length < 1){
@@ -221,12 +304,13 @@ function addToTable(table, array, elementTag, className){
 
         if(elementTag == "img"){
             newItem.src = (cardData.find(x=> x.card_id==item)).image;
+            newItem.data = String(item);
+            console.log(item);
         }
         table.appendChild(newItem);
     }
 }
 
-// refactor later
 // display trade data in popup
 function displayTrade(tradeId){
     let tradeObj = tradeData.find(x => x.id == parseInt(tradeId));
@@ -298,4 +382,38 @@ function post(endpoint, data){
     xhr.open("POST", endpoint, true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(data));
+}
+
+// called when iframe "back" clicked. 
+// call toggleTable() if in iframe, otherwise window.history.back()
+function checkIFrame(event){
+    if ( window.location !== window.parent.location ) {
+        toggleTable(false, event, 'iframe', window.parent.document);
+      } 
+    else {
+        window.history.back();
+    }
+}
+
+function displayCards(cards, container){
+    // seperate duplicates
+    let unique = [];
+    let dupes = [];
+    cards.forEach(item => {
+        return unique.includes(item) ? dupes.push(item) : unique.push(item);
+    });
+
+    for(let cardObj of container.getElementsByClassName("cardImgSample")){
+        let data = parseInt(cardObj.getElementsByClassName("card")[0].data);
+        if(dupes.includes(data)){
+            let count = 0;
+            dupes.forEach(item=>{
+                return item == data? count++:0;
+            })
+            let lbl = cardObj.getElementsByClassName("cardCount")[0];
+            lbl.innerHTML = count;
+            lbl.hidden = false;
+            cardObj.appendChild(lbl)
+        }
+    }
 }

@@ -1,9 +1,28 @@
 let ADMIN_PASSWORD = "password"; // used to delete users
+let activeTabColor = "#6f6f6f";
+let deactivatedTabColor = "#434343";
+
+// help popup
+function help(hidden){
+    document.getElementById("helpPagePopUp").hidden = hidden;
+    if(hidden) return;
+
+    document.getElementById("helpPageName").innerHTML = document.getElementsByTagName("h1")[2].innerHTML + " Page";
+    document.getElementById("helpPageInfo").innerHTML = 
+    '<hr>Click on <b>Friends</b>, <b>Trades</b>, <b>Cards</b> to view full array in a popup.</br>'+
+    '</br>Enter <b>password</b> when prompted to delete user.</br><hr>' +
+    'Select a trade state from the <b>Status</b> drop down menu to change status.</br>' +
+    '(Note if an invalid trade is accepted, an error message will appear and the trade will be rejected.)</br>' +
+    '</br>Click <b>Cards</b> to see cards involved in a trade.</br>' +
+    '<hr>Click outside popups to close.<hr>';
+}
 
 // setup tabs on load
 function adminSetUp(){
+    document.getElementsByClassName("helpButton")[0].hidden = false;
     setUpUserTab();
     setUpTradeTab();
+    changeTab(0);
 }
 
 // setup user table on load
@@ -45,8 +64,11 @@ function setUpTable(sampleRowId, classNames, properties, tableId, data){
 // hide all tabs except index
 function changeTab(index){
     let tabs = document.getElementsByClassName("tab");
+    let buttons = document.getElementsByClassName("tabButton");
     for(let i=0; i<tabs.length; i++){
-        tabs[i].hidden = i == parseInt(index)?false:true;
+        let check = i == parseInt(index);
+        tabs[i].hidden = check?false:true;
+        buttons[i].style.backgroundColor = check? activeTabColor:deactivatedTabColor;
     }
 }
 
@@ -201,7 +223,7 @@ function changeTradeStatus(event){
 
     // make post request
     post("/trade/editTradeStatus", {newValue:select.value, tradeId:id});
-    window.location = window.location;
+    location.reload();
 }
 
 // delete trade from database
@@ -215,7 +237,7 @@ function deleteTrade(event){
     select.parentElement.parentElement.remove();
     
     // reload page to get updated database
-    window.location = window.location;
+    location.reload();
 }
 
 // delete user data from database
@@ -232,6 +254,7 @@ function deleteUser(event){
 
     post("/deleteUser", {userId:id});
     select.parentElement.parentElement.remove();
+    location.reload();
 }
 
 // make post request

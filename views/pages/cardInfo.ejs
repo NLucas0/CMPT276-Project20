@@ -5,6 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/stylesheets/cardViewer.css">
+        <script src="/scripts/trade.js" defer></script>
     </head>
     <body>
         <h1 style="text-align:center"><%=cardInfo.name%></h1>
@@ -30,6 +31,6 @@
                 <% } %>
             </li>
         </ul>
-        <a onclick="window.history.back()" style="cursor:pointer; color:rgb(53, 57, 255)">Back</a>
+        <a id="cardViewerBackButton" onclick="checkIFrame(event)" style="cursor:pointer; color:rgb(53, 57, 255)">Back</a>
     </body>
 </html>

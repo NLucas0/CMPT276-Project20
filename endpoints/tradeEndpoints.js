@@ -34,19 +34,23 @@ var pool = index.pool;
 // url: /trade
 router.get('/', async(req, res)=>{
     try{
+        if(!req.session.user){throw error;}
+        
         const client = await pool.connect();
-        const result = await client.query(`SELECT * FROM users`);
+        const users = await client.query(`SELECT * FROM users`);
         const trades = await pool.query(`SELECT * FROM trades WHERE sender_id=${req.session.user.id} OR
                                         receiver_id=${req.session.user.id}`);
-        const cardData = await getCardData(client, "card_id, image");
-        const data = {results: result.rows,
+        const cardData = await getCardData(client, "card_id, image, name");
+        const data = {results: users.rows,
                         id:req.session.user.id,
                         trades: trades.rows,
                         cardData: cardData};
+        res.status = 200;
         res.render('pages/tradingPage', data);
         client.release();
     }
     catch(error){
+        res.status = 401;
         res.redirect("/");
     }
 })
@@ -70,7 +74,7 @@ router.get('/tradeSelection', async(req, res)=>{
         client.release();
     }
     catch(error){
-        res.redirect("/trade");
+        res.redirect("/");
     }
 })
 
@@ -96,7 +100,7 @@ router.post('/newTradeRequest', async(req, res)=>{
         client.release();
     }
     catch(error){
-        res.redirect('/');
+        res.redirect("/");
     }
 })
 

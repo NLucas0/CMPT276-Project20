@@ -8,25 +8,24 @@
 <!-- row template for user data in /admin-->
 <table hidden="true">
     <tr class="adminUserSampleRow">
-        <td class="online">online</td>
-        <td class="id">id</td>
-        <td class="username">name</td>
-        <td class="password">pass</td>
-        <td><button onclick="toggleTable(false,'Owned Cards', event,'user')">cards</button></td>
-        <td><button onclick="toggleTable(false,'Friends', event,'user')">friends</button></td>
-        <td><button onclick="toggleTable(false,'Ongoing Trades', event,'user')">trades</button></td>
-        <td class="type">type</td>
-        <td><button onclick="deleteUser(event)">X</button></td>
+        <td class="id">ID</td>
+        <td class="username">Name</td>
+        <td class="password">Pass</td>
+        <td class="buttonContainer" onclick="toggleTable(false,'Owned Cards', event,'user')">Cards</td>
+        <td class="buttonContainer" onclick="toggleTable(false,'Friends', event,'user')">Friends</td>
+        <td class="buttonContainer" onclick="toggleTable(false,'Ongoing Trades', event,'user')">Trades</td>
+        <td class="type">Type</td>
+        <td class="buttonContainer" onclick="deleteUser(event)">X</td>
     </tr>
 </table>
 
 <!-- row template for trade data in /admin-->
 <table hidden="true">
     <tr class="adminTradeSampleRow">
-        <td class="tradeId">id</td>
-        <td class="senderId">sender id</td>
-        <td class="receiverId">receiver id</td>
-        <td><button onclick="toggleTable(false,'Trade Cards', event,'trade')">cards</button></td>
+        <td class="tradeId">ID</td>
+        <td class="senderId">Sender ID</td>
+        <td class="receiverId">Receiver ID</td>
+        <td class="buttonContainer" onclick="toggleTable(false,'Trade Cards', event,'trade')">Cards</td>
         <td>
             <select class="tradeStatus" onchange="changeTradeStatus(event)">
                 <option value="PENDING">PENDING</option>
@@ -35,7 +34,7 @@
                 <option value="UPDATED">UPDATED</option>
             </select>
         </td>
-        <td><button onclick="deleteTrade(event)">X</button></td>
+        <td class="buttonContainer" onclick="deleteTrade(event)" class="buttonContainer">X</td>
     </tr>
 </table>
 
@@ -46,7 +45,7 @@
     <tr class="tradeSampleRow">
         <td class="tradeId">Id</td>
         <td class="tradeName">Name</td>
-        <td class="tradeDisplayCards"><button onclick="toggleTable(false, event)">See Cards</button></td>
+        <td class="tradeDisplayCards buttonContainer" onclick="toggleTable(false, event)">See Cards</td>
         <td><a class="tradeButton">Trade</a></td>
     </tr>
 </table>
@@ -57,10 +56,15 @@
         <td class="tradeId" hidden="true">ID</td>
         <td class="tradeStatus">STATUS</td>
         <td class="tradeName" style="width: 50%;">Username</td>
-        <td style="width: 10%;"><button onclick="toggleTable(false, event, 'trade')">Cards</button></td>
-        <td style="width: 10%;"><button class="acceptButton" onclick="tradeAction(event, 'ACCEPTED')">Accept</button></td>
-        <td style="width: 10%;"><button class="rejectButton" onclick="tradeAction(event, 'REJECTED')">Reject</button></td>
-        <td style="width: 10%;"><button class="cancelButton" onclick="tradeAction(event, 'CANCEL')">Cancel</button></td>
-        <td style="width: 10%;"><button class="counterButton" onclick="tradeAction(event, 'COUNTER')">Counter</button></td>
+        <td style="width: 10%;" class="buttonContainer" onclick="toggleTable(false, event, 'trade')">Cards</td>
+        <td style="width: 10%;" class="buttonContainer" onclick="tradeAction(event, 'ACCEPTED')"><button class="acceptButton">Accept</button></td>
+        <td style="width: 10%;" class="buttonContainer" onclick="tradeAction(event, 'REJECTED')"><button class="rejectButton">Reject</button></td>
+        <td style="width: 10%;" class="buttonContainer" onclick="tradeAction(event, 'CANCEL')"><button class="cancelButton" >Cancel</button></td>
+        <td style="width: 10%;" class="buttonContainer" onclick="tradeAction(event, 'COUNTER')"><button class="counterButton">Counter</button></td>
     </tr>
 </table>
+
+<figure hidden="true" class="cardImgSample">
+    <img class="card" data="0">
+    <figcaption class="cardCount" hidden="true">0</figcaption>
+</figure>
