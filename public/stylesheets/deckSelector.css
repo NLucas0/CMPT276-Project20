@@ -1,0 +1,28 @@
+.horizontalAlignContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: top;
+    align-items: top;
+    width: 98%;
+    height: 60vh;
+    margin: 1%;
+}
+
+#decksTable {
+    display: grid;
+    width: auto;
+    height: 100%;
+    grid-template-columns: repeat(5, 1fr);
+}
+
+
+
+.card {
+    width: 8.85vw;
+    height: 12.9vw;
+    display: block;
+}
+
+td {
+    padding: 0px;
+}
