@@ -23,6 +23,7 @@ function adminSetUp(){
     setUpUserTab();
     setUpTradeTab();
     changeTab(0);
+    console.log(userData);
 }
 
 // setup user table on load
@@ -111,8 +112,9 @@ function toggleTable(hidden, col, event, type){
 }
 
 // display column data in popup
-function displayData(col, userId){
-    let userObj = userData.find(x => x.id == parseInt(userId));
+function displayData(col, id){
+    let userObj = userData.find(x => x.id == parseInt(id));
+    console.log(id);
 
     // get correct array
     let array;

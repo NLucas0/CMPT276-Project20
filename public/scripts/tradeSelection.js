@@ -6,16 +6,20 @@ function help(hidden){
     document.getElementById("helpPageName").innerHTML = document.getElementsByTagName("h1")[2].innerHTML + " Page";
     document.getElementById("helpPageInfo").innerHTML = 
     '<hr>To offer cards to the other user, click cards from <b>Owned Cards</b>. '+
-    'From <b>Trader\'s Cards</b>, click cards you want in exchange.</br>' +
+    'From <b>Trader\'s Cards</b>, click cards you want in exchange.</br></br>' +
     'Cards you have selected to give are displayed in the <b>Offer</b> table. '+
-    'Cards you have selected to request are displayed in the <b>Request</b> table.</br>' +
-    'To move cards between tables, simple click on the image.</br>' +
+    'Cards you have selected to request are displayed in the <b>Request</b> table.</br></br>' +
+    'To move cards between tables, simply click on the image.</br></br>' +
     'The total value of each side of the trade is displayed above the respective table.</br><hr>'+
-    'To confirm and send the trade request, click <b>Send Trade Request</b>';
+    'To confirm and send the trade request, click <b>Send Trade Request</b></br></br>' +
+
+    'To see card details, <b>right click</b> on the card';
 }
 
 // trade selection
 function tradeSelectionPageSetUp(){
+    document.getElementsByClassName("helpButton")[0].hidden = false;
+
     displayCards(document.getElementById("initiatorCardsTable"), user1.cards);
     displayCards(document.getElementById("receiverCardsTable"), user2.cards);
 
@@ -46,6 +50,19 @@ function findCardButton(id, container){
     }
 }
 
+// show card details in popup
+function showCardDetails(event, hide=false){
+    document.getElementById("tradeSelectionInfoPopUp").hidden = hide;
+    document.getElementById("tradeSelectionCardViewer").hidden = hide;
+    
+    if(hide){
+        return;
+    }
+    let cardName = (event.target || event.srcElement).name;
+    // open card viewer in popup
+    document.getElementById("tradeSelectionCardViewer").src = window.location.protocol + '/cardView/' + cardName;
+}
+
 // display cards
 function displayCards(container, cards){
     try{
@@ -55,6 +72,7 @@ function displayCards(container, cards){
             let newCard = document.createElement("img");
             newCard.className = "card";
             newCard.data = card;
+            newCard.name = (cardData.find(x=>x.card_id == card)).name;
             newCard.src = "/" + (cardData.find(x=>x.card_id == card)).image;
 
             // set up click events
@@ -64,6 +82,7 @@ function displayCards(container, cards){
             else{
                 newCard.onclick = function(event){selectCard(event, "RECEIVE", false, card);}
             }
+            newCard.oncontextmenu = function(event){showCardDetails(event, false);}
             container.getElementsByTagName("tbody")[0].appendChild(newCard);
         }
     }

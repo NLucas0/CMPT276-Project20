@@ -41,6 +41,10 @@ input{
     margin-left: 45%;
     text-align: center;
 }
+select{
+    background-color: var(--bg);
+    color:var(--txt);
+}
 .noMatchMessage{
     position: relative;
     text-align: center;
