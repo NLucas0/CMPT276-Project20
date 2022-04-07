@@ -10,7 +10,7 @@ const {Pool} = require('pg');
 const { rmSync } = require('fs');
 var pool = new Pool({
   connectionString: process.env.DATABASE_URL||"postgres://postgres:root@localhost/aio_dld_database"
-  //,ssl:{rejectUnauthorized: false}
+  ,ssl:{rejectUnauthorized: false}
 })
 
 // allow pool to be accessed by other files
