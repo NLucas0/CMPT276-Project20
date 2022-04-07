@@ -20,6 +20,10 @@ tr {
     grid-template-columns: repeat(5, 1fr);
 }
 
+tr:hover{
+    background-color: var(--bg);
+}
+
 .cardTable tbody{
     overflow-y: visible;
 }
