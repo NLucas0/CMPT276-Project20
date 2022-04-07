@@ -10,13 +10,17 @@ input {
     justify-content: top;
     align-items: top;
     width: 98%;
-    height: 60vh;
+    height: auto;
     margin: 1%;
 }
 
-
-#collection{
-    margin-right: 6%;
+#largeImage{
+    margin-left: auto;
+    margin-right: auto;
+    height: 25.8vw;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 5px;
 }
 
 #deck{
@@ -24,7 +28,7 @@ input {
 }
 
 .deckBuilderTable{
-    width: 44.5vw; /*Five cards worth */
+    width: 29.5vw; /*Five cards worth */
     height: inherit;
 }
 
@@ -38,12 +42,12 @@ input {
 }
 
 .card, .cardImage{
-    width: 8.85vw;
-    height: 12.9vw;
+    width: 5.9vw;
+    height: 8.6vw;
 }
 
 .card{
-    padding-top: 100%;
+    padding-top: 85%;
 }
 
 .value, .quantity {
@@ -61,7 +65,7 @@ input {
 }
 
 h3{
-    height: 10%;
+    height: 1%;
     width: auto;
     float: left;
     margin: 0.5%;

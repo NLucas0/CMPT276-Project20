@@ -6,6 +6,7 @@ const COLLECTION_TABLE = "collectionCardsTable";
 const DECK_TABLE = "deckCardsTable";
 const EXTRA_DECK_TABLE = "extraDeckCardsTable";
 const TEST_HAND_TABLE = "testHandCardsTable";
+const IMAGE_ID = "largeImage";
 var deck = [];
 var extraDeck = [];
 var sortType = 1; //1 = name, 2 == star, 3 = price(asc), 4 = price (dsc)
@@ -52,6 +53,7 @@ function createCard(cardIndex) {
     newCard.className = "card";
     newCard.style.backgroundImage = "url('/" + cardsList[cardIndex].image + "')";
     newCard.style.backgroundSize = "contain";
+    newCard.onmouseover = function() {displayFullCard(cardIndex)};
 
     let quantityLabel = document.createElement("p");
     quantityLabel.className = "quantity";
@@ -69,6 +71,10 @@ function createCard(cardIndex) {
     newCard.dataset.value = cardsList[cardIndex].value;
     newCard.onclick = function(event){selectCard(newCard, event, cardsList[cardIndex].card_id);}
     return newCard;
+}
+
+function displayFullCard(cardIndex) {
+    document.getElementById(IMAGE_ID).src = "/" + cardsList[cardIndex].image;
 }
 
 function selectCard(card, event, cardId){
@@ -93,6 +99,7 @@ function selectCard(card, event, cardId){
         valueLabel.innerHTML = "$" + cardsList[cardId-1].value;
         copyCard.appendChild(valueLabel);
         copyCard.onclick = function(event){deselectCard(copyCard, event, cardId, card);};
+        copyCard.onmouseover = function() {displayFullCard(cardId - 1)};
         cardCollection[cardId-1] -= 1;
         updateCardCount(card, cardId);
         sortTable(document.getElementById(id));
@@ -265,6 +272,7 @@ function drawTestHand() {
             let cardImage = document.createElement("img");
             cardImage.src = "/" + cardsList[card-1].image;
             cardImage.className = "cardImage";
+            cardImage.onmouseover = function() {displayFullCard(card-1)};
             table.appendChild(cardImage);
         }
     }
