@@ -4,18 +4,42 @@
 	<meta charset = "utf-8"/>
 	<title><%=user.name%>'s Decks</title>
 	<link rel="stylesheet" href="/stylesheets/main.css"/>
+	<link rel="stylesheet" href="/stylesheets/deckSelector.css"/>
+
 </head>
 
 <body>
 
     <%- include ("../partials/aio_dld_header.ejs") %>
 
-    <ul>
-        <% decks.forEach(function(deck) { %>
-            <li><a href="/deckBuild/edit/<%= deck.id %>"><%= deck.name %></a></li>
-        <% }); %>
-    </ul>
-
     <button onclick="goToPage('/deckBuild/build')">New Deck</button>
+
+    <div class="horizontalAlignContainer">
+        <table id="decksTable">
+            <tbody>
+                <% decks.forEach(function(deck) { %>
+                    <td>
+                        <%= deck.name %>
+                        <% if(deck.cards.length > 0) { %>
+                            <button class="card" 
+                            onclick="goToPage('/deckBuild/edit/<%= deck.id %>')" 
+                            style="background-image: url('/<%= cards[deck.cards[0] - 1].image %>'); background-size: contain;">
+                            </button>
+                            <button formmethod="post" onclick="goToPage('/deckBuild/delete/<%= deck.id %>')">DELETE</button>
+                        <% } else { %>
+                            <button class="card" 
+                            onclick="goToPage('/deckBuild/edit/<%= deck.id %>')" 
+                            style="background-image: url('/images/card_back.jpg'); background-size: contain;"></button>
+                            </button>
+                            <button formmethod="post" onclick="goToPage('/deckBuild/delete/<%= deck.id %>')">DELETE</button>
+                        <% } %>
+                    </td>
+                <% }); %>
+            </tbody>
+        </table>
+
+    </div>
+
+
     
 </body>

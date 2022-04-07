@@ -10,6 +10,7 @@ var sortType = 1; //1 = name, 2 == star, 3 = price(asc), 4 = price (dsc)
 
 function deckBuilderPageSetUp(){
     displayCards(document.getElementById("collectionCardsTable"), cardCollection);
+    document.getElementById("searchBar").addEventListener("input", () => {searchCards()});
 }
 
 function displayCards(container, cardCollection){
@@ -83,11 +84,18 @@ function selectCard(card, event, cardId){
         let originalTable = card.parentElement.parentElement.id;
         let copyCard = card.cloneNode();
         document.getElementById(id).getElementsByTagName("tbody")[0].appendChild(copyCard);
+        let valueLabel = document.createElement("p");
+        valueLabel.className = "value";
+        valueLabel.innerHTML = "$" + cardsList[cardId-1].value;
+        copyCard.appendChild(valueLabel);
         copyCard.onclick = function(event){deselectCard(copyCard, event, cardId, card);};
         cardCollection[cardId-1] -= 1;
         updateCardCount(card, cardId);
+        sortTable(document.getElementById(id));
+        if(!validateCard(cardId)) {
+            grayscaleCard(card);
+        }
     }
-    sortTable(document.getElementById(id));
 }
 
 function deselectCard(card, event, cardId, originalCard) {
@@ -109,6 +117,10 @@ function deselectCard(card, event, cardId, originalCard) {
             deck.splice(cardIndex, 1);
         }
     }
+
+    if(validateCard(cardId)) {
+        unGrayscaleCard(originalCard);
+    }
 }
 
 
@@ -124,6 +136,17 @@ function validateCard(cardId) {
     }
 }
 
+function grayscaleCard(card) {
+    card.style.filter = "gray";
+    card.style.webkitFilter = "grayscale(1)";
+    card.style.filter = "grayscale(1)";
+}
+
+function unGrayscaleCard(card) {
+    card.style.webkitFilter = "grayscale(0)";
+    card.style.filter = "none";
+}
+
 function updateCardCount(card, cardId) {
     quantityLabel = card.getElementsByClassName("quantity")[0];
     quantityLabel.innerHTML = "X " + cardCollection[cardId-1];
@@ -131,7 +154,6 @@ function updateCardCount(card, cardId) {
 
 function changeSortType(type) {
     sortType = type;
-    console.log(type);
     sortTable(document.getElementById(COLLECTION_TABLE));
     sortTable(document.getElementById(DECK_TABLE));
     sortTable(document.getElementById(EXTRA_DECK_TABLE));
@@ -140,6 +162,15 @@ function changeSortType(type) {
 function sortTable(container) {
     var cards = [].slice.call(container.getElementsByClassName("card"));
     console.log(sortType);
+    
+    sortCards(cards);
+
+    for(let card of cards) {
+        card.parentElement.appendChild(card);
+    }
+}
+
+function sortCards(cards) {
     switch (sortType) {
         case 1:
            cards.sort((a,b) => {
@@ -182,9 +213,29 @@ function sortTable(container) {
             });
             break;
     }
-    
-    for(let card of cards) {
-        card.parentElement.appendChild(card);
+}
+
+function searchCards() {
+    let searchString = document.getElementById("searchBar").value;
+    if(searchString == "") {
+        sortTable(document.getElementById(COLLECTION_TABLE));
+        sortTable(document.getElementById(DECK_TABLE));
+        sortTable(document.getElementById(EXTRA_DECK_TABLE));
+    } else {
+        let cards = [].slice.call(document.getElementsByClassName("card"));
+        let foundCards = [];
+        for(let card of cards) {
+            let cardName = card.dataset.name.toLowerCase();
+            if(cardName.includes(searchString.toLowerCase())) {
+                console.log(cardName);
+                foundCards.push(card);
+            }
+        }
+        sortCards(foundCards);
+        for(var i = foundCards.length - 1; i >= 0; i--) {
+            let card = foundCards[i];
+            card.parentElement.insertBefore(card, card.parentElement.firstChild);
+        }
     }
 }
 
