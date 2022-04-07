@@ -15,7 +15,9 @@
     grid-template-columns: repeat(5, 1fr);
 }
 
-
+.cardTable tbody{
+    overflow-y: visible;
+}
 
 .card {
     width: 8.85vw;

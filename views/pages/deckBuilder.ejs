@@ -12,28 +12,28 @@
 
     <%- include ("../partials/aio_dld_header.ejs") %>
 
+    <h3>Sort By:</h3>
     <button onclick="changeSortType(1)">Alphabetical</button>
     <button onclick="changeSortType(2)">Stars</button>
     <button onclick="changeSortType(3)">Value (Low - High)</button>
     <button onclick="changeSortType(4)">Value (High - Low)</button>
-    <input type="text" id="searchBar">
+    <input type="text" id="searchBar" placeholder="Search">
     <div class="horizontalAlignContainer">
         <div id="collection" class="deckBuilderTable">
             <h3>Collection</h3>
-            <table id="collectionCardsTable" class="cardTable" style="height: 90%;">
+            <table id="collectionCardsTable" class="cardTable" style="height: auto; width: 44.5vw;">
                 <tbody></tbody>
             </table>
         </div>
     
         <div id="deck" class="deckBuilderTable">
-            <input type="text" id="deckName" value="<%- deck.name %>">
-            <label for="deckName">Name</label>
             <h3>Deck</h3>
-            <table id="deckCardsTable" class="cardTable" style="height: 90%;">
+            <input type="text" id="deckName" value="<%- deck.name %>" placeholder="Name Deck">
+            <table id="deckCardsTable" class="cardTable" style="height: auto; width: 44.5vw;">
                 <tbody></tbody>
             </table>
             <h3>Extra Deck</h3>
-            <table id="extraDeckCardsTable" class="cardTable" style="height: 90%;">
+            <table id="extraDeckCardsTable" class="cardTable" style="height: auto; width: 44.5vw;">
                 <tbody></tbody>
             </table>
             <button id="saveDeck" type="button" onclick="saveDeck()">Save Deck</button>
