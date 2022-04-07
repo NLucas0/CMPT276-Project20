@@ -7,6 +7,7 @@ const session = require("express-session")
 const PORT = process.env.PORT || 5000
 
 const {Pool} = require('pg');
+const { rmSync } = require('fs');
 var pool = new Pool({
   connectionString: process.env.DATABASE_URL||"postgres://postgres:bootstrap@localhost/aio_dld_database"
   , ssl:{rejectUnauthorized: false}
@@ -93,14 +94,21 @@ var app = express()
       var users = await pool.query(`select name from users`);
       
       var valid = true;
+      var taken = false;
 
-      for(let i = 0; users.rows[i] != null; i++) {
-        if(users.rows[i].name == username) {
-          valid = false;
-        }
+      if(username == null || password == null) {
+        valid = false;
       }
 
-      if(valid == true) {
+      if(username != null) {
+        for(let i = 0; users.rows[i] != null; i++) {
+          if(users.rows[i].name == username) {
+            taken = true;
+          }
+        }
+      }      
+
+      if(valid == true && taken == false) {
         var cardsArray = new Array(280).fill(0);
         var friendArray = new Array();
         var tradeArray = new Array();
@@ -118,12 +126,20 @@ var app = express()
         await pool.query(`Insert into progress values(${userId.rows[0].id}, $1, $2, $3, $2, 200, 80, 200, 80)`, [newBox1,newBox2_4,newBox3]);
       
         res.redirect('/login');
-      } else {
+      } else if(valid == true) {
         res.send(`
-        Username already exists. Please pick another
+        Invalid credentials. Please Try Again.
         <br>
         <a href='/signup'>Return to Sign-up</a>
         `)
+      } else if(taken == true) {
+        res.send(`
+        Username already taken. Please Try Again.
+        <br>
+        <a href='/signup'>Return to Sign-up</a>
+        `)
+      } else {
+        res.redirect("/signup");
       }
     })
 
