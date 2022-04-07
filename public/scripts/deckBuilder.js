@@ -84,6 +84,10 @@ function selectCard(card, event, cardId){
         let originalTable = card.parentElement.parentElement.id;
         let copyCard = card.cloneNode();
         document.getElementById(id).getElementsByTagName("tbody")[0].appendChild(copyCard);
+        let valueLabel = document.createElement("p");
+        valueLabel.className = "value";
+        valueLabel.innerHTML = "$" + cardsList[cardId-1].value;
+        copyCard.appendChild(valueLabel);
         copyCard.onclick = function(event){deselectCard(copyCard, event, cardId, card);};
         cardCollection[cardId-1] -= 1;
         updateCardCount(card, cardId);
