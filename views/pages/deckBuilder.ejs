@@ -12,13 +12,14 @@
 
     <%- include ("../partials/aio_dld_header.ejs") %>
 
+    <button onclick="changeSortType(1)">Alphabetical</button>
+    <button onclick="changeSortType(2)">Stars</button>
+    <button onclick="changeSortType(3)">Value (Low - High)</button>
+    <button onclick="changeSortType(4)">Value (High - Low)</button>
+    <input type="text" id="searchBar">
     <div class="horizontalAlignContainer">
         <div id="collection" class="deckBuilderTable">
             <h3>Collection</h3>
-            <button onclick="changeSortType(1)">Alphabetical</button>
-            <button onclick="changeSortType(2)">Stars</button>
-            <button onclick="changeSortType(3)">Value (Low - High)</button>
-            <button onclick="changeSortType(4)">Value (High - Low)</button>
             <table id="collectionCardsTable" class="cardTable" style="height: 90%;">
                 <tbody></tbody>
             </table>

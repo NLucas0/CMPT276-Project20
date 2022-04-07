@@ -10,6 +10,7 @@ var sortType = 1; //1 = name, 2 == star, 3 = price(asc), 4 = price (dsc)
 
 function deckBuilderPageSetUp(){
     displayCards(document.getElementById("collectionCardsTable"), cardCollection);
+    document.getElementById("searchBar").addEventListener("input", () => {searchCards()});
 }
 
 function displayCards(container, cardCollection){
@@ -86,8 +87,8 @@ function selectCard(card, event, cardId){
         copyCard.onclick = function(event){deselectCard(copyCard, event, cardId, card);};
         cardCollection[cardId-1] -= 1;
         updateCardCount(card, cardId);
+        sortTable(document.getElementById(id));
     }
-    sortTable(document.getElementById(id));
 }
 
 function deselectCard(card, event, cardId, originalCard) {
@@ -131,7 +132,6 @@ function updateCardCount(card, cardId) {
 
 function changeSortType(type) {
     sortType = type;
-    console.log(type);
     sortTable(document.getElementById(COLLECTION_TABLE));
     sortTable(document.getElementById(DECK_TABLE));
     sortTable(document.getElementById(EXTRA_DECK_TABLE));
@@ -140,6 +140,15 @@ function changeSortType(type) {
 function sortTable(container) {
     var cards = [].slice.call(container.getElementsByClassName("card"));
     console.log(sortType);
+    
+    sortCards(cards);
+
+    for(let card of cards) {
+        card.parentElement.appendChild(card);
+    }
+}
+
+function sortCards(cards) {
     switch (sortType) {
         case 1:
            cards.sort((a,b) => {
@@ -182,9 +191,29 @@ function sortTable(container) {
             });
             break;
     }
-    
-    for(let card of cards) {
-        card.parentElement.appendChild(card);
+}
+
+function searchCards() {
+    let searchString = document.getElementById("searchBar").value;
+    if(searchString == "") {
+        sortTable(document.getElementById(COLLECTION_TABLE));
+        sortTable(document.getElementById(DECK_TABLE));
+        sortTable(document.getElementById(EXTRA_DECK_TABLE));
+    } else {
+        let cards = [].slice.call(document.getElementsByClassName("card"));
+        let foundCards = [];
+        for(let card of cards) {
+            let cardName = card.dataset.name.toLowerCase();
+            if(cardName.includes(searchString.toLowerCase())) {
+                console.log(cardName);
+                foundCards.push(card);
+            }
+        }
+        sortCards(foundCards);
+        for(var i = foundCards.length - 1; i >= 0; i--) {
+            let card = foundCards[i];
+            card.parentElement.insertBefore(card, card.parentElement.firstChild);
+        }
     }
 }
 
