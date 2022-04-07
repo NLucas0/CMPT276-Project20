@@ -1,11 +1,25 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: rgb(26, 16, 173);
+    color: white;
+    margin: 0%;
+}
+
 .columnLeft {
-    width: 25%;
+    padding-left: 1%;
+    width: 24%;
     float: left;
 }
 
 .columnRight {
-    width: 75%;
+    padding-right: 1%;
+    width: 74%;
     float: left;
+}
+
+#boxname {
+    font-family: Verdana, Arial, sans-serif;
+    color: white;
 }
 
 table, th, td {
@@ -13,6 +27,26 @@ table, th, td {
     border-collapse: collapse;
     text-align: left;
     padding: 4px;
-    font-family: Georgia, 'Times New Roman', Times, serif;
     font-size: 16px;
-  }
+    background-color: lightblue;
+    color: black;
+}
+
+input {
+    background-color: #0959b0;
+    color: white;
+
+    margin-right: 16px;
+    padding: 8px 10px;
+
+    font-size: 14px;
+
+    border-style: hidden;
+    border-radius: 4px;
+
+    transition-duration: 0.2s
+}
+
+input:hover {
+    background-color: #1c6fc7;
+}

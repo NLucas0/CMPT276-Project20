@@ -1,37 +1,139 @@
+
 <script>
     function goToPage(page){
         window.location.href = page;
     }
 </script>
 
-<div id="headerTop">
-    <h1>All-in-One Duel Links Draft</h1>
+<style>
+    /* Note, needs every page this applies to have CSS as following:
+    body {
+        margin: 0%
+    }
+    at a minimum */
 
-    <% if (user) {%>
-        <div id="loginDivAfter">
-            <label><%= user.name %></label>
-            <button onclick="goToPage('/logout')">Log Out</button>
-        </div>
-    <% } else { %>
+    .header {
+        background-color: #063970;
+    }
 
-        <div id="loginDivBefore">
-            <button onclick="goToPage('/login')">Log in</button>
-            <button onclick="goToPage('/signup')">Sign up</button>
-        </div>
-    <% } %>
+    #headerTop {
+        padding: 10px;
+    }
+
+    #headerName {
+        font-family: Verdana, Arial, sans-serif;
+        color: white;
+    }
+
+    #headerButtonLeft {
+        background-color: #0959b0;
+        color: white;
+
+        margin-right: 10px;
+        padding: 8px 12px;
+
+        font-size: 14px;
+
+        border-style: hidden;
+        border-radius: 4px;
+
+        transition-duration: 0.2s
+    }
+
+    #headerButtonLeft:hover {
+        background-color: #1c6fc7;
+    }
+
+    #headerButton {
+        background-color: #0959b0;
+        color: white;
+
+        margin-left: 10px;
+        margin-right: 10px;
+        padding: 8px 12px;
+
+        font-size: 14px;
+
+        border-style: hidden;
+        border-radius: 4px;
+
+        transition-duration: 0.2s
+    }
+
+    #headerButton:hover {
+        background-color: #1c6fc7;
+    }
+
+    #navBar {
+        padding-top: 0%;
+        /* padding-left: 10px;
+        padding-right: 10px; */
+    }
+
+    #navButton {
+        background-color: #063970;
+        color: white;
+
+        margin-left: -2px;
+        margin-right: -2px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        padding-left: 30px;
+        padding-right: 30px;
+
+        font-size: 20px;
+        font-family: Arial, sans-serif;
+
+        border-style: hidden;
+
+        transition-duration: 0.2s;
+    }
+
+    #navButton:hover {
+        background-color: #095486;
+    }
+
+    label {
+        color: white;
+    }
+
+    hr {
+        border: 1px solid black;
+        margin-top:0px;
+        margin-bottom: 0px;
+    }
+</style>
+
+<div class="header">
+    <div id="headerTop">
+        <h1 id="headerName">All-in-One Duel Links Draft</h1>
     
-</div>
-<hr>
-<div id="navBar">
-    <button onclick="goToPage('/landing')">Home</button>
-    <% if (user) {%>
-        <button onclick="goToPage('/opener')">Pack Opener</button>
-        <button onclick="goToPage('/cardView')">Card Database</button>
-        <button onclick="goToPage('/deckBuild/decks')">Deck Builder</button>
-        <button onclick="goToPage('/trade')">Trade Cards</button>
-        <% if (user.type == 'ADMIN') {%>
-            <button onclick="goToPage('/admin')">Admin</button>
+        <% if (user) {%>
+            <div id="loginDivAfter">
+                <label>Welcome <%= user.name %>!</label>
+                <button id="headerButton" onclick="goToPage('/logout')">Log Out</button>
+            </div>
+        <% } else { %>
+    
+            <div id="loginDivBefore">
+                <button id="headerButtonLeft" onclick="goToPage('/login')">Log in</button>
+                <button id="headerButton" onclick="goToPage('/signup')">Sign up</button>
+            </div>
         <% } %>
-    <% } %>
+        
+    </div>
+    <hr>
+    <div id="navBar">
+        <button id="navButton" onclick="goToPage('/landing')">Home</button>
+        <% if (user) {%>
+            <button id="navButton" onclick="goToPage('/opener')">Pack Opener</button>
+            <button id="navButton" onclick="goToPage('/cardView')">Card Database</button>
+            <button id="navButton" onclick="goToPage('/deckBuild/decks')">Deck Builder</button>
+            <button id="navButton" onclick="goToPage('/trade')">Trade Cards</button>
+            <% if (user.type == 'ADMIN') {%>
+                <button id="navButton" onclick="goToPage('/admin')">Admin</button>
+            <% } %>
+        <% } %>
+    </div>
+    <hr>
 </div>
-<hr>
