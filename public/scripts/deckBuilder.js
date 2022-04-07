@@ -88,6 +88,9 @@ function selectCard(card, event, cardId){
         cardCollection[cardId-1] -= 1;
         updateCardCount(card, cardId);
         sortTable(document.getElementById(id));
+        if(!validateCard(cardId)) {
+            grayscaleCard(card);
+        }
     }
 }
 
@@ -110,6 +113,10 @@ function deselectCard(card, event, cardId, originalCard) {
             deck.splice(cardIndex, 1);
         }
     }
+
+    if(validateCard(cardId)) {
+        unGrayscaleCard(originalCard);
+    }
 }
 
 
@@ -123,6 +130,17 @@ function validateCard(cardId) {
         deck.filter(x => x === cardId).length < MAXIMUM_COPIES && 
         cardCollection[cardId-1] > 0;
     }
+}
+
+function grayscaleCard(card) {
+    card.style.filter = "gray";
+    card.style.webkitFilter = "grayscale(1)";
+    card.style.filter = "grayscale(1)";
+}
+
+function unGrayscaleCard(card) {
+    card.style.webkitFilter = "grayscale(0)";
+    card.style.filter = "none";
 }
 
 function updateCardCount(card, cardId) {
