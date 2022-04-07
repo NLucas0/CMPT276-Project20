@@ -12,9 +12,9 @@
 
     <%- include ("../partials/aio_dld_header.ejs") %>
 
-    <button onclick="goToPage('/deckBuild/build')">New Deck</button>
-
+    
     <div class="horizontalAlignContainer">
+        <button onclick="goToPage('/deckBuild/build')">New Deck</button>
         <table id="decksTable">
             <tbody>
                 <% decks.forEach(function(deck) { %>

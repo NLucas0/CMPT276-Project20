@@ -37,9 +37,12 @@ input {
     grid-template-columns: repeat(5, 1fr);
 }
 
-.card{
+.card, .cardImage{
     width: 8.85vw;
     height: 12.9vw;
+}
+
+.card{
     padding-top: 100%;
 }
 
@@ -59,7 +62,7 @@ input {
 
 h3{
     height: 10%;
-    width: 5%;
+    width: auto;
     float: left;
     margin: 0.5%;
     color: white;

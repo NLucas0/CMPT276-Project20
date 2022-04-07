@@ -9,9 +9,13 @@
 }
 
 #decksTable {
-    display: grid;
     width: auto;
     height: 100%;
+    margin-bottom: 5%;
+}
+
+tr {
+    display: grid;
     grid-template-columns: repeat(5, 1fr);
 }
 
