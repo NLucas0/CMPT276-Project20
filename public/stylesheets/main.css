@@ -1,21 +1,143 @@
+:root{
+    /* use for background/table backgrounds*/
+    --bg:#252525;
+    --bg_highlight: #3a3a3a;
+
+    --txt: #f5efed;
+
+    /* Use for elements or stuff that stands out against bg*/
+    --fg: #6f6f6f;
+    --fg_highlight: #69b0e4;
+}
+
+body{
+    background-color: var(--bg);
+}
+hr{
+    border: 2px dashed var(--fg);
+}
+
+/* text */
+h1{
+    color: var(--txt);
+}
+
+p, label{
+    color: var(--fg);
+    font-size: 16px;
+}
+
+a{
+    color: var(--fg_highlight);
+}
+b{
+    color: var(--fg_highlight);
+}
+input{
+    background-color: var(--bg);
+    font-size: 16px;
+    color: var(--txt);
+    padding: 1%;
+    margin-left: 45%;
+    text-align: center;
+}
+.noMatchMessage{
+    position: relative;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* buttons*/
+button{
+    background-color: var(--fg);
+    color: var(--txt);
+    font-size: 16px;
+    border: none;
+    padding-left: 1%;
+    padding-top: 0.5%;
+    padding-bottom: 0.5%;
+    padding-right: 1%;
+}
+button:hover{
+    background-color: var(--fg_highlight);
+}
+button:active{
+    transform: translateY(5%);
+}
+
+.tabButton{
+    opacity: 70%;
+}
+.tabButton:hover{
+    opacity: 100%;
+}
+
+.helpButton{
+    color:var(--txt);
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    float: right;
+    padding-top: 0.7%;
+    background: radial-gradient(
+    ellipse at center,
+    var(--fg) 0%,
+    var(--fg) 68%,
+    rgba(0,0,0,0) 70.3%
+    );
+}
+.helpButton:hover{
+    background: radial-gradient(
+    ellipse at center,
+    var(--fg_highlight) 0%,
+    var(--fg_highlight) 68%,
+    rgba(0,0,0,0) 70.3%
+    );
+}
+
 /* table */
 table {
-    border: 1px solid;
+    border: 1px solid var(--fg);
     border-collapse: collapse;
     width: 100%;
     height: 100%;
+    background-color: var(--bg_highlight);
+    color: var(--txt);
 }
 
 td, th {
-    border: 1px solid;
-    padding: 1%;
+    border: 1px solid var(--fg);
     text-align: center;
+    padding: 1%;
+}
+tr:hover{
+    background-color: var(--fg);
 }
 
+.buttonContainer{
+    background-color: var(--fg);
+    border-color: var(--bg_highlight);
+}
+.buttonContainer:hover{
+    background-color: var(--fg_highlight);
+}
+.buttonContainer button{
+    background-color: #00000000;
+}
 
+th{
+    font-size: 16px;
+    border: none;
+    font-weight: bold;
+}
+
+/* popup*/
 .popup{
+    z-index: 2;
     background-color: #000000AA;
-    position: absolute;
+    position: fixed;
     bottom: 0;
     right: 0;
     width: 100%;
@@ -23,10 +145,10 @@ td, th {
 }
 
 .popupContents {
+    background-color: var(--bg_highlight);
     overflow-y: scroll;
     overflow-x: hidden;
     display: block;
-    background-color: white;
     border-collapse: collapse;
 
     position: absolute;
@@ -40,10 +162,10 @@ td, th {
     height: 80%;
     padding: 5%;
     z-index: 1;
-
 }
 
 .popupContents tbody, .popupContents tbody label{
+    background-color: var(--bg);
     border: 1px solid;
     display: grid;
     grid-template-columns: repeat(10, 1fr);
@@ -53,6 +175,7 @@ td, th {
 }
 
 .cardTable tbody{
+    background-color: var(--bg);
     overflow-y: scroll;
     display: grid;
     width: 100%;
@@ -60,8 +183,32 @@ td, th {
     grid-template-columns: repeat(5, 1fr);
 }
 
-.card{
+.cardImgSample{
+    background-color: var(--bg_highlight);
+    position: relative;
+}
+.card{  
     width: 6.7vw;
+}
+/*
+    dynamic height reference:
+    https://stackoverflow.com/questions/5445491/height-equal-to-dynamic-width-css-fluid-layout
+*/
+.cardCount{
+    color:var(--txt);
+    text-align: center;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 30%;
+    height: 0;
+    padding-bottom: 30%;
+    background: radial-gradient(
+    ellipse at center,
+    var(--fg_highlight) 0%,
+    var(--fg_highlight) 68%,
+    rgba(0,0,0,0) 70.3%
+    );
 }
 
 select {

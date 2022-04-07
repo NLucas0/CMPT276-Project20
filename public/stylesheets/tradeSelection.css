@@ -1,11 +1,14 @@
 .horizontalAlignContainer{
+    background-color: var(--bg_highlight);
+    color: var(--txt);
+    padding: 1%;
     display: flex;
     flex-direction: row;
     justify-content: top;
     align-items: top;
     width: 98%;
     height: 100%;
-    margin: 1%;
+    margin: 0%;
 }
 
 .tradeSelectionTable{

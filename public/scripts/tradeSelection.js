@@ -1,3 +1,19 @@
+// help popup contents
+function help(hidden){
+    document.getElementById("helpPagePopUp").hidden = hidden;
+    if(hidden) return;
+
+    document.getElementById("helpPageName").innerHTML = document.getElementsByTagName("h1")[2].innerHTML + " Page";
+    document.getElementById("helpPageInfo").innerHTML = 
+    '<hr>To offer cards to the other user, click cards from <b>Owned Cards</b>. '+
+    'From <b>Trader\'s Cards</b>, click cards you want in exchange.</br>' +
+    'Cards you have selected to give are displayed in the <b>Offer</b> table. '+
+    'Cards you have selected to request are displayed in the <b>Request</b> table.</br>' +
+    'To move cards between tables, simple click on the image.</br>' +
+    'The total value of each side of the trade is displayed above the respective table.</br><hr>'+
+    'To confirm and send the trade request, click <b>Send Trade Request</b>';
+}
+
 // trade selection
 function tradeSelectionPageSetUp(){
     displayCards(document.getElementById("initiatorCardsTable"), user1.cards);

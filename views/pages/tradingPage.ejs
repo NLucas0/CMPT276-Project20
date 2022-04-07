@@ -4,7 +4,7 @@
 	<meta charset = "utf-8"/>
 	<title>Trade - AIO DLD</title>
 	<link rel="stylesheet" href="/stylesheets/main.css"/>
-    <script src="/scripts/trade.js" defer></script>
+    <script id="tradeScript" src="/scripts/trade.js" defer></script>
 </head>
 
 <body onload="tradePageSetUp()">
@@ -18,9 +18,9 @@
 
     <!--buttons at top to toggle pages-->
     <div id="tradeTabs">
-        <button onclick="changeTab(0)">Friends</button>
-        <button onclick="changeTab(1)">Search User</button>
-        <button onclick="changeTab(2)">Ongoing Trades</button>
+        <button onclick="changeTab(0)" class="tabButton">Friends</button>
+        <button onclick="changeTab(1)" class="tabButton">Search User</button>
+        <button onclick="changeTab(2)" class="tabButton">Ongoing Trades</button>
     </div>
 
     <!--tables with users-->
@@ -33,9 +33,11 @@
         <!--tab 2-->
         <table class="tab" id="tradeUserListAll" hidden="true">
             <tr>
-                <td colspan="4"><input placeholder="Search User" onkeyup="search(event)"></input></td>
+                <td colspan="4" style="background-color: var(--bg_highlight);">
+                    <input style="width: 80%; margin-left: 0%;" placeholder="Search User" onkeyup="search(event)"></input>
+                </td>
             </tr>
-            <td class="noMatchMessage" hidden="true">No matching users</td>
+            <td class="noMatchMessage" hidden="true"  style="background-color: var(--bg_highlight);">No matching users</td>
         </table>
 
         <!--tab 3-->

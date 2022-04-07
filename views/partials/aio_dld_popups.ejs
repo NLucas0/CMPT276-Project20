@@ -50,10 +50,18 @@ hidden="true">
 <!--trade-->
 <!-- use to display cards info in /trade-->
 <div class="popup" id="tradeTableInfoPopUp" onmouseup="toggleTable(true, event)" hidden="true">
-    <table class="popupContents" id="tradeTableInfoTable">
+    <table class="popupContents cardTable" id="tradeTableInfoTable">
         <thead>
             <th>Cards</th>
         </thead>
         <td class="noMatchMessage" hidden="true">No Cards</td>
     </table>
+</div>
+
+<!--help-->
+<div class="popup" id="helpPagePopUp" onmouseup="help(true)" hidden="true">
+    <div class="popupContents" style="padding-top:1%; overflow: hidden; width: fit-content; height: fit-content; margin: 20%; bottom: 0%; right: 0%;">
+        <h1 id="helpPageName">PAGE NAME</h1>
+        <p id="helpPageInfo">PAGE NAME</p>
+    </div>
 </div>
