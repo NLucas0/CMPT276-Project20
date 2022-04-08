@@ -28,7 +28,7 @@ input {
 }
 
 .deckBuilderTable{
-    width: 29.5vw; /*Five cards worth */
+    width: 35.4vw; /*Five cards worth */
     height: inherit;
 }
 
@@ -42,8 +42,8 @@ input {
 }
 
 .card, .cardImage{
-    width: 5.9vw;
-    height: 8.6vw;
+    width: 7.08vw;
+    height: 10.32vw;
 }
 
 .card{
