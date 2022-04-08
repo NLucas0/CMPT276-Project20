@@ -2,7 +2,15 @@ let ADMIN_PASSWORD = "password"; // used to delete users
 let activeTabColor = "#6f6f6f";
 let deactivatedTabColor = "#3a3a3a";
 
-// help popup
+// save frequently accessed elements to improve load time
+let clearContents = [document.getElementById("adminTableInfoTable").getElementsByTagName("tbody")[0],
+                    document.getElementsByClassName("adminTradeTableInfoPopUpTable")[0].getElementsByTagName("tbody")[0],
+                    document.getElementsByClassName("adminTradeTableInfoPopUpTable")[1]
+                    .getElementsByTagName("tbody")[0]
+                ]
+let noMatchMessages = document.getElementsByClassName("noMatchMessage");
+
+// help popup (show when "?" pressed)
 function help(hidden){
     document.getElementById("helpPagePopUp").hidden = hidden;
     if(hidden) return;
@@ -10,11 +18,16 @@ function help(hidden){
     document.getElementById("helpPageName").innerHTML = document.getElementsByTagName("h1")[2].innerHTML + " Page";
     document.getElementById("helpPageInfo").innerHTML = 
     '<hr class="helpHr">Click on <b>Friends</b>, <b>Trades</b>, <b>Cards</b> to view full array in a popup.</br>'+
-    '</br>Enter <b>password</b> when prompted to delete user.</br><hr class="helpHr">' +
-    'Select a trade state from the <b>Status</b> drop down menu to change status.</br>' +
+
+    '</br>Enter <b>password</b> when prompted to delete user.</br>' +
+
+    '<hr class="helpHr">Select a trade state from the <b>Status</b> drop down menu to change status.</br>' +
     '(Note if an invalid trade is accepted, an error message will appear and the trade will be rejected.)</br>' +
+
     '</br>Click <b>Cards</b> to see cards involved in a trade.</br>' +
-    '<hr class="helpHr">Click outside popups to close.<hr class="helpHr">';
+
+    '<hr class="helpHr">Click outside popups to close.</br><hr class="helpHr">' +
+    'If data isn\'t updated immediately, refresh the page.<hr class="helpHr">';
 }
 
 // setup tabs on load
@@ -23,7 +36,6 @@ function adminSetUp(){
     setUpUserTab();
     setUpTradeTab();
     changeTab(0);
-    console.log(userData);
 }
 
 // setup user table on load
@@ -41,6 +53,8 @@ function setUpTradeTab(){
 // generic set up table function
 function setUpTable(sampleRowId, classNames, properties, tableId, data){
     try{
+        if(data.length <= 0){ throw TypeError;}
+
         // add all data to table
         for(let item of data){
             let newRow = document.getElementsByClassName(sampleRowId)[0].cloneNode(true);
@@ -58,7 +72,8 @@ function setUpTable(sampleRowId, classNames, properties, tableId, data){
     }
     // if no data
     catch(TypeError){
-        document.getElementsByClassName("noMatchMessage")[0].hidden = false;
+        let msg = sampleRowId == "adminUserSampleRow"? noMatchMessages[4]:noMatchMessages[5];
+        msg.hidden = false;
     }
 }
 
@@ -66,6 +81,7 @@ function setUpTable(sampleRowId, classNames, properties, tableId, data){
 function changeTab(index){
     let tabs = document.getElementsByClassName("tab");
     let buttons = document.getElementsByClassName("tabButton");
+
     for(let i=0; i<tabs.length; i++){
         let check = i == parseInt(index);
         tabs[i].hidden = check?false:true;
@@ -85,36 +101,33 @@ function toggleTable(hidden, col, event, type){
                                 document.getElementById("adminTradeTableInfoPopUp");
     popup.hidden = hidden;
 
+    resetPopUpData();
+
     // display data in correct popup
     if(!hidden){
         if(type == "user"){
             document.getElementById("adminTableInfoHeader").innerHTML = col;
-            let userId = (event.target || event.srcElement).parentElement.parentElement
+            let userId = (event.target || event.srcElement).parentElement
                             .getElementsByClassName("id")[0].innerHTML;
             displayData(col, userId);
         }
         else{
-            let tradeId = (event.target || event.srcElement).parentElement.parentElement
+            let tradeId = (event.target || event.srcElement).parentElement
                             .getElementsByClassName("tradeId")[0].innerHTML;
             displayTradeData(tradeId);
         }
     }
-    // reset displayed data
-    else{
-        let resetData = '<tr><td class="noMatchMessage" hidden="true">No Cards</td></tr>';
-        document.getElementById("adminTableInfoTable")
-                .getElementsByTagName("tbody")[0].innerHTML = resetData;
-        document.getElementsByClassName("adminTradeTableInfoPopUpTable")[0]
-                .getElementsByTagName("tbody")[0].innerHTML = resetData;
-        document.getElementsByClassName("adminTradeTableInfoPopUpTable")[1]
-                .getElementsByTagName("tbody")[0].innerHTML = resetData;
-    }
+}
+
+// clear popup data on close
+function resetPopUpData(){
+    let resetData = '<tr><td class="noMatchMessage" hidden="true">No Cards</td></tr>';
+    clearContents.forEach(item=> item.innerHTML = resetData);
 }
 
 // display column data in popup
 function displayData(col, id){
     let userObj = userData.find(x => x.id == parseInt(id));
-    console.log(id);
 
     // get correct array
     let array;
@@ -163,6 +176,7 @@ function displayTradeData(tradeId){
 // add data to table
 function addToTable(table, array, elementTag, className){
     if(array == null){return;}
+
     for(let item of array){
         if(elementTag == "img" && item == 0){continue;}
         
@@ -185,7 +199,7 @@ function filterUsers(){
     let userBox = document.getElementById("adminCheckbox2").checked;
     let users = document.getElementById("userTable").getElementsByClassName("adminUserSampleRow");
     
-    document.getElementsByClassName("noMatchMessage")[0].hidden = false;
+    noMatchMessages[4].hidden = false;
 
     // check each user for matching substring
     for(let user of users){
@@ -197,7 +211,7 @@ function filterUsers(){
 
         // if at least one user is shown, hide "no data" message
         if(!user.hidden){
-            document.getElementsByClassName("noMatchMessage")[0].hidden = true;
+            noMatchMessages[4].hidden = true;
         }
     }
 }
@@ -234,8 +248,8 @@ function deleteTrade(event){
     let select = event.target||event.srcElement;
     let id = select.parentElement.parentElement.getElementsByClassName("tradeId")[0].innerHTML;
 
-    post("/trade/deleteTrade", {tradeId:id});
     select.parentElement.parentElement.remove();
+    post("/trade/deleteTrade", {tradeId:id});
 }
 
 // delete user data from database
@@ -250,9 +264,8 @@ function deleteUser(event){
     let select = event.target||event.srcElement;
     let id = select.parentElement.getElementsByClassName("id")[0].innerHTML;
 
-    post("/deleteUser", {deleteId:id});
     select.parentElement.remove();
-    location.reload();
+    post("/deleteUser", {deleteId:id});
 }
 
 // make post request
