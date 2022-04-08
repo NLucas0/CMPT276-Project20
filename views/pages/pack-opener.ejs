@@ -11,23 +11,7 @@
         <div class="columnLeft">
             <h1 id="boxname"><%= name %></h1>
 
-            Packs Left: <%= packsleft %><br><br>
-        
-            <% if(card1 == 0) { %>
-                Card #1:<br>
-                <img src="/images/card_back.jpg"><br>
-                Card #2:<br>
-                <img src="/images/card_back.jpg"><br>
-                Card #3:<br>
-                <img src="/images/card_back.jpg"><br>
-            <% } else { %>
-                Card #1: <%= card1.name %><br>
-                <img src=/<%= card1.image %>><br>
-                Card #2: <%= card2.name %><br>
-                <img src=/<%= card2.image %>><br>
-                Card #3: <%= card3.name %><br> 
-                <img src=/<%= card3.image %>><br>
-            <% } %>
+            Packs Left: <%= packsleft %><br>
             
             <br>
 
@@ -41,8 +25,18 @@
                     <input class="opener" type="submit" value="Reset Box">
                 </form>
             </div>
-            
+
             <br>
+        
+            <% if(card1 == 0) { %>
+                <img src="/images/card_back.jpg"><br>
+                <img src="/images/card_back.jpg"><br>
+                <img src="/images/card_back.jpg"><br>
+            <% } else { %>
+                <img src=/<%= card1.image %>><br>
+                <img src=/<%= card2.image %>><br>
+                <img src=/<%= card3.image %>><br>
+            <% } %>
         </div>
 
         <div class="columnRight">
