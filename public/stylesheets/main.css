@@ -15,6 +15,9 @@ body{
     margin: 0%;
     background-color: var(--bg);
 }
+.Content {
+    padding:1%;
+}
 hr{
     border: 2px dashed var(--fg);
 }

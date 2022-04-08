@@ -7,16 +7,17 @@
     <title>Welcome to AIO DLD</title>
 </head>
 
+<%- include ("../partials/aio_dld_header.ejs") %>
+
 <body>
-    <%- include ("../partials/aio_dld_header.ejs") %>
-    <% if (user) { %>
-        <p>Hello <%= user.name %>,</p>
-        <p>Welcome to AIO DLD</p>
-    <% } else { %>
-        <p>Welcome to AIO DLD</p>
-        <p>Please Login</p>
-        <a href="/login">Login Here</a>
-    <% } %>
+    <div class="Content">
+        <p>Welcome to the AIO DLD!</p>
+        <% if (user) { %>
+            <p>Hello <%= user.name %>!</p>
+        <% } else { %>
+            <p>Please <a href="/login">Login Here</a></p>
+        <% } %>
+    </div>    
 </body>
 
 </html>
