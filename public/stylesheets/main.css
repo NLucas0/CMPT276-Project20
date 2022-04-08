@@ -3,7 +3,7 @@
     --bg:#2c4560;
     --bg_highlight: #3a3a3a;
 
-    --txt: black;
+    --txt: white;
 
     /* Use for elements or stuff that stands out against bg*/
     --fg: #6f6f6f;
@@ -46,7 +46,7 @@ b{
 }
 input{
     font-size: 16px;
-    color: var(--txt);
+    color: black;
     text-align: center;
 }
 select{
