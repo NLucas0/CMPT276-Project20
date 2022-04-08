@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/stylesheets/main.css"/>
-    <title>Welcome to AIO DLD</title>
+    <title>AIO DLD</title>
 </head>
 
-<%- include ("../partials/aio_dld_header.ejs") %>
-
 <body>
+    <%- include ("../partials/aio_dld_header.ejs") %>
+    
     <div class="Content">
         <p>Welcome to the AIO DLD!</p>
         <% if (user) { %>
@@ -17,6 +17,29 @@
         <% } else { %>
             <p>Please <a href="/login">Login Here</a></p>
         <% } %>
+        <p>
+            The All-In-One Duel Links Draft, shortened to AIO DLD, is an all-in-one application<br>
+            that allows users to pull cards from Duel Links boxes, organize those cards into decks,<br>
+            trade cards with other users, and view all the cards available all in one place!<br>
+            It's built especially for players and practitioners of the Duel Links Draft format!<br>
+        </p>
+        <p>
+            Current Duel Links Boxes Implemented:<br>
+            <ul>
+                <div class="quarter">
+                    <li>The Ultimate Rising<br><img src="/images/1.jpg" width="120px"><img src="/images/2.jpg" width="120px"></li>
+                </div>
+                <div class="quarter">
+                    <li>Age Of Discovery<br><img src="/images/101.jpg" width="120px"><img src="/images/102.jpg" width="120px"></li>
+                </div>
+                <div class="quarter">
+                    <li>Neo-Impact<br><img src="/images/141.jpg" width="120px"><img src="/images/142.jpg" width="120px"></li>
+                </div>
+                <div class="quarter">
+                    <li>Flame Of The Tyrant<br><img src="/images/241.jpg" width="120px"><img src="/images/242.jpg" width="120px"></li>
+                </div>
+            </ul>
+        </p>
     </div>    
 </body>
 
