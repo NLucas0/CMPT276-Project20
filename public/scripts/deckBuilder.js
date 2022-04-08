@@ -1,16 +1,21 @@
 const MAXIMUM_DECK_SIZE = 30;
 const MAXIMUM_EXTRA_SIZE = 7;
 const MAXIMUM_COPIES = 3;
+const HAND_SIZE = 4;
 const COLLECTION_TABLE = "collectionCardsTable";
 const DECK_TABLE = "deckCardsTable";
 const EXTRA_DECK_TABLE = "extraDeckCardsTable";
+const TEST_HAND_TABLE = "testHandCardsTable";
+const IMAGE_ID = "largeImage";
 var deck = [];
 var extraDeck = [];
 var sortType = 1; //1 = name, 2 == star, 3 = price(asc), 4 = price (dsc)
 
 function deckBuilderPageSetUp(){
+    console.log(deck);
     displayCards(document.getElementById("collectionCardsTable"), cardCollection);
     document.getElementById("searchBar").addEventListener("input", () => {searchCards()});
+    console.log(deck);
 }
 
 function displayCards(container, cardCollection){
@@ -48,6 +53,7 @@ function createCard(cardIndex) {
     newCard.className = "card";
     newCard.style.backgroundImage = "url('/" + cardsList[cardIndex].image + "')";
     newCard.style.backgroundSize = "contain";
+    newCard.onmouseover = function() {displayFullCard(cardIndex)};
 
     let quantityLabel = document.createElement("p");
     quantityLabel.className = "quantity";
@@ -65,6 +71,10 @@ function createCard(cardIndex) {
     newCard.dataset.value = cardsList[cardIndex].value;
     newCard.onclick = function(event){selectCard(newCard, event, cardsList[cardIndex].card_id);}
     return newCard;
+}
+
+function displayFullCard(cardIndex) {
+    document.getElementById(IMAGE_ID).src = "/" + cardsList[cardIndex].image;
 }
 
 function selectCard(card, event, cardId){
@@ -89,12 +99,14 @@ function selectCard(card, event, cardId){
         valueLabel.innerHTML = "$" + cardsList[cardId-1].value;
         copyCard.appendChild(valueLabel);
         copyCard.onclick = function(event){deselectCard(copyCard, event, cardId, card);};
+        copyCard.onmouseover = function() {displayFullCard(cardId - 1)};
         cardCollection[cardId-1] -= 1;
         updateCardCount(card, cardId);
         sortTable(document.getElementById(id));
         if(!validateCard(cardId)) {
             grayscaleCard(card);
         }
+        hideTestHand()
     }
 }
 
@@ -121,6 +133,7 @@ function deselectCard(card, event, cardId, originalCard) {
     if(validateCard(cardId)) {
         unGrayscaleCard(originalCard);
     }
+    hideTestHand()
 }
 
 
@@ -239,6 +252,39 @@ function searchCards() {
     }
 }
 
+function drawTestHand() {
+    let table = document.getElementById(TEST_HAND_TABLE);
+    table.parentElement.hidden = false;
+    while(table.firstChild) {
+        table.removeChild(table.lastChild);
+    }
+
+    if(deck.length >= HAND_SIZE) {
+        let workingDeck = deck.slice();
+        let hand = [];
+        for(var i = 0; i < HAND_SIZE; i++) {
+            let drawnCard = randomCard(workingDeck.length);
+            hand.push(workingDeck[drawnCard]);
+            workingDeck.splice(drawnCard, 1);
+        }
+
+        for(let card of hand) {
+            let cardImage = document.createElement("img");
+            cardImage.src = "/" + cardsList[card-1].image;
+            cardImage.className = "cardImage";
+            cardImage.onmouseover = function() {displayFullCard(card-1)};
+            table.appendChild(cardImage);
+        }
+    }
+}
+
+function randomCard(cardCount) {
+    return Math.floor(Math.random() * cardCount);
+}
+
+function hideTestHand() {
+    document.getElementById(TEST_HAND_TABLE).parentElement.hidden = true;
+}
 
 function saveDeck() {
     var deckName = document.getElementById("deckName").value;

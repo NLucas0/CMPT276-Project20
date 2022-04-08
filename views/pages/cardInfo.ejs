@@ -6,10 +6,26 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/stylesheets/cardViewer.css">
         <script src="/scripts/trade.js" defer></script>
+        <script>
+            // called when iframe "back" clicked. 
+            // call appropriate function if in iframe, otherwise window.history.back()
+            function checkIFrame(event){
+                if ( window.location !== window.parent.location ) {
+                    if(window.parent.location.pathname == "/trade/tradeSelection/"){
+                        parent.showCardDetails(event, true);
+                        return;
+                    }
+                    parent.toggleTable(false, event, 'iframe', window.parent.document);
+                } 
+                else {
+                    window.history.back();
+                }
+            }
+        </script>
     </head>
     <body>
         <h1 style="text-align:center"><%=cardInfo.name%></h1>
-        <img src= "../<%=cardInfo.image%>", alt="<%=cardInfo.name%>" style="display:block; margin:auto">
+        <img src= "/<%=cardInfo.image%>", alt="<%=cardInfo.name%>" style="display:block; margin:auto">
         <ul>
             <li>Pack name: <%=cardInfo.box_name%></li>
             <li>

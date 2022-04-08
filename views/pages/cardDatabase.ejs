@@ -31,7 +31,7 @@
                             <tr>
                         <% } %>
                             <td style="text-align:center">
-                                <img id= "aimg<%=i%>" src= "<%=allCards[i].image%>" alt="<%=allCards[i].name%>" onclick='relocate("<%=allCards[i].name%>")'>
+                                <img id= "aimg<%=i%>" src= "<%=allCards[i].image%>" alt="<%=allCards[i].name%>" onclick='relocate("<%=allCards[i].name%>")' class="dbCardImg">
                             </td>
                         <% if(i%4 == 3) { %> 
                             </tr>
@@ -51,7 +51,7 @@
                                     <% } %>
                                         <td style="text-align:center">
                                             <% counter++; %>
-                                            <img id= "uimg<%=counter%>" src= "<%=allCards[i].image%>" alt="<%=allCards[i].name%>" onclick='relocate("<%=allCards[i].name%>")'>
+                                            <img id= "uimg<%=counter%>" src= "<%=allCards[i].image%>" alt="<%=allCards[i].name%>" onclick='relocate("<%=allCards[i].name%>")' class="dbCardImg">
                                         </td>
                                     <% if(counter%4 == 0 || counter==userCards.length) { %> 
                                         </tr>
@@ -60,13 +60,14 @@
                             <% } %>
                         <% } %>
                     </table>
-                    <div id="topDiv">
+                    <div id="topDiv" style="position:relative">
                         <input type="text" class="searchbar" name="sBar" placeholder="SEARCH" onkeyup="searchUsr(this.value)">
-                        <p style="float:left; margin:0">You currently own: <%=counter%> cards.</p>
+                        <p style="float:left; margin:0" id="ownedCount">You currently own: <%=counter%> cards.</p>
                         <button style="float:right" onclick="setSort('s1')" class="s1">abc</button>
                         <button style="float:right" onclick="setSort('s2')" class="s2">stars</button>
                         <button style="float:right" onclick="setSort('s3')" class="s3">value</button>
-                        <p style="text-align:right; margin:0">sort by: </p>                       
+                        <p style="text-align:right; margin:0; float:right">sort by: </p> 
+                        <button onclick="clearAll()" id="clearBtn">Clear all owned cards</button>                    
                     </div>
                 </div>
             </div>

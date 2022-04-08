@@ -384,16 +384,7 @@ function post(endpoint, data){
     xhr.send(JSON.stringify(data));
 }
 
-// called when iframe "back" clicked. 
-// call toggleTable() if in iframe, otherwise window.history.back()
-function checkIFrame(event){
-    if ( window.location !== window.parent.location ) {
-        toggleTable(false, event, 'iframe', window.parent.document);
-      } 
-    else {
-        window.history.back();
-    }
-}
+
 
 function displayCards(cards, container){
     // seperate duplicates

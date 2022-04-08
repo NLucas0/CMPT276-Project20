@@ -12,10 +12,10 @@
 
     <%- include ("../partials/aio_dld_header.ejs") %>
 
-    <button onclick="goToPage('/deckBuild/build')">New Deck</button>
-
-    <div class="horizontalAlignContainer">
-        <table id="decksTable">
+    
+    <div class="decksListContainer">
+        <button id="newDeckButton" onclick="goToPage('/deckBuild/build')">New Deck</button>
+        <table id="decksTable" class="cardTable">
             <tbody>
                 <% decks.forEach(function(deck) { %>
                     <td>
@@ -25,14 +25,13 @@
                             onclick="goToPage('/deckBuild/edit/<%= deck.id %>')" 
                             style="background-image: url('/<%= cards[deck.cards[0] - 1].image %>'); background-size: contain;">
                             </button>
-                            <button formmethod="post" onclick="goToPage('/deckBuild/delete/<%= deck.id %>')">DELETE</button>
                         <% } else { %>
                             <button class="card" 
                             onclick="goToPage('/deckBuild/edit/<%= deck.id %>')" 
                             style="background-image: url('/images/card_back.jpg'); background-size: contain;"></button>
                             </button>
-                            <button formmethod="post" onclick="goToPage('/deckBuild/delete/<%= deck.id %>')">DELETE</button>
                         <% } %>
+                        <button formmethod="post" onclick="goToPage('/deckBuild/delete/<%= deck.id %>')">DELETE</button>
                     </td>
                 <% }); %>
             </tbody>

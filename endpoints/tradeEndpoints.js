@@ -62,7 +62,7 @@ router.get('/tradeSelection', async(req, res)=>{
         if(!req.session.user){throw error;}
 
         const client = await pool.connect();
-        const cardResults = await getCardData(client, "card_id, image, value");
+        const cardResults = await getCardData(client, "card_id, image, value, name");
         
         const data = {user1: req.query.user1,
                     user2: req.query.user2,

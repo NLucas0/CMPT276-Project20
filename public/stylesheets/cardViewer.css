@@ -1,7 +1,11 @@
+body {
+    background-color:#2c4560;
+}
+
 #tabS, #tabD {
     border-width:1px;
-    height:5vh;
-    width:10vw;
+    height:5%;
+    min-width:10%;
     float:left;
 }
 
@@ -23,7 +27,7 @@
 }
 
 #tableBody {
-    width:92vw;
+    width:98vw;
     height:100vh;
     margin:auto;
 }
@@ -36,16 +40,47 @@
 
 .searchbar {
     display:block;
-    width:30%;
-    height:2%;
+    min-width:30%;
+    min-height:2%;
     margin: 0.5% 35%;
     text-align:center;
 }
 
 .s1, .s2, .s3 {
     height:3%;
-    width:4%;
+    min-width:4%;
     border-radius:0;
     border-width:1px;
     background-color:white;
+}
+
+#clearBtn {
+    height:50%;
+    min-width:10%;
+    border-width:1px;
+    background-color:white;
+    display:block;
+    margin:auto;
+    clear:right;
+    position:absolute;
+    bottom:44%;
+    right:0;
+}
+
+button:active{
+    transform: translateY(5%);
+}
+
+button:hover{
+    filter:brightness(90%);
+}
+
+.dbCardImg {
+    width:90%;
+    height:auto;
+}
+
+.dbCardImg:hover{
+    filter:brightness(85%);
+    transform: scale(1.02,1.02)
 }

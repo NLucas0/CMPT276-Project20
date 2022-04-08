@@ -22,7 +22,7 @@ router.get('/', async(req,res)=> {
     }
 })
 
-router.get('/:cardName', async(req,res)=> {
+router.get('/card/:cardName', async(req,res)=> {
     const client = await pool.connect();
     try {
         //retrieve price data for this card, this is to ensure up-to-date information
@@ -48,6 +48,16 @@ router.get('/:cardName', async(req,res)=> {
     } finally {
         client.release();
     }
+})
+
+router.get('/clear', (req,res)=> {
+    const qString = `update users set cards=array_fill(0,ARRAY[280]) where id=${req.session.user.id}`;
+    pool.query(qString, (err) => {
+        if(err) {
+            throw err;
+        }
+    });
+    res.redirect('/cardView');
 })
 
 module.exports = router;

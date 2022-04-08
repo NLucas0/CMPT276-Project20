@@ -2,7 +2,7 @@ function sTab(id) { //handling the switching between view modes
     if(id=='tabD') {
         let tabD = document.getElementById(id);
         let tabS = document.getElementById('tabS');
-        tabD.style.backgroundColor = "rgb(240,240,240)";
+        tabD.style.backgroundColor = "rgb(200,200,200)";
         tabD.id = 'tabS';
         tabS.style.backgroundColor = "white";
         tabS.id = 'tabD';
@@ -17,7 +17,7 @@ function sTab(id) { //handling the switching between view modes
 }
 
 function relocate(cardName) { //redirect to card info page
-    window.location.href = "/cardView/" + cardName;
+    window.location.href = "/cardView/card/" + cardName;
 }
 
 function doSort() { //handles sorting
@@ -163,5 +163,11 @@ function setSort(currentID) { //handles switching between sort types
         }
         sortType = Number(currentID.slice(1));
         doSort();
+    }
+}
+
+function clearAll() {
+    if(confirm("Do you really wish to clear all owned cards?")==true) {
+        window.location.href = '/cardView/clear';
     }
 }
