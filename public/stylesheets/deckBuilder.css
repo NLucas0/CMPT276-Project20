@@ -1,3 +1,8 @@
+body {
+    margin:0%;
+    background-image: linear-gradient(to right, #2c4560, #08294d);
+}
+
 input {
     margin-left: 1%;
     float: right;

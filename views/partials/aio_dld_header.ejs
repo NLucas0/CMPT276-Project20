@@ -13,7 +13,11 @@
     }
     at a minimum */
     .header {
+        background-image: url("images/Yugioheader.png");
         background-color: #063970;
+        background-repeat:no-repeat;
+        background-size: cover;
+        background-position: 50% 95%;
     }
     #headerTop {
         padding: 10px;
@@ -92,13 +96,13 @@
         <h1 id="headerName">All-in-One Duel Links Draft</h1>
     
         <% if (user) {%>
-            <div id="loginDivAfter">
+            <div id="loginDivAfter" style="margin-top:3%">
                 <label>Welcome <%= user.name %>!</label>
                 <button id="headerButton" onclick="goToPage('/logout')">Log Out</button>
             </div>
         <% } else { %>
     
-            <div id="loginDivBefore">
+            <div id="loginDivBefore" style="margin-top:3%">
                 <button id="headerButtonLeft" onclick="goToPage('/login')">Log in</button>
                 <button id="headerButton" onclick="goToPage('/signup')">Sign up</button>
             </div>

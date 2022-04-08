@@ -13,7 +13,7 @@
 body{
     font-family: Arial, sans-serif;
     margin: 0%;
-    background-color: var(--bg);
+    background-image: linear-gradient(to right, #2c4560, #08294d);
 }
 hr{
     border: 2px dashed var(--fg);
