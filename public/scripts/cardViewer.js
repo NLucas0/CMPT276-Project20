@@ -2,9 +2,9 @@ function sTab(id) { //handling the switching between view modes
     if(id=='tabD') {
         let tabD = document.getElementById(id);
         let tabS = document.getElementById('tabS');
-        tabD.style.backgroundColor = "rgb(200,200,200)";
+        tabD.style.backgroundColor = "rgb(50, 163, 255)";
         tabD.id = 'tabS';
-        tabS.style.backgroundColor = "white";
+        tabS.style.backgroundColor = "rgb(0, 125, 228)";
         tabS.id = 'tabD';
         if(tabD.innerHTML == 'View owned cards') {
             document.getElementById('displayAll').style.display = "none";
@@ -156,10 +156,10 @@ function searchUsr(searchStr) { //search function for viewing user's cards
 function setSort(currentID) { //handles switching between sort types
     if(currentID.slice(1)!=sortType) {
         let toSelect = document.getElementsByClassName(currentID);
-        for(let t of toSelect) {t.style.backgroundColor="rgb(200,200,200)";}
+        for(let t of toSelect) {t.style.backgroundColor="rgb(50, 163, 255)";}
         if(sortType!=0) {
             let currentSelected = document.getElementsByClassName('s'+sortType);
-            for(let c of currentSelected) {c.style.backgroundColor = "white";}
+            for(let c of currentSelected) {c.style.backgroundColor = "rgb(0, 125, 228)";}
         }
         sortType = Number(currentID.slice(1));
         doSort();

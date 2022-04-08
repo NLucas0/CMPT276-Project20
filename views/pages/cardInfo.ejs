@@ -24,29 +24,41 @@
         </script>
     </head>
     <body>
-        <h1 style="text-align:center"><%=cardInfo.name%></h1>
-        <img src= "/<%=cardInfo.image%>", alt="<%=cardInfo.name%>" style="display:block; margin:auto">
-        <ul>
-            <li>Pack name: <%=cardInfo.box_name%></li>
-            <li>
-                Stars:
-                <% if(cardInfo.stars <= 0) { %>
-                    N/A
-                <% } else { %>
-                    <% for(i=0;i<cardInfo.stars;i++) { %>
-                        &#9733;
+        <div id="infoStyle">
+            <h1 style="text-align:center; margin-top:2%"><%=cardInfo.name%></h1>
+            <hr style="width:75%; height:0.05%; background-color:white">
+            <img src= "/<%=cardInfo.image%>", alt="<%=cardInfo.name%>" style="display:block; margin:auto; height:60%; width:auto;">
+            <hr style="width:75%; height:0.05%; background-color:white">
+            <ul style="margin-left:12.5%; width:20%">
+                <li>Pack name: <%=cardInfo.box_name%></li>
+                <li>
+                    Stars:
+                    <% if(cardInfo.stars <= 0) { %>
+                        N/A
+                    <% } else { %>
+                        <% for(i=0;i<cardInfo.stars;i++) { %>
+                            &#9733;
+                        <% } %>
                     <% } %>
-                <% } %>
-            </li>
-            <li>
-                Value:
-                <% if(cardInfo.value <= 0) { %>
-                    Could not retrieve price
-                <% } else { %> 
-                    $<%=cardInfo.value%> (average price)
-                <% } %>
-            </li>
-        </ul>
-        <a id="cardViewerBackButton" onclick="checkIFrame(event)" style="cursor:pointer; color:rgb(53, 57, 255)">Back</a>
+                </li>
+                <li>
+                    Value:
+                    <% if(cardInfo.value <= 0) { %>
+                        Could not retrieve price
+                    <% } else { %> 
+                        Average: $<%=cardInfo.value%> <br>
+                        High: $<%=otherCardInfo.price_data.data.prices.high%> <br>
+                        Low: $<%=otherCardInfo.price_data.data.prices.low%>
+                    <% } %>
+                </li>
+                <li>
+                    Print Tag: <%=otherCardInfo.print_tag%>
+                </li>
+                <li>
+                    Rarity: <%=otherCardInfo.rarity%>
+                </li>
+            </ul>
+            <a id="cardViewerBackButton" onclick="checkIFrame(event)" style="cursor:pointer; display:block; color:white; position:absolute; bottom:2%; left:2%">Back</a>
+        </div>
     </body>
 </html>

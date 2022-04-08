@@ -1,5 +1,8 @@
 body {
     background-color:#2c4560;
+    margin:0;
+    font-family: Arial, sans-serif;
+    color:white;
 }
 
 #tabS, #tabD {
@@ -7,14 +10,16 @@ body {
     height:5%;
     min-width:10%;
     float:left;
+    color:white;
+    border-color:white;
 }
 
 #tabS {
-    background-color:rgb(240, 240, 240);
+    background-color:rgb(50, 163, 255);
 }
 
 #tabD {
-    background-color:white;
+    background-color:rgb(0, 125, 228);
 }
 
 #displayAll, #displayOwned {
@@ -51,20 +56,24 @@ body {
     min-width:4%;
     border-radius:0;
     border-width:1px;
-    background-color:white;
+    background-color:rgb(0, 125, 228);
+    color:white;
+    border-color:white;
 }
 
 #clearBtn {
     height:50%;
     min-width:10%;
     border-width:1px;
-    background-color:white;
+    background-color:rgb(0, 125, 228);
     display:block;
     margin:auto;
     clear:right;
     position:absolute;
     bottom:44%;
     right:0;
+    color:white;
+    border-color:white;
 }
 
 button:active{
@@ -72,7 +81,7 @@ button:active{
 }
 
 button:hover{
-    filter:brightness(90%);
+    filter:brightness(110%);
 }
 
 .dbCardImg {
@@ -82,5 +91,21 @@ button:hover{
 
 .dbCardImg:hover{
     filter:brightness(85%);
-    transform: scale(1.02,1.02)
+    transform: scale(1.02,1.02);
+}
+
+#infoStyle {
+    width:90%; 
+    height:95vh; 
+    margin:1.25% 5%; 
+    background-image:radial-gradient(circle, rgb(100, 182, 172), rgb(58, 141, 131), rgb(35, 107, 99));
+    overflow:auto;
+    position:relative;
+}
+
+#cardViewerBackButton:hover {
+    filter:brightness(85%);
+}
+#cardViewerBackButton:active {
+    transform: translateY(5%);
 }

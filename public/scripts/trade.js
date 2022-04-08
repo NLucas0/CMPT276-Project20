@@ -267,7 +267,7 @@ function showCardDetails(event, hide=false){
     let iframe = document.createElement("iframe");
     iframe.id = "cardViewPopup";
     iframe.style = "width:100%; height:100%; display:block;";
-    iframe.src = window.location.protocol + '/cardView/' + cardName;
+    iframe.src = window.location.protocol + '/cardView/card/' + cardName;
     iframe.onclick = toggleTable(false, event, null);
     iframe.id = "cardViewer";
 
