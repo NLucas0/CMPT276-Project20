@@ -36,6 +36,21 @@ function adminSetUp(){
     setUpUserTab();
     setUpTradeTab();
     changeTab(0);
+    cleanArrays();
+    console.log(userData);
+}
+
+// remove null elements
+function cleanArrays(){
+    for(let user of userData){
+        let newArr = [];
+        for(let i=user.cards.length -1; i>=0; i--){
+            if(user.cards[i] != 0){
+                newArr.push(user.cards[i]);
+            }
+        }
+        user.cards = newArr;
+    }
 }
 
 // setup user table on load
@@ -121,7 +136,7 @@ function toggleTable(hidden, col, event, type){
 
 // clear popup data on close
 function resetPopUpData(){
-    let resetData = '<tr><td class="noMatchMessage" hidden="true">No Cards</td></tr>';
+    let resetData = '<tr style="background-color: var(--bg);"><td class="noMatchMessage" hidden="false">No Cards</td></tr>';
     clearContents.forEach(item=> item.innerHTML = resetData);
 }
 
@@ -151,12 +166,73 @@ function displayData(col, id){
     try{
         let elementTag = col != "Owned Cards"? "label":"img";
         let className = col != "Owned Cards"? "": "card";
-        addToTable(table, array, elementTag, className);
+      
+        if(col == "Owned Cards"){
+            addCardsToTable(array, table);
+        }
+        else{
+            addToTable(table, array, elementTag, className);  
+        }
     }
     // if no data
     catch(TypeError){
+        console.log(TypeError);
         document.getElementById("adminTableInfoTable").
         getElementsByClassName("noMatchMessage")[0].hidden = false;
+    }
+}
+
+// add cards to popup
+function addCardsToTable(array, table){
+    try{
+        if(!array || array.length <= 0){ throw TypeError;}
+        // remove duplicates
+        let uniqueArray = [...new Set(array)];
+
+        for(let i=0; i<uniqueArray.length; i++){
+            if(uniqueArray[i] == 0){continue;}
+
+            let newCard = document.getElementsByClassName("cardImgSample")[0].cloneNode(true);
+            newCard.hidden = false;
+
+            let newCell = newCard.getElementsByClassName("card")[0];
+            newCell.src = (cardData.find(x=> x.card_id==uniqueArray[i])).image;
+            newCell.name = (cardData.find(x=> x.card_id==uniqueArray[i])).name;
+            newCell.data = uniqueArray[i];
+
+            table.prepend(newCard);  
+        } 
+        displayCards(array, table);
+    }
+    // if no data
+    catch(error){
+        table.getElementsByClassName("noMatchMessage")[0].hidden = false;
+        table.prepend(table.getElementsByClassName("noMatchMessage")[0].parentElement);
+    }
+}
+
+// show card count
+function displayCards(cards, container){
+    // seperate duplicates
+    let unique = [];
+    let dupes = [];
+    cards.forEach(item => {
+        return unique.includes(item) ? dupes.push(item) : unique.push(item);
+    });
+
+    // show count if duplicates
+    for(let cardObj of container.getElementsByClassName("cardImgSample")){
+        let data = parseInt(cardObj.getElementsByClassName("card")[0].data);
+        if(dupes.includes(data)){
+            let count = 0;
+            dupes.forEach(item=>{
+                return item == data? count++:0;
+            })
+            let lbl = cardObj.getElementsByClassName("cardCount")[0];
+            lbl.innerHTML = count+1;
+            lbl.hidden = false;
+            cardObj.appendChild(lbl)
+        }
     }
 }
 

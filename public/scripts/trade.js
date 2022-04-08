@@ -35,6 +35,21 @@ function tradePageSetUp(){
     setUpUsers();
     setUpTrades();
     changeTab(0);
+
+    cleanArrays();
+}
+
+// remove all null elements
+function cleanArrays(){
+    for(let user of userData){
+        let newArr = [];
+        for(let i=user.cards.length -1; i>=0; i--){
+            if(user.cards[i] != 0){
+                newArr.push(user.cards[i]);
+            }
+        }
+        user.cards = newArr;
+    }
 }
 
 // add friends to friends tab
@@ -246,17 +261,19 @@ function displayData(id){
 
     try{
         if(!array || array.length <= 0){ throw TypeError;}
+        // remove duplicates
+        let uniqueArray = [...new Set(array)];
 
-        for(let i=0; i<array.length; i++){
-            if(array[i] == 0){continue;}
+        for(let i=0; i<uniqueArray.length; i++){
+            if(uniqueArray[i] == 0){continue;}
 
             let newCard = document.getElementsByClassName("cardImgSample")[0].cloneNode(true);
             newCard.hidden = false;
 
             let newCell = newCard.getElementsByClassName("card")[0];
-            newCell.src = (cardData.find(x=> x.card_id==array[i])).image;
-            newCell.name = (cardData.find(x=> x.card_id==array[i])).name;
-            newCell.data = array[i];
+            newCell.src = (cardData.find(x=> x.card_id==uniqueArray[i])).image;
+            newCell.name = (cardData.find(x=> x.card_id==uniqueArray[i])).name;
+            newCell.data = uniqueArray[i];
             newCell.onclick = function(event){showCardDetails(event);};
 
             table.prepend(newCard);  
@@ -410,7 +427,7 @@ function displayCards(cards, container){
                 return item == data? count++:0;
             })
             let lbl = cardObj.getElementsByClassName("cardCount")[0];
-            lbl.innerHTML = count;
+            lbl.innerHTML = count+1;
             lbl.hidden = false;
             cardObj.appendChild(lbl)
         }
