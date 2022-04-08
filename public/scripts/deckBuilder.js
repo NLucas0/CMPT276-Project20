@@ -9,7 +9,7 @@ const TEST_HAND_TABLE = "testHandCardsTable";
 const IMAGE_ID = "largeImage";
 var deck = [];
 var extraDeck = [];
-var sortType = 1; //1 = name, 2 == star, 3 = price(asc), 4 = price (dsc)
+var sortType = 1; //1 = name, 2 = star (Asc), 3 = price(Asc), 4 = price (Desc), 5 = star (Desc)
 
 function deckBuilderPageSetUp(){
     console.log(deck);
@@ -222,6 +222,19 @@ function sortCards(cards) {
                 let valueB = b.dataset.value;
                 if(valueA > valueB) return -1;
                 if(valueA < valueB) return 1;
+                return 0;
+            });
+            break;
+        case 5:
+            cards.sort((a,b) => {
+                let starsA = a.dataset.stars;
+                let starsB = b.dataset.stars;
+                if(starsA > starsB) return -1;
+                if(starsA < starsB) return 1;
+                let nameA = a.dataset.name.toLowerCase();
+                let nameB = b.dataset.name.toLowerCase();
+                if(nameA > nameB) return 1;
+                if(nameA < nameB) return -1;
                 return 0;
             });
             break;

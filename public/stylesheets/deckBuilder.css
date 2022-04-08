@@ -4,6 +4,11 @@ input {
     padding: 1%;
 }
 
+#searchBar {
+    float: none;
+    height: auto;
+}
+
 .horizontalAlignContainer{
     display: flex;
     flex-direction: row;
@@ -27,6 +32,10 @@ input {
     float: right;
 }
 
+table {
+    margin-bottom: 5%;
+}
+
 .deckBuilderTable{
     width: 35.4vw; /*Five cards worth */
     height: inherit;
@@ -39,6 +48,12 @@ input {
     width: 100%;
     height: 100%;
     grid-template-columns: repeat(5, 1fr);
+}
+
+#testHandCardsTable {
+    height: auto;
+    width: auto;
+    background-color: var(--bg);
 }
 
 .card, .cardImage{
@@ -68,6 +83,6 @@ h3{
     height: 1%;
     width: auto;
     float: left;
-    margin: 0.5%;
+    margin: 1%;
     color: white;
 }
