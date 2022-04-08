@@ -251,6 +251,16 @@ select {
     width: 100%;
 }
 
+ul {
+    color: white;
+    margin-top: -16px;
+}
+
+.quarter {
+    width: 24%;
+    float: left;
+}
+
 #username, #password {
     display:block; 
     margin:auto; 
