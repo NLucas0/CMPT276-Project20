@@ -14,9 +14,10 @@
 
     <h3>Sort By:</h3>
     <button onclick="changeSortType(1)">Alphabetical</button>
-    <button onclick="changeSortType(2)">Stars</button>
-    <button onclick="changeSortType(3)">Value (Low - High)</button>
-    <button onclick="changeSortType(4)">Value (High - Low)</button>
+    <button onclick="changeSortType(2)">Stars (Ascend)</button>
+    <button onclick="changeSortType(5)">Stars (Descend)</button>
+    <button onclick="changeSortType(3)">Value (Ascend)</button>
+    <button onclick="changeSortType(4)">Value (Descend)</button>
     <input type="text" id="searchBar" placeholder="Search">
     <div class="horizontalAlignContainer">
         <div id="collection" class="deckBuilderTable">
@@ -43,7 +44,7 @@
             <button id="saveDeck" type="button" onclick="saveDeck()">Save Deck</button>
             <div id="testHand" hidden="true">
                 <h3 style="width: 100%;">Test Hand</h3>
-                <table id="testHandCardsTable" class="cardTable" style="height: auto; width: 35.6vw;" >
+                <table id="testHandCardsTable" class="cardTable">
                     <tbody></tbody>
                 </table>
             </div>
