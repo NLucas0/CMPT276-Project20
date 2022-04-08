@@ -1,9 +1,10 @@
 let data;
 let viewedTrades = false;
+
 let activeTabColor = "#6f6f6f";
 let deactivatedTabColor = "#3a3a3a";
 
-// help popup contents
+// help popup contents (displayed when "?" pressed)
 function help(hidden){
     document.getElementById("helpPagePopUp").hidden = hidden;
     if(hidden) return;
@@ -11,7 +12,8 @@ function help(hidden){
     document.getElementById("helpPageName").innerHTML = document.getElementsByTagName("h1")[2].innerHTML + " Page";
     document.getElementById("helpPageInfo").innerHTML = 
     '<hr class="helpHr">Click on <b>See Cards</b> to view an user\'s cards.</br>'+
-    '</br>Click <b>Add Friend</b> to add user as a friend. (This makes it easier to find users when trading)</br>' +
+    '</br>Click <b>Add Friend</b> to add user as a friend. (This makes it easier to find users when trading) ' +
+    'If you do not see the friend you just added, refresh the page.</br>' +
     '</br>Click <b>Trade</b> to initiate trade. You will be redirected to the trade selection page</br><hr class="helpHr">' +
 
     'Type either a <b>ID</b> or <b>username</b> into the search bar to find an user.</br>' +
@@ -26,16 +28,26 @@ function help(hidden){
 
 // setup tabs on load
 function tradePageSetUp(){
-    
     document.getElementsByClassName("helpButton")[0].hidden = false;
     data = getUserById(userId)
+
     setUpFriends();
     setUpUsers();
     setUpTrades();
     changeTab(0);
 }
 
-// initialize tables
+// add friends to friends tab
+function setUpFriends(){
+    setUpRow(data.friends, "tradeUserListFriends", document.getElementsByClassName("noMatchMessage")[2]);
+}
+
+// set up all users tab
+function setUpUsers(){
+    setUpRow(userData, "tradeUserListAll", document.getElementsByClassName("noMatchMessage")[3]);
+}
+
+// initialize tables for users
 function setUpRow(displayData, tableId, noMatchElement){
     try{
         // check for no data
@@ -76,16 +88,6 @@ function setUpRow(displayData, tableId, noMatchElement){
     }
 }
 
-// add friends to friends tab
-function setUpFriends(){
-    setUpRow(data.friends, "tradeUserListFriends", document.getElementsByClassName("noMatchMessage")[2]);
-}
-
-// set up all users tab
-function setUpUsers(){
-    setUpRow(userData, "tradeUserListAll", document.getElementsByClassName("noMatchMessage")[3]);
-}
-
 // set up ongoing trades tab
 function setUpTrades(){
     if(data.trades == null || data.trades.length < 1){
@@ -121,6 +123,7 @@ function setUpTrades(){
 function changeTab(index){
     let tabs = document.getElementsByClassName("tab");
     let buttons = document.getElementsByClassName("tabButton");
+
     for(let i=0; i<tabs.length; i++){
         let check = i == parseInt(index);
         tabs[i].hidden = check? false:true;
@@ -175,7 +178,7 @@ function search(event){
     }
 }
 
-// show/hide popup with additional information
+// show/hide popup with additional information (show iframes too)
 function toggleTable(hidden, event, type=null, doc=document){
     // reset table if card viewer open
     try{
@@ -202,61 +205,68 @@ function toggleTable(hidden, event, type=null, doc=document){
 
     document.getElementById("tradeTableInfoPopUp").hidden = hidden || type =='trade';
     document.getElementById("adminTradeTableInfoPopUp").hidden = hidden || type !='trade';
+    resetPopUpData();
 
     // get id of user and display data
     if(!hidden){
-        let userId = (event.target || event.srcElement).parentElement.parentElement
+        let id = (event.target || event.srcElement).parentElement
                     .getElementsByClassName("tradeId")[0].innerHTML;
         
         if(type=='trade'){
-            displayTrade(userId);
+            displayTrade(id);
         }
 
         else{
-            displayData(userId);
+            displayData(id);
         }
     }
-    else{
-        // reset displayed data
-        let resetData = '<tr><td class="noMatchMessage" hidden="true">No Cards</td></tr>';
-        document.getElementsByClassName("adminTradeTableInfoPopUpTable")[0].getElementsByTagName("tbody")[0].innerHTML = resetData;
-        document.getElementsByClassName("adminTradeTableInfoPopUpTable")[1].getElementsByTagName("tbody")[0].innerHTML = resetData;
-        document.getElementById("tradeTableInfoTable").getElementsByTagName("tbody")[0].innerHTML = resetData;
+}
+
+// reset popups
+function resetPopUpData(){
+    let resetData = '<tr style="background-color: var(--bg);"><td class="noMatchMessage" hidden="true">No Cards</td></tr>';
+    let contents = [document.getElementsByClassName("adminTradeTableInfoPopUpTable")[0].getElementsByTagName("tbody")[0],
+                    document.getElementsByClassName("adminTradeTableInfoPopUpTable")[1].getElementsByTagName("tbody")[0],
+                    document.getElementById("tradeTableInfoTable").getElementsByTagName("tbody")[0]
+                ]
+    for(let item of contents){
+        item.innerHTML = resetData;
     }
 }
 
 // display column data in popup
-function displayData(userId){
-    let userObj = userData.find(x => x.id == parseInt(userId));
+function displayData(id){
+    let userObj = userData.find(x => x.id == parseInt(id));
 
     // get correct array
     let array = userObj.cards;
-    if(!array){return;}
 
     // display items
     let table = document.getElementById("tradeTableInfoTable").getElementsByTagName("tbody")[0];
 
     try{
+        if(!array || array.length <= 0){ throw TypeError;}
+
         for(let i=0; i<array.length; i++){
             if(array[i] == 0){continue;}
 
             let newCard = document.getElementsByClassName("cardImgSample")[0].cloneNode(true);
             newCard.hidden = false;
+
             let newCell = newCard.getElementsByClassName("card")[0];
             newCell.src = (cardData.find(x=> x.card_id==array[i])).image;
             newCell.name = (cardData.find(x=> x.card_id==array[i])).name;
             newCell.data = array[i];
             newCell.onclick = function(event){showCardDetails(event);};
+
             table.prepend(newCard);  
-            
         } 
         displayCards(array, table);
-        
     }
     // if no data
     catch(error){
         table.getElementsByClassName("noMatchMessage")[0].hidden = false;
-        table.insertBefore(table.getElementsByClassName("noMatchMessage")[0], table.getElementsByClassName("cardImgSample")[0]);
+        table.prepend(table.getElementsByClassName("noMatchMessage")[0].parentElement);
     }
 }
 
@@ -283,7 +293,7 @@ function showCardDetails(event, hide=false){
 // set all children to hidden (ignore noMatchMessages)
 function hideChildren(component, hidden=true){
     for(let child of component.children){
-        if(child.className == "noMatchMessage"){continue;}
+        if(child.className == "noMatchMessage" || child.className == "cardCount"){continue;}
         child.hidden = hidden;
         hideChildren(child, hidden);
     }
@@ -306,7 +316,6 @@ function addToTable(table, array, elementTag, className){
         if(elementTag == "img"){
             newItem.src = (cardData.find(x=> x.card_id==item)).image;
             newItem.data = String(item);
-            console.log(item);
         }
         table.appendChild(newItem);
     }
