@@ -11,25 +11,20 @@
 </head>
 
 <body>
-    <form id="loginForm" action="/login" method="post">
-        <div>Login</div>
-        <table id="login form">
-            <tr>
-                <th>Username:</th>
-                <td><input type="username" id="username" name="username"  placeholder="username"
-                    onkeydown="goToNext('password', event)" autofocus></td>  
-            </tr>
-            <tr>
-                <th>Password:</th>
-                <td><input type="password" id="password" name="password"  placeholder="password"
-                    onkeydown="goToNext('submit', event)"></td> 
-            </tr>
-        </table>
-
-        <input type="button" value="Log in" onclick="goToNext('submit', event)">
-    </form>
-
-    <a href="/signup">Sign up</a>
+    <div id="accountAccessWrap">
+        <p style="margin:auto; width:20%; text-align:center; margin-top:10%; font-size:200%">Login</p>
+        <form id="loginForm" action="/login" method="post">
+            <p style="display:block; margin:auto; width:20%; text-align:center; margin-top:6%">Username:</p>
+            <input type="username" id="username" name="username" placeholder="username" onkeydown="goToNext('password', event)" autofocus>
+            <br>
+            <p style="display:block; margin:auto; width:20%; text-align:center">Password:</p>
+            <input type="password" id="password" name="password"  placeholder="password" onkeydown="goToNext('submit', event)">
+            <br>
+            <input type="button" value="Log in" onclick="goToNext('submit', event)" id="submitBtn">
+        </form>
+        <br>
+        <a href="/signup" id="signup">Sign up</a>
+    </div>
 </body>
 
 </html>

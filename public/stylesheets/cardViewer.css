@@ -104,6 +104,13 @@ button:hover{
     position:relative;
 }
 
+#cardViewerBackButton {
+    cursor:pointer;
+    position:absolute;
+    bottom:2%;
+    left:2%;
+}
+
 #cardViewerBackButton:hover {
     filter:brightness(85%);
 }
