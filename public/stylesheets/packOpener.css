@@ -1,19 +1,19 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: rgb(26, 16, 173);
+    background-color: #2c4560;
     color: white;
     margin: 0%;
 }
 
 .columnLeft {
     padding-left: 1%;
-    width: 24%;
+    width: 29%;
     float: left;
 }
 
 .columnRight {
     padding-right: 1%;
-    width: 74%;
+    width: 69%;
     float: left;
 }
 
@@ -32,7 +32,7 @@ table, th, td {
     color: black;
 }
 
-input {
+input.opener {
     background-color: #0959b0;
     color: white;
 
@@ -47,6 +47,32 @@ input {
     transition-duration: 0.2s
 }
 
-input:hover {
+input.opener:hover {
     background-color: #1c6fc7;
+}
+
+input.opener:active {
+    transform: translateY(5%);
+}
+
+input.select {
+    background-color: #0959b0;
+    color: white;
+
+    padding: 10px 14px;
+
+    font-size: 24px;
+
+    border-style: hidden;
+    border-radius: 4px;
+
+    transition-duration: 0.2s
+}
+
+input.select:hover {
+    background-color: #1c6fc7;
+}
+
+input.select:active {
+    transform: translateY(5%);
 }

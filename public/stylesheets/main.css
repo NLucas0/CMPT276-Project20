@@ -1,6 +1,6 @@
 :root{
     /* use for background/table backgrounds*/
-    --bg:#252525;
+    --bg:#2c4560;
     --bg_highlight: #3a3a3a;
 
     --txt: #f5efed;
@@ -11,6 +11,8 @@
 }
 
 body{
+    font-family: Arial, sans-serif;
+    margin: 0%;
     background-color: var(--bg);
 }
 hr{
@@ -23,7 +25,7 @@ h1{
 }
 
 p, label{
-    color: var(--fg);
+    color: var(--txt);
     font-size: 16px;
 }
 
@@ -55,17 +57,20 @@ select{
 
 /* buttons*/
 button{
-    background-color: var(--fg);
+    background-color: #0959b0; /* was var(--fg) */
     color: var(--txt);
     font-size: 16px;
-    border: none;
+    border-style: hidden;
+    border-radius: 4px;
     padding-left: 1%;
     padding-top: 0.5%;
     padding-bottom: 0.5%;
     padding-right: 1%;
+
+    transition-duration: 0.2s;
 }
 button:hover{
-    background-color: var(--fg_highlight);
+    background-color: #1c6fc7; /* was var(--fg_highlight) */
 }
 button:active{
     transform: translateY(5%);
