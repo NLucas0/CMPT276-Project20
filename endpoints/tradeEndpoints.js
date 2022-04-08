@@ -62,7 +62,7 @@ router.get('/tradeSelection', async(req, res)=>{
         if(!req.session.user){throw error;}
 
         const client = await pool.connect();
-        const cardResults = await getCardData(client, "card_id, image, value, name");
+        const cardResults = await getCardData(client, "card_id, image, value, name, stars");
         
         const data = {user1: req.query.user1,
                     user2: req.query.user2,
@@ -180,6 +180,25 @@ router.post('/deleteTrade', async(req, res)=>{
         // delete trade id from involved users
         await client.query(`UPDATE users SET trades=ARRAY_REMOVE(trades, ${req.body.tradeId})
                             WHERE id=${tradeData.rows[0].sender_id} OR id=${tradeData.rows[0].receiver_id}`);
+        client.release();
+    }
+    catch(error){
+        res.redirect('/');
+    }
+})
+
+// add friend
+// url: /trade/addFriend
+// input: user1, user2
+router.post('/addFriend', async(req, res)=>{
+    try{
+        if(!req.session.user){throw error;}
+        const client = await pool.connect();
+
+        await client.query(`UPDATE users SET friends=ARRAY_APPEND(friends, ${req.body.user2}) 
+                            WHERE id=${req.body.user1} AND NOT(${req.body.user2} = ANY(friends))`);
+        await client.query(`UPDATE users SET friends=ARRAY_APPEND(friends, ${req.body.user1}) 
+                            WHERE id=${req.body.user2}`);
         client.release();
     }
     catch(error){

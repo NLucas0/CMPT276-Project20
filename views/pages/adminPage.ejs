@@ -13,63 +13,66 @@
     <%- include ("../partials/aio_dld_header.ejs") %>
     <%- include ("../partials/aio_dld_row_templates.ejs") %>
     <%- include ("../partials/aio_dld_popups.ejs") %>
-    <h1 class="title">Admin</h1>
-    <p class="subtitle">
-        View and manage user and trade data in database
-    </p>
 
-    <!--tabs-->
-    <div>
-        <button onclick="changeTab(0)" class="tabButton">User Data</button>
-        <button onclick="changeTab(1)" class="tabButton">Trade Data</button>
-    </div>
+    <div class="Content">
+        <h1 class="title">Admin</h1>
+        <p class="subtitle">
+            View and manage user and trade data in database
+        </p>
 
-    <!--user data-->
-    <div class="tab" id="adminUsersTab" style="background-color: var(--bg_highlight); padding: 1%;">
-        <!-- search-->
+        <!--tabs-->
         <div>
-            <input style="width: 80%; margin-left: 10%;" id="searchBox" placeholder="Search User" onkeyup="filterUsers()"/>
-            </br>
-            <input type="checkbox" value="ADMIN" id="adminCheckbox1" checked="checked" onclick="filterUsers()">
-            <label for="adminCheckbox1">ADMIN</label></br>
-            <input type="checkbox" value="USER" id="adminCheckbox2" checked="checked" onclick="filterUsers()">
-            <label for="adminCheckbox2">USER</label>
+            <button onclick="changeTab(0)" class="tabButton">User Data</button>
+            <button onclick="changeTab(1)" class="tabButton">Trade Data</button>
         </div>
 
-        <!-- table with all user data-->
-        <div id="userTableContainer">
-            <table id="userTable">
-                <tr>
-                    <th>ID</th>
-                    <th>USERNAME</th>
-                    <th>PASSWORD</th>
-                    <th>CARDS</th>
-                    <th>FRIENDS</th>
-                    <th>TRADES</th>
-                    <th>TYPE</th>
-                    <th>DELETE</th>
-                </tr>
-                <td class="noMatchMessage" hidden="true" colspan="8">No users</td>
-            </table>
+        <!--user data-->
+        <div class="tab" id="adminUsersTab" style="background-color: var(--bg_highlight); padding: 1%;">
+            <!-- search-->
+            <div>
+                <input style="width: 80%; margin-left: 10%;" id="searchBox" placeholder="Search User" onkeyup="filterUsers()"/>
+                </br>
+                <input type="checkbox" value="ADMIN" id="adminCheckbox1" checked="checked" onclick="filterUsers()">
+                <label for="adminCheckbox1">ADMIN</label></br>
+                <input type="checkbox" value="USER" id="adminCheckbox2" checked="checked" onclick="filterUsers()">
+                <label for="adminCheckbox2">USER</label>
+            </div>
+
+            <!-- table with all user data-->
+            <div id="userTableContainer">
+                <table id="userTable">
+                    <tr>
+                        <th>ID</th>
+                        <th>USERNAME</th>
+                        <th>PASSWORD</th>
+                        <th>CARDS</th>
+                        <th>FRIENDS</th>
+                        <th>TRADES</th>
+                        <th>TYPE</th>
+                        <th>DELETE</th>
+                    </tr>
+                    <td class="noMatchMessage" hidden="true" colspan="8">No users</td>
+                </table>
+            </div>
         </div>
-    </div>
 
-    <!--trade data-->
-    <div class="tab" id="adminTradesTab" hidden="true">
+        <!--trade data-->
+        <div class="tab" id="adminTradesTab" hidden="true">
 
-        <!-- table with all user data-->
-        <div id="tradeTableContainer">
-            <table id="tradeTable">
-                <tr>
-                    <th>ID</th>
-                    <th>SENDER ID</th>
-                    <th>RECEIVER ID</th>
-                    <th>CARDS</th>
-                    <th>STATUS</th>
-                    <th>DELETE</th>
-                </tr>
-                <td class="noMatchMessage" hidden="true" colspan="8">No trades</td>
-            </table>
+            <!-- table with all user data-->
+            <div id="tradeTableContainer">
+                <table id="tradeTable">
+                    <tr>
+                        <th>ID</th>
+                        <th>SENDER ID</th>
+                        <th>RECEIVER ID</th>
+                        <th>CARDS</th>
+                        <th>STATUS</th>
+                        <th>DELETE</th>
+                    </tr>
+                    <td class="noMatchMessage" hidden="true" colspan="8">No trades</td>
+                </table>
+            </div>
         </div>
     </div>
 
