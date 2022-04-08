@@ -204,6 +204,7 @@ th{
 .cardImgSample{
     background-color: var(--bg_highlight);
     position: relative;
+    height: fit-content;
 }
 .card{  
     width: 6.7vw;
