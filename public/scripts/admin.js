@@ -1,6 +1,6 @@
 let ADMIN_PASSWORD = "password"; // used to delete users
 let activeTabColor = "#6f6f6f";
-let deactivatedTabColor = "#434343";
+let deactivatedTabColor = "#3a3a3a";
 
 // help popup
 function help(hidden){
@@ -9,12 +9,12 @@ function help(hidden){
 
     document.getElementById("helpPageName").innerHTML = document.getElementsByTagName("h1")[2].innerHTML + " Page";
     document.getElementById("helpPageInfo").innerHTML = 
-    '<hr>Click on <b>Friends</b>, <b>Trades</b>, <b>Cards</b> to view full array in a popup.</br>'+
-    '</br>Enter <b>password</b> when prompted to delete user.</br><hr>' +
+    '<hr class="helpHr">Click on <b>Friends</b>, <b>Trades</b>, <b>Cards</b> to view full array in a popup.</br>'+
+    '</br>Enter <b>password</b> when prompted to delete user.</br><hr class="helpHr">' +
     'Select a trade state from the <b>Status</b> drop down menu to change status.</br>' +
     '(Note if an invalid trade is accepted, an error message will appear and the trade will be rejected.)</br>' +
     '</br>Click <b>Cards</b> to see cards involved in a trade.</br>' +
-    '<hr>Click outside popups to close.<hr>';
+    '<hr class="helpHr">Click outside popups to close.<hr class="helpHr">';
 }
 
 // setup tabs on load
@@ -225,7 +225,6 @@ function changeTradeStatus(event){
 
     // make post request
     post("/trade/editTradeStatus", {newValue:select.value, tradeId:id});
-    location.reload();
 }
 
 // delete trade from database
@@ -237,9 +236,6 @@ function deleteTrade(event){
 
     post("/trade/deleteTrade", {tradeId:id});
     select.parentElement.parentElement.remove();
-    
-    // reload page to get updated database
-    location.reload();
 }
 
 // delete user data from database
@@ -252,10 +248,10 @@ function deleteUser(event){
     }
     
     let select = event.target||event.srcElement;
-    let id = select.parentElement.parentElement.getElementsByClassName("id")[0].innerHTML;
+    let id = select.parentElement.getElementsByClassName("id")[0].innerHTML;
 
-    post("/deleteUser", {userId:id});
-    select.parentElement.parentElement.remove();
+    post("/deleteUser", {deleteId:id});
+    select.parentElement.remove();
     location.reload();
 }
 
@@ -271,6 +267,7 @@ async function post(endpoint, data){
     
     if(response.status == 400){
         alert('Error: invalid trade');
-        window.location = window.location;
     }
+
+    location.reload();
 }

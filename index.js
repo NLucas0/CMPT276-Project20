@@ -10,7 +10,7 @@ const {Pool} = require('pg');
 const { rmSync } = require('fs');
 var pool = new Pool({
   connectionString: process.env.DATABASE_URL||"postgres://postgres:root@localhost/aio_dld_database"
-  ,ssl:{rejectUnauthorized: false}
+   ,ssl:{rejectUnauthorized: false}
 })
 
 // allow pool to be accessed by other files
@@ -460,16 +460,19 @@ var app = express()
     })
 
     // delete trade item from /admin
-    // input: userId
+    // input: deleteId
     .post('/deleteUser', async(req, res)=>{
         try{
             const client = await pool.connect();
             if(!req.session.user || req.session.user.type != 'ADMIN'){throw error;}
-            await client.query(`DELETE FROM users WHERE id=${req.body.userId}`);
+            await client.query(`DELETE FROM users WHERE id=${req.body.deleteId}`);
 
             // delete trades associated with user
-            await client.query(`DELETE FROM trades WHERE sender_id=${req.body.userId}
-                                OR receiver_id=${req.body.userId}`);
+            await client.query(`DELETE FROM trades WHERE sender_id=${req.body.deleteId}
+                                OR receiver_id=${req.body.deleteId}`);
+
+            // update friend lists to remove user
+            await client.query(`UPDATE users SET friends=ARRAY_REMOVE(friends, ${req.body.deleteId})`);
             client.release();
         }
         catch(error){

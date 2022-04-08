@@ -1,3 +1,10 @@
+let activeTabColor = "#6f6f6f";
+let deactivatedTabColor = "#434343";
+
+let ascendingSort = true;
+let sortAtt = "name";
+let selectedTab = null;
+
 // help popup contents
 function help(hidden){
     document.getElementById("helpPagePopUp").hidden = hidden;
@@ -5,15 +12,16 @@ function help(hidden){
 
     document.getElementById("helpPageName").innerHTML = document.getElementsByTagName("h1")[2].innerHTML + " Page";
     document.getElementById("helpPageInfo").innerHTML = 
-    '<hr>To offer cards to the other user, click cards from <b>Owned Cards</b>. '+
+    '<hr class="helpHr">To offer cards to the other user, click cards from <b>Owned Cards</b>. '+
     'From <b>Trader\'s Cards</b>, click cards you want in exchange.</br></br>' +
     'Cards you have selected to give are displayed in the <b>Offer</b> table. '+
     'Cards you have selected to request are displayed in the <b>Request</b> table.</br></br>' +
     'To move cards between tables, simply click on the image.</br></br>' +
-    'The total value of each side of the trade is displayed above the respective table.</br><hr>'+
+    'The total value of each side of the trade is displayed above the respective table.</br><hr class="helpHr">'+
     'To confirm and send the trade request, click <b>Send Trade Request</b></br></br>' +
 
-    'To see card details, <b>right click</b> on the card';
+    'To see card details, <b>right click</b> on the card</br></br>' +
+    'To sort cards, click either <b>Value</b>, <b>Stars</b> or <b>Name</b>. To reverse the sort, click the button again.<hr class="helpHr">';
 }
 
 // trade selection
@@ -22,6 +30,7 @@ function tradeSelectionPageSetUp(){
 
     displayCards(document.getElementById("initiatorCardsTable"), user1.cards);
     displayCards(document.getElementById("receiverCardsTable"), user2.cards);
+    sortCards(0);
 
     if(counter != -1){
         setUpTable(offered, wanted);
@@ -52,6 +61,7 @@ function findCardButton(id, container){
 
 // show card details in popup
 function showCardDetails(event, hide=false){
+    event.preventDefault();
     document.getElementById("tradeSelectionInfoPopUp").hidden = hide;
     document.getElementById("tradeSelectionCardViewer").hidden = hide;
     
@@ -60,7 +70,7 @@ function showCardDetails(event, hide=false){
     }
     let cardName = (event.target || event.srcElement).name;
     // open card viewer in popup
-    document.getElementById("tradeSelectionCardViewer").src = window.location.protocol + '/cardView/' + cardName;
+    document.getElementById("tradeSelectionCardViewer").src = window.location.protocol + '/cardView/card/' + cardName;
 }
 
 // display cards
@@ -126,6 +136,7 @@ function selectCard(event, type, deselect, cardId){
     checkTableEmpty(id);
 
     updateValue(type, deselect, card.data);
+    sortAll();
 }
 
 // display message if no items in table
@@ -185,4 +196,79 @@ function updateValue(type, deselect, cardId){
 
     let newValue = parseFloat(priceObjs[priceObjIndx].innerHTML.replace('$','')) + changeAmount;
     priceObjs[priceObjIndx].innerHTML = '$' + newValue.toFixed(2);
+}
+
+// sort displayed cards (selection sort)
+function displaySort(container){
+    console.log('here');
+    let array = Array.from(container.getElementsByClassName("card"));
+    let prevElement = null;
+
+    for(let i=0; i<array.length; i++){
+        let minElement = array[i];
+        let minObj = (cardData.find(x=> x.card_id == minElement.data));
+        let minIndex = i;
+
+        for(let j=i; j<array.length; j++){
+            if((ascendingSort && minObj[sortAtt] >= (cardData.find(x=> x.card_id == array[j].data))[sortAtt])||
+                (!ascendingSort && minObj[sortAtt] <= (cardData.find(x=> x.card_id == array[j].data))[sortAtt]))
+            {
+                minElement = array[j];
+                minIndex = j;
+            }
+        }
+        if(prevElement == null){
+            container.prepend(minElement);
+        }
+        else{
+            prevElement.parentNode.insertBefore(minElement, prevElement.nextSibling);
+        }
+        prevElement = minElement;
+
+        // move moved element to front of array
+        array.splice(minIndex, 1);
+        array.unshift(minElement);
+        console.log(minObj['name']+minObj['value']);
+    }
+
+    container.append(container.getElementsByClassName("noMatchMessage")[0].parentElement);
+}
+
+function sortAll(){
+    displaySort(document.getElementById("initiatorCardsTable").getElementsByTagName("tbody")[0]);
+    displaySort(document.getElementById("offeredCardsTable").getElementsByTagName("tbody")[0]);
+    
+    displaySort(document.getElementById("wantedCardsTable").getElementsByTagName("tbody")[0]);
+    displaySort(document.getElementById("receiverCardsTable").getElementsByTagName("tbody")[0]);
+}
+
+function sortCards(index){
+    let tabs = document.getElementsByClassName("tabButton");
+
+    // if already selected, reverse sort
+    if(selectedTab != null && selectedTab==tabs[index]){
+        ascendingSort = !ascendingSort;
+    }
+    else{
+        // change tab colors
+        for(let i=0; i<tabs.length; i++){
+            tabs[i].style.backgroundColor = index==i?activeTabColor:deactivatedTabColor;
+        }
+        
+        // update search attribute
+        switch(index){
+            case 0: // name
+                sortAtt = "name";
+                break;
+            case 1: // stars
+                sortAtt = "stars";
+                break;
+            case 2: // value
+                sortAtt = "value";
+                break;
+        }
+    }
+
+    sortAll();
+    selectedTab = tabs[index];
 }

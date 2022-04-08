@@ -13,37 +13,39 @@
     <%- include ("../partials/aio_dld_row_templates.ejs") %>
     <%- include ("../partials/aio_dld_popups.ejs") %>
 
-    <h1 class="title">Trading</h1>
-    <p class="subtitle">Exchange cards with friends and other users</p>
+    <div class="Content">
+        <h1 class="title">Trading</h1>
+        <p class="subtitle">Exchange cards with friends and other users</p>
 
-    <!--buttons at top to toggle pages-->
-    <div id="tradeTabs">
-        <button onclick="changeTab(0)" class="tabButton">Friends</button>
-        <button onclick="changeTab(1)" class="tabButton">Search User</button>
-        <button onclick="changeTab(2)" class="tabButton">Ongoing Trades</button>
-    </div>
+        <!--buttons at top to toggle pages-->
+        <div id="tradeTabs">
+            <button onclick="changeTab(0)" class="tabButton">Friends</button>
+            <button onclick="changeTab(1)" class="tabButton">Search User</button>
+            <button onclick="changeTab(2)" class="tabButton">Ongoing Trades</button>
+        </div>
 
-    <!--tables with users-->
-    <div id="tradeUsers">
-        <!--tab 1-->
-        <table class="tab" id="tradeUserListFriends">
-            <td class="noMatchMessage" hidden="true">No matching users</td>
-        </table>
+        <!--tables with users-->
+        <div id="tradeUsers">
+            <!--tab 1-->
+            <table class="tab" id="tradeUserListFriends">
+                <td class="noMatchMessage" hidden="true" style="background-color:var(--bg_highlight);">No matching users</td>
+            </table>
 
-        <!--tab 2-->
-        <table class="tab" id="tradeUserListAll" hidden="true">
-            <tr>
-                <td colspan="4" style="background-color: var(--bg_highlight);">
-                    <input style="width: 80%; margin-left: 0%;" placeholder="Search User" onkeyup="search(event)"></input>
-                </td>
-            </tr>
-            <td class="noMatchMessage" hidden="true"  style="background-color: var(--bg_highlight);">No matching users</td>
-        </table>
+            <!--tab 2-->
+            <table class="tab" id="tradeUserListAll" hidden="true">
+                <tr>
+                    <td colspan="5" style="background-color: var(--bg_highlight);">
+                        <input style="width: 80%; margin-left: 0%;" placeholder="Search User" onkeyup="search(event)"></input>
+                    </td>
+                </tr>
+                <td class="noMatchMessage" hidden="true"  style="background-color: var(--bg_highlight);">No matching users</td>
+            </table>
 
-        <!--tab 3-->
-        <table class="tab" id="tradeTradesList" hidden="true" style="min-height: 3%;">
-            <tr><td class="noMatchMessage" hidden="true">No trades</td></tr>
-        </table>
+            <!--tab 3-->
+            <table class="tab" id="tradeTradesList" hidden="true" style="min-height: 3%;">
+                <tr><td class="noMatchMessage" hidden="true" style="background-color:var(--bg_highlight);">No trades</td></tr>
+            </table>
+        </div>
     </div>
         
     <!-- store data from database in local variables-->

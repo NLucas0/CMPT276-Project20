@@ -15,8 +15,17 @@ body{
     margin: 0%;
     background-image: linear-gradient(to right, #2c4560, #08294d);
 }
+.Content {
+    padding:1%;
+}
 hr{
     border: 2px dashed var(--fg);
+}
+
+.helpHr{
+    border: 1px dashed var(--fg);
+    margin-bottom: 1%;
+    margin-top: 1%;
 }
 
 /* text */

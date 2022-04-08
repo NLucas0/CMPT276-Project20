@@ -1,7 +1,7 @@
 let data;
 let viewedTrades = false;
 let activeTabColor = "#6f6f6f";
-let deactivatedTabColor = "#434343";
+let deactivatedTabColor = "#3a3a3a";
 
 // help popup contents
 function help(hidden){
@@ -10,17 +10,18 @@ function help(hidden){
 
     document.getElementById("helpPageName").innerHTML = document.getElementsByTagName("h1")[2].innerHTML + " Page";
     document.getElementById("helpPageInfo").innerHTML = 
-    '<hr>Click on <b>See Cards</b> to view an user\'s cards.</br>'+
-    '</br>Click <b>Trade</b> to initiate trade. You will be redirected to the trade selection page</br><hr>' +
+    '<hr class="helpHr">Click on <b>See Cards</b> to view an user\'s cards.</br>'+
+    '</br>Click <b>Add Friend</b> to add user as a friend. (This makes it easier to find users when trading)</br>' +
+    '</br>Click <b>Trade</b> to initiate trade. You will be redirected to the trade selection page</br><hr class="helpHr">' +
 
     'Type either a <b>ID</b> or <b>username</b> into the search bar to find an user.</br>' +
     '</br>Click <b>Ongoing Trades</b> to see trades sent to/from you.</br>' +
 
-    '<hr>Click <b>Cards</b> to see the trade details.</br>' +
+    '<hr class="helpHr">Click <b>Cards</b> to see the trade details.</br>' +
     '</br>Click <b>Cancel</b>, <b>Accept</b> or <b>Reject</b> to perform said action.</br>' +
     '</br>Click <b>Counter</b> to initiate a counter-trade. ' +
     'You will be redirected to the trade Selection Screen to edit trade details.</br>' +
-    '(Note if you sent the trade, the accept/reject/counter options will not be visible)<hr>';
+    '(Note if you sent the trade, the accept/reject/counter options will not be visible)<hr class="helpHr">';
 }
 
 // setup tabs on load
@@ -334,7 +335,7 @@ async function tradeAction(event, type){
     // make post request
     if(type == 'CANCEL'){
         post("/trade/deleteTrade", {tradeId:id});
-        window.location = window.location;
+        location.reload();
     }
 
     // issue counter trade
@@ -358,7 +359,7 @@ async function tradeAction(event, type){
                             + JSON.stringify(objData.cards_wanted);
     }
     else{
-        window.location = window.location;
+        location.reload();
         let response = await fetch(window.location.protocol + "//" + window.location.host + "/trade/editTradeStatus",{
             method: 'POST',
             body: JSON.stringify({
@@ -384,8 +385,6 @@ function post(endpoint, data){
     xhr.send(JSON.stringify(data));
 }
 
-
-
 function displayCards(cards, container){
     // seperate duplicates
     let unique = [];
@@ -407,4 +406,10 @@ function displayCards(cards, container){
             cardObj.appendChild(lbl)
         }
     }
+}
+
+function addFriend(event){
+    let id = (event.target||event.srcElement).parentElement.getElementsByClassName("tradeId")[0].innerHTML;
+    post("/trade/addFriend", {user1:userId, user2: id});
+    location.reload();
 }
