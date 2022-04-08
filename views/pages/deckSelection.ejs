@@ -12,31 +12,32 @@
 
     <%- include ("../partials/aio_dld_header.ejs") %>
 
+    <div class="content">
+        <div class="decksListContainer">
+            <button id="newDeckButton" onclick="goToPage('/deckBuild/build')">New Deck</button>
+            <table id="decksTable" class="cardTable">
+                <tbody>
+                    <% decks.forEach(function(deck) { %>
+                        <td>
+                            <%= deck.name %>
+                            <% if(deck.cards.length > 0) { %>
+                                <button class="card" 
+                                onclick="goToPage('/deckBuild/edit/<%= deck.id %>')" 
+                                style="background-image: url('/<%= cards[deck.cards[0] - 1].image %>'); background-size: contain;">
+                                </button>
+                            <% } else { %>
+                                <button class="card" 
+                                onclick="goToPage('/deckBuild/edit/<%= deck.id %>')" 
+                                style="background-image: url('/images/card_back.jpg'); background-size: contain;"></button>
+                                </button>
+                            <% } %>
+                            <button formmethod="post" onclick="goToPage('/deckBuild/delete/<%= deck.id %>')">DELETE</button>
+                        </td>
+                    <% }); %>
+                </tbody>
+            </table>
     
-    <div class="decksListContainer">
-        <button id="newDeckButton" onclick="goToPage('/deckBuild/build')">New Deck</button>
-        <table id="decksTable" class="cardTable">
-            <tbody>
-                <% decks.forEach(function(deck) { %>
-                    <td>
-                        <%= deck.name %>
-                        <% if(deck.cards.length > 0) { %>
-                            <button class="card" 
-                            onclick="goToPage('/deckBuild/edit/<%= deck.id %>')" 
-                            style="background-image: url('/<%= cards[deck.cards[0] - 1].image %>'); background-size: contain;">
-                            </button>
-                        <% } else { %>
-                            <button class="card" 
-                            onclick="goToPage('/deckBuild/edit/<%= deck.id %>')" 
-                            style="background-image: url('/images/card_back.jpg'); background-size: contain;"></button>
-                            </button>
-                        <% } %>
-                        <button formmethod="post" onclick="goToPage('/deckBuild/delete/<%= deck.id %>')">DELETE</button>
-                    </td>
-                <% }); %>
-            </tbody>
-        </table>
-
+        </div>
     </div>
 
 
