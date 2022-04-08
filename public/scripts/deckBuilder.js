@@ -302,15 +302,21 @@ function hideTestHand() {
 function saveDeck() {
     var deckName = document.getElementById("deckName").value;
 
-    if(deckName.length > 0) {
-        post('/save', { name: deckName, cards: deck, extra: extraDeck });
-    
-        alert("Deck Saved");
-        window.location = window.location.protocol + "//" +
-                        window.location.host + "/deckBuild/decks";
-    } else {
+    if(deckName.length === 0) {
         alert("Please give your deck a name");
+        return;
     }
+    if(deck.length < 20) {
+        alert("A deck must contain at least twenty cards (not counting the Extra Deck)");
+        return;
+    }
+
+    post('/save', { name: deckName, cards: deck, extra: extraDeck });
+
+    alert("Deck Saved");
+    window.location = window.location.protocol + "//" +
+                    window.location.host + "/deckBuild/decks";
+    
 }
 
 function post(endpoint, data){

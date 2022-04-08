@@ -45,11 +45,8 @@ b{
     color: var(--fg_highlight);
 }
 input{
-    background-color: var(--bg);
     font-size: 16px;
     color: var(--txt);
-    padding: 1%;
-    margin-left: 45%;
     text-align: center;
 }
 select{
@@ -204,6 +201,7 @@ th{
 .cardImgSample{
     background-color: var(--bg_highlight);
     position: relative;
+    height: fit-content;
 }
 .card{  
     width: 6.7vw;
@@ -261,4 +259,55 @@ ul {
 .quarter {
     width: 24%;
     float: left;
+}
+
+#username, #password {
+    display:block; 
+    margin:auto; 
+    width:40%; 
+    padding-top:1%;
+    padding-bottom:1%;
+    text-align:center; 
+    margin-top:1%;
+    border-radius:10px;
+    border-width:2px;
+    color:black;
+}
+
+#submitBtn {
+    display:block; 
+    margin:auto; 
+    width:22%; 
+    padding-top:1%;
+    padding-bottom:1%;
+    text-align:center; 
+    background-color:rgb(88, 188, 130);
+    border-radius:5px;
+    border-width:0;
+}
+
+#submitBtn:hover {
+    background-color:rgb(35, 156, 86)
+}
+
+#submitBtn:active {
+    transform: translateY(5%);
+}
+
+#accountAccessWrap {
+    width:40vw; 
+    height:80vh;
+    margin: 4% 30%; 
+    background-color:rgb(2, 128, 144); 
+    border-radius:40px; 
+    overflow:auto;
+    box-shadow: 10px 10px 5px rgb(5, 31, 59);
+}
+
+#login, #signup {
+    display:block; 
+    margin:auto; 
+    width:20%; 
+    text-align:center; 
+    color:white;
 }

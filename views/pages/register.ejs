@@ -10,23 +10,19 @@
 </head>
 
 <body>
-    <form action="/signup" method="post">
-        <div>Sign up</div>
-        <table id="register form">
-            <tr>
-                <th>Username:</th>
-                <td><input type="username" id="username" name="username"  placeholder="username"></td>  
-            </tr>
-            <tr>
-                <th>Password:</th>
-                <td><input type="password" id="password" name="password"  placeholder="password"></td> 
-            </tr>
-        </table>
-
-        <input type="submit" id="submit" value="Sign up">
-    </form>
-
-    <a href="/login">Log in</a>
+    <div id="accountAccessWrap">
+        <p style="margin:auto; width:20%; text-align:center; margin-top:10%; font-size:200%">Sign up</p>
+        <form action="/signup" method="post">
+            <p style="display:block; margin:auto; width:20%; text-align:center; margin-top:6%">Username:</p> 
+            <input type="username" id="username" name="username"  placeholder="username">
+            <br>
+            <p style="display:block; margin:auto; width:20%; text-align:center">Password:</p>
+            <input type="password" id="password" name="password"  placeholder="password"> <br>   
+            <input type="submit" id="submitBtn" value="Sign up">
+        </form>
+        <br>
+        <a href="/login" id="login">Log in</a>
+    </div>
 </body>
 
 </html>

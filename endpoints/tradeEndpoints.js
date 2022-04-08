@@ -225,7 +225,7 @@ async function removeFromArray(client, tableName, elements, arrayName, searchCol
 
         // add back accidentally removed elements
         if(itemCountBefore-1-itemCountAfter > 0){
-            addToArray(client, tableName, new Array(itemCountBefore-1-itemCountAfter).fill(element), arrayName, searchCol, searchTerm);
+            addToArray(client, tableName, new Array(itemCountBefore-itemCountAfter).fill(element), arrayName, searchCol, searchTerm);
         }
     }
 }

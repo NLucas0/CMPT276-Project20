@@ -7,13 +7,13 @@
 <!-- use to display card/friend/trade info in /admin-->
 <div class="popup" id="adminUserTableInfoPopUp" onmouseup="toggleTable(true, 0, event, 'user')"
 hidden="true">
-    <table class="popupContents" id="adminTableInfoTable">
+    <table class="popupContents cardTable" id="adminTableInfoTable">
         <thead>
             <tr>
                 <th id="adminTableInfoHeader" colspan="100">ColName</th>
             </tr>
         </thead>
-        <td class="noMatchMessage" hidden="true">Nothing to Show</td>
+        <td class="noMatchMessage" hidden="true" style="background-color: var(--bg_highlight);">Nothing to Show</td>
     </table>
 </div>
 
@@ -30,14 +30,14 @@ hidden="true">
                 <td>
                 <table class="adminTradeTableInfoPopUpTable cardTable">
                     <tbody>
-                        <tr><td class="noMatchMessage" hidden="true">No Cards</td></tr>
+                        <tr><td class="noMatchMessage" hidden="true" style="background-color: var(--bg_highlight);">No Cards</td></tr>
                     </tbody>
                 </table>
             </td>
             <td>
                 <table class="adminTradeTableInfoPopUpTable cardTable">
                     <tbody>
-                        <tr><td class="noMatchMessage" hidden="true">No Cards</td></tr>
+                        <tr><td class="noMatchMessage" hidden="true" style="background-color: var(--bg_highlight);">No Cards</td></tr>
                     </tbody>
                 </table>
             </td>
@@ -54,7 +54,7 @@ hidden="true">
         <thead>
             <th>Cards</th>
         </thead>
-        <td class="noMatchMessage" hidden="true">No Cards</td>
+        <td class="noMatchMessage" hidden="true" style="background-color: var(--bg_highlight);">No Cards</td>
     </table>
 </div>
 
