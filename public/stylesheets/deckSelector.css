@@ -24,6 +24,10 @@ tr:hover{
     background-color: var(--bg);
 }
 
+.table {
+    background-color: var(--bg);
+}
+
 .cardTable tbody{
     overflow-y: visible;
 }
